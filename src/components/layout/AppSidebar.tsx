@@ -28,6 +28,7 @@ const moreItems = [
   { title: "Events", url: "/events", icon: Calendar },
   { title: "Ramadan", url: "/ramadan", icon: Moon },
   { title: "Khadims", url: "/khadims", icon: HandHeart },
+  { title: "Donations", url: "/donations", icon: Gift },
   { title: "Support", url: "/support", icon: Heart },
 ];
 
