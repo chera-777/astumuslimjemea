@@ -23,12 +23,12 @@ interface AuthDialogProps {
 }
 
 const universities = [
-  { id: "astu", name: "ASTU (Adama)" },
-  { id: "aau", name: "AAU (Addis Ababa)" },
-  { id: "ju", name: "JU (Jimma)" },
-  { id: "bdu", name: "BDU (Bahir Dar)" },
-  { id: "hu", name: "HU (Haramaya)" },
-  { id: "mu", name: "MU (Mekelle)" },
+  { id: "ASTU", name: "ASTU (Adama)" },
+  { id: "AAU", name: "AAU (Addis Ababa)" },
+  { id: "JU", name: "JU (Jimma)" },
+  { id: "BDU", name: "BDU (Bahir Dar)" },
+  { id: "HU", name: "HU (Haramaya)" },
+  { id: "MU", name: "MU (Mekelle)" },
 ];
 
 export function AuthDialog({ open, onOpenChange, defaultMode = "register" }: AuthDialogProps) {
