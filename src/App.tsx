@@ -4,9 +4,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
-import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import ResetPassword from "./pages/ResetPassword";
+import Donations from "./pages/Donations";
 import StudentPortal from "./pages/StudentPortal";
 import AmirsPortal from "./pages/AmirsPortal";
 import SectorPortal from "./pages/amirs/SectorPortal";
@@ -36,24 +38,30 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/portal/student" element={<StudentPortal />} />
-            <Route path="/portal/amirs" element={<AmirsPortal />} />
-            <Route path="/portal/amirs/:sector" element={<SectorPortal />} />
-            <Route path="/portal/committee" element={<CommitteePortal />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+
+            {/* Protected routes */}
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/donations" element={<ProtectedRoute><Donations /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/resources" element={<ProtectedRoute><Resources /></ProtectedRoute>} />
+            <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
+            <Route path="/groups" element={<ProtectedRoute><Groups /></ProtectedRoute>} />
+            <Route path="/news" element={<ProtectedRoute><News /></ProtectedRoute>} />
+            <Route path="/services" element={<ProtectedRoute><Services /></ProtectedRoute>} />
+            <Route path="/ramadan" element={<ProtectedRoute><Ramadan /></ProtectedRoute>} />
+            <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
+            <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
+            <Route path="/khadims" element={<ProtectedRoute><Khadims /></ProtectedRoute>} />
+            <Route path="/governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
+
+            {/* Role-restricted portals */}
+            <Route path="/portal/student" element={<ProtectedRoute allowedRoles={["student", "admin"]}><StudentPortal /></ProtectedRoute>} />
+            <Route path="/portal/amirs" element={<ProtectedRoute allowedRoles={["amir", "admin"]}><AmirsPortal /></ProtectedRoute>} />
+            <Route path="/portal/amirs/:sector" element={<ProtectedRoute allowedRoles={["amir", "admin"]}><SectorPortal /></ProtectedRoute>} />
+            <Route path="/portal/committee" element={<ProtectedRoute allowedRoles={["committee", "admin"]}><CommitteePortal /></ProtectedRoute>} />
             <Route path="/portal/guest" element={<GuestPortal />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/governance" element={<Governance />} />
-            <Route path="/community" element={<Community />} />
-            <Route path="/groups" element={<Groups />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/ramadan" element={<Ramadan />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/support" element={<Support />} />
-            <Route path="/khadims" element={<Khadims />} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
