@@ -14,16 +14,305 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      donations: {
+        Row: {
+          amount: number
+          campaign: string | null
+          created_at: string
+          donor_id: string | null
+          id: string
+          is_anonymous: boolean | null
+          university_id: string
+        }
+        Insert: {
+          amount: number
+          campaign?: string | null
+          created_at?: string
+          donor_id?: string | null
+          id?: string
+          is_anonymous?: boolean | null
+          university_id: string
+        }
+        Update: {
+          amount?: number
+          campaign?: string | null
+          created_at?: string
+          donor_id?: string | null
+          id?: string
+          is_anonymous?: boolean | null
+          university_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "donations_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      khadim_registrations: {
+        Row: {
+          availability_notes: string | null
+          created_at: string
+          id: string
+          is_approved: boolean | null
+          period: string
+          preferred_roles: string[] | null
+          university_id: string
+          user_id: string
+        }
+        Insert: {
+          availability_notes?: string | null
+          created_at?: string
+          id?: string
+          is_approved?: boolean | null
+          period: string
+          preferred_roles?: string[] | null
+          university_id: string
+          user_id: string
+        }
+        Update: {
+          availability_notes?: string | null
+          created_at?: string
+          id?: string
+          is_approved?: boolean | null
+          period?: string
+          preferred_roles?: string[] | null
+          university_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "khadim_registrations_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      khadim_schedule: {
+        Row: {
+          assigned_date: string
+          assigned_role: string
+          created_at: string
+          id: string
+          khadim_id: string
+          meal_type: string
+          university_id: string
+        }
+        Insert: {
+          assigned_date: string
+          assigned_role: string
+          created_at?: string
+          id?: string
+          khadim_id: string
+          meal_type: string
+          university_id: string
+        }
+        Update: {
+          assigned_date?: string
+          assigned_role?: string
+          created_at?: string
+          id?: string
+          khadim_id?: string
+          meal_type?: string
+          university_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "khadim_schedule_khadim_id_fkey"
+            columns: ["khadim_id"]
+            isOneToOne: false
+            referencedRelation: "khadim_registrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "khadim_schedule_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      news: {
+        Row: {
+          author_id: string | null
+          category: string
+          content: string | null
+          created_at: string
+          id: string
+          is_featured: boolean | null
+          summary: string | null
+          title: string
+          university_id: string
+        }
+        Insert: {
+          author_id?: string | null
+          category?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          is_featured?: boolean | null
+          summary?: string | null
+          title: string
+          university_id: string
+        }
+        Update: {
+          author_id?: string | null
+          category?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          is_featured?: boolean | null
+          summary?: string | null
+          title?: string
+          university_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "news_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          batch_year: string | null
+          created_at: string
+          department: string | null
+          full_name: string
+          gender: string
+          id: string
+          id_card_url: string | null
+          is_cafe_student: boolean | null
+          is_verified: boolean | null
+          phone: string | null
+          profile_photo_url: string | null
+          student_id: string | null
+          university_id: string
+          updated_at: string
+        }
+        Insert: {
+          batch_year?: string | null
+          created_at?: string
+          department?: string | null
+          full_name: string
+          gender: string
+          id: string
+          id_card_url?: string | null
+          is_cafe_student?: boolean | null
+          is_verified?: boolean | null
+          phone?: string | null
+          profile_photo_url?: string | null
+          student_id?: string | null
+          university_id: string
+          updated_at?: string
+        }
+        Update: {
+          batch_year?: string | null
+          created_at?: string
+          department?: string | null
+          full_name?: string
+          gender?: string
+          id?: string
+          id_card_url?: string | null
+          is_cafe_student?: boolean | null
+          is_verified?: boolean | null
+          phone?: string | null
+          profile_photo_url?: string | null
+          student_id?: string | null
+          university_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      universities: {
+        Row: {
+          city: string
+          created_at: string
+          id: string
+          name: string
+          short_name: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          id?: string
+          name: string
+          short_name: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          id?: string
+          name?: string
+          short_name?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          sector: string | null
+          university_id: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          sector?: string | null
+          university_id?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          sector?: string | null
+          university_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_university: { Args: { _user_id: string }; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "amir" | "committee" | "student" | "guest"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +439,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "amir", "committee", "student", "guest"],
+    },
   },
 } as const

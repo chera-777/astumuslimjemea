@@ -1,6 +1,6 @@
 import {
   Home, BookOpen, Newspaper, Vote, MessageCircle, User, Shield,
-  Users, Globe, Calendar, Heart, GraduationCap, Briefcase, Moon
+  Users, Globe, Calendar, Heart, GraduationCap, Briefcase, Moon, HandHeart
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -29,6 +29,7 @@ const featureItems = [
   { title: "Groups", url: "/groups", icon: Users },
   { title: "Services", url: "/services", icon: Briefcase },
   { title: "Ramadan", url: "/ramadan", icon: Moon },
+  { title: "Khadims", url: "/khadims", icon: HandHeart },
   { title: "Events", url: "/events", icon: Calendar },
   { title: "Support", url: "/support", icon: Heart },
 ];
@@ -63,17 +64,6 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r-0">
-      <div className="p-4 flex items-center gap-3 border-b border-sidebar-border">
-        <div className="w-9 h-9 rounded-lg gradient-emerald flex items-center justify-center">
-          <Moon className="h-5 w-5 text-primary-foreground" />
-        </div>
-        {!collapsed && (
-          <div>
-            <p className="font-display text-sm font-bold text-sidebar-foreground">Muslim Jemea</p>
-            <p className="text-[10px] text-sidebar-foreground/50 font-body">ASTU Community</p>
-          </div>
-        )}
-      </div>
       <SidebarContent className="pt-2">
         {renderGroup("Main", mainItems)}
         {renderGroup("Portals", portalItems)}
