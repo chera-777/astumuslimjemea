@@ -1,123 +1,136 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Users, Shield, Vote, Moon, Star, ArrowRight, Heart, HandHeart, Sparkles } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { AuthDialog } from "@/components/AuthDialog";
+import {
+  Moon, Star, ArrowRight, BookOpen, Users, Shield, Heart,
+  Sparkles, GraduationCap, Globe
+} from "lucide-react";
 
-const features = [
-  { icon: BookOpen, title: "Islamic Resources", desc: "Qur'an, Hadith, Kitabs & Zikr tools", gradient: "gradient-teal" },
-  { icon: Users, title: "Group System", desc: "Annual gender-segregated study groups", gradient: "gradient-blue" },
-  { icon: Shield, title: "Multi-Portal Access", desc: "Amirs, Committee, Student & Guest portals", gradient: "gradient-green" },
-  { icon: Vote, title: "Governance", desc: "Transparent elections & decision-making", gradient: "gradient-purple" },
-  { icon: Moon, title: "Ramadan Tools", desc: "Meal cards, calendars & Khadims service", gradient: "gradient-gold" },
-  { icon: Heart, title: "Support Programs", desc: "Mentoring, charity & community events", gradient: "gradient-pink" },
+const highlights = [
+  { icon: BookOpen, label: "Resources", gradient: "gradient-teal" },
+  { icon: Users, label: "Community", gradient: "gradient-blue" },
+  { icon: Shield, label: "Portals", gradient: "gradient-green" },
+  { icon: Moon, label: "Ramadan", gradient: "gradient-gold" },
+  { icon: Heart, label: "Support", gradient: "gradient-pink" },
+  { icon: GraduationCap, label: "Study", gradient: "gradient-purple" },
 ];
 
 const Index = () => {
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"register" | "signin">("register");
+  const { user, roles, loading } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect authenticated users
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard");
+    }
+  }, [user, loading, navigate]);
+
+  const openRegister = () => { setAuthMode("register"); setAuthOpen(true); };
+  const openSignIn = () => { setAuthMode("signin"); setAuthOpen(true); };
+  const openGuest = () => { setAuthMode("register"); setAuthOpen(true); };
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero */}
-      <section className="relative overflow-hidden">
+    <div className="h-screen overflow-hidden bg-background flex flex-col relative">
+      {/* Full-screen hero */}
+      <div className="flex-1 relative flex flex-col">
         <div className="absolute inset-0 gradient-hero opacity-95" />
-        <div className="absolute inset-0 islamic-pattern opacity-30" />
-        <div className="relative z-10 container mx-auto px-4 py-20 md:py-32 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+        <div className="absolute inset-0 islamic-pattern opacity-20" />
+
+        {/* Top bar */}
+        <div className="relative z-10 flex items-center justify-between px-5 py-4">
+          <div className="flex items-center gap-2">
+            <div className="w-9 h-9 rounded-xl gradient-pink flex items-center justify-center">
+              <Moon className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <span className="font-display text-lg font-bold text-primary-foreground">ASTU MSJ</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={openSignIn}
+            className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 font-body text-sm"
           >
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <Sparkles className="h-5 w-5 text-gold" />
-              <span className="text-gold font-body text-sm font-semibold tracking-wide uppercase">
+            Sign In
+          </Button>
+        </div>
+
+        {/* Center content */}
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Sparkles className="h-4 w-4 text-gold" />
+              <span className="text-gold font-body text-xs font-semibold tracking-widest uppercase">
                 بسم الله الرحمن الرحيم
               </span>
-              <Sparkles className="h-5 w-5 text-gold" />
+              <Sparkles className="h-4 w-4 text-gold" />
             </div>
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-              ASTU Muslim<br />
-              <span className="text-gold">Jemea</span>
+
+            <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground leading-tight mb-3">
+              ASTU Muslim<br /><span className="text-gold">Jemea</span>
             </h1>
-            <p className="font-body text-primary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-              Strengthening the academic, spiritual, and social life of Muslim students 
-              at Ethiopian universities — built on Islamic values.
+
+            <p className="font-body text-primary-foreground/75 text-sm md:text-base max-w-md mx-auto mb-8 leading-relaxed">
+              Strengthening the academic, spiritual, and social life of Muslim students at Ethiopian universities.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="text-base px-8 gradient-pink text-primary-foreground border-0 shadow-pink hover:opacity-90">
-                <Link to="/register">
-                  Join the Community
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+
+            {/* Highlight icons row */}
+            <div className="flex items-center justify-center gap-3 mb-8 flex-wrap">
+              {highlights.map((h, i) => (
+                <motion.div
+                  key={h.label}
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3 + i * 0.08 }}
+                  className="flex flex-col items-center gap-1"
+                >
+                  <div className={`w-10 h-10 rounded-xl ${h.gradient} flex items-center justify-center`}>
+                    <h.icon className="h-5 w-5 text-primary-foreground" />
+                  </div>
+                  <span className="text-primary-foreground/60 font-body text-[10px] font-medium">{h.label}</span>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-sm mx-auto">
+              <Button
+                size="lg"
+                onClick={openRegister}
+                className="flex-1 gradient-pink text-primary-foreground border-0 shadow-pink hover:opacity-90 font-body"
+              >
+                Join the Community <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground">
-                <Link to="/portal/guest">Explore as Guest</Link>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={openGuest}
+                className="flex-1 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground font-body"
+              >
+                <Globe className="mr-2 h-4 w-4" /> Explore as Guest
               </Button>
             </div>
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 80" className="w-full h-16 md:h-20" preserveAspectRatio="none">
-            <path fill="hsl(180,15%,97%)" d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" />
-          </svg>
-        </div>
-      </section>
 
-      {/* Features */}
-      <section className="container mx-auto px-4 py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-            One Platform, Complete Community
-          </h2>
-          <p className="text-muted-foreground font-body max-w-xl mx-auto">
-            Everything Muslim students need — from spiritual growth to academic excellence.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((f, i) => (
-            <motion.div
-              key={f.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="gamification-card p-6"
-            >
-              <div className={`w-12 h-12 rounded-xl ${f.gradient} flex items-center justify-center mb-4`}>
-                <f.icon className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <h3 className="font-display text-xl font-bold text-foreground mb-2">{f.title}</h3>
-              <p className="text-muted-foreground font-body text-sm">{f.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-secondary islamic-pattern">
-        <div className="container mx-auto px-4 py-16 text-center">
-          <h2 className="font-display text-3xl font-bold text-foreground mb-4">Ready to Join?</h2>
-          <p className="text-muted-foreground font-body mb-8 max-w-lg mx-auto">
-            Register now and connect with your Muslim student community.
-          </p>
-          <Button asChild size="lg" className="px-10 gradient-teal text-primary-foreground border-0 shadow-glow hover:opacity-90">
-            <Link to="/register">Register Now <ArrowRight className="ml-2 h-5 w-5" /></Link>
-          </Button>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-card border-t border-border py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p className="font-display text-lg font-bold text-primary mb-1">ASTU Muslim Jemea</p>
-          <p className="text-muted-foreground font-body text-sm">
-            Built on Islamic values • Strengthening community
+        {/* Bottom tagline */}
+        <div className="relative z-10 text-center pb-6">
+          <p className="text-primary-foreground/40 font-body text-xs">
+            Built on Islamic values • <Star className="h-3 w-3 inline text-gold" /> Strengthening community
           </p>
         </div>
-      </footer>
+      </div>
+
+      <AuthDialog open={authOpen} onOpenChange={setAuthOpen} defaultMode={authMode} />
     </div>
   );
 };
