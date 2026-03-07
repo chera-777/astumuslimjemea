@@ -1,6 +1,6 @@
 import {
   Home, GraduationCap, Shield, Users, Globe, BookOpen, Newspaper,
-  MessageCircle, User, Calendar, Moon, HandHeart, Heart
+  MessageCircle, User, Calendar, Moon, HandHeart, Heart, Gift
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
