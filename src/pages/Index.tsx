@@ -1,23 +1,24 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Users, Shield, Vote, Moon, Star, ArrowRight, Heart } from "lucide-react";
+import { BookOpen, Users, Shield, Vote, Moon, Star, ArrowRight, Heart, HandHeart, Sparkles } from "lucide-react";
 
 const features = [
-  { icon: BookOpen, title: "Islamic Resources", desc: "Qur'an, Hadith, Kitabs & Zikr tools" },
-  { icon: Users, title: "Group System", desc: "Annual gender-segregated study groups" },
-  { icon: Shield, title: "Multi-Portal Access", desc: "Amirs, Committee, Student & Guest portals" },
-  { icon: Vote, title: "Governance", desc: "Transparent elections & decision-making" },
-  { icon: Moon, title: "Ramadan Tools", desc: "Meal cards, calendars & Azan player" },
-  { icon: Heart, title: "Support Programs", desc: "Mentoring, charity & community events" },
+  { icon: BookOpen, title: "Islamic Resources", desc: "Qur'an, Hadith, Kitabs & Zikr tools", gradient: "gradient-teal" },
+  { icon: Users, title: "Group System", desc: "Annual gender-segregated study groups", gradient: "gradient-blue" },
+  { icon: Shield, title: "Multi-Portal Access", desc: "Amirs, Committee, Student & Guest portals", gradient: "gradient-green" },
+  { icon: Vote, title: "Governance", desc: "Transparent elections & decision-making", gradient: "gradient-purple" },
+  { icon: Moon, title: "Ramadan Tools", desc: "Meal cards, calendars & Khadims service", gradient: "gradient-gold" },
+  { icon: Heart, title: "Support Programs", desc: "Mentoring, charity & community events", gradient: "gradient-pink" },
 ];
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="relative overflow-hidden islamic-pattern">
-        <div className="absolute inset-0 bg-emerald-gradient opacity-95" />
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 gradient-hero opacity-95" />
+        <div className="absolute inset-0 islamic-pattern opacity-30" />
         <div className="relative z-10 container mx-auto px-4 py-20 md:py-32 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -25,11 +26,11 @@ const Index = () => {
             transition={{ duration: 0.8 }}
           >
             <div className="flex items-center justify-center gap-2 mb-6">
-              <Star className="h-5 w-5 text-gold" />
+              <Sparkles className="h-5 w-5 text-gold" />
               <span className="text-gold font-body text-sm font-semibold tracking-wide uppercase">
                 بسم الله الرحمن الرحيم
               </span>
-              <Star className="h-5 w-5 text-gold" />
+              <Sparkles className="h-5 w-5 text-gold" />
             </div>
             <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
               ASTU Muslim<br />
@@ -40,7 +41,7 @@ const Index = () => {
               at Ethiopian universities — built on Islamic values.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" variant="gold" className="text-base px-8">
+              <Button asChild size="lg" className="text-base px-8 gradient-pink text-primary-foreground border-0 shadow-pink hover:opacity-90">
                 <Link to="/register">
                   Join the Community
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -52,10 +53,9 @@ const Index = () => {
             </div>
           </motion.div>
         </div>
-        {/* Decorative bottom wave */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 80" className="w-full h-16 md:h-20" preserveAspectRatio="none">
-            <path fill="hsl(40,30%,97%)" d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" />
+            <path fill="hsl(180,15%,97%)" d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" />
           </svg>
         </div>
       </section>
@@ -84,10 +84,10 @@ const Index = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="group p-6 rounded-xl bg-card border border-border hover:shadow-emerald transition-all duration-300 hover:-translate-y-1"
+              className="gamification-card p-6"
             >
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                <f.icon className="h-6 w-6 text-primary" />
+              <div className={`w-12 h-12 rounded-xl ${f.gradient} flex items-center justify-center mb-4`}>
+                <f.icon className="h-6 w-6 text-primary-foreground" />
               </div>
               <h3 className="font-display text-xl font-bold text-foreground mb-2">{f.title}</h3>
               <p className="text-muted-foreground font-body text-sm">{f.desc}</p>
@@ -103,7 +103,7 @@ const Index = () => {
           <p className="text-muted-foreground font-body mb-8 max-w-lg mx-auto">
             Register now and connect with your Muslim student community.
           </p>
-          <Button asChild size="lg" variant="hero" className="px-10">
+          <Button asChild size="lg" className="px-10 gradient-teal text-primary-foreground border-0 shadow-glow hover:opacity-90">
             <Link to="/register">Register Now <ArrowRight className="ml-2 h-5 w-5" /></Link>
           </Button>
         </div>
