@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import StudentPortal from "./pages/StudentPortal";
 import AmirsPortal from "./pages/AmirsPortal";
+import SectorPortal from "./pages/amirs/SectorPortal";
 import CommitteePortal from "./pages/CommitteePortal";
 import GuestPortal from "./pages/GuestPortal";
 import Resources from "./pages/Resources";
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/portal/student" element={<StudentPortal />} />
             <Route path="/portal/amirs" element={<AmirsPortal />} />
+            <Route path="/portal/amirs/:sector" element={<SectorPortal />} />
             <Route path="/portal/committee" element={<CommitteePortal />} />
             <Route path="/portal/guest" element={<GuestPortal />} />
             <Route path="/resources" element={<Resources />} />

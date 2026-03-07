@@ -180,4 +180,11 @@
     background: linear-gradient(90deg, hsl(var(--teal)), hsl(var(--blue)));
     transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
