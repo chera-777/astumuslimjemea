@@ -1,15 +1,20 @@
-import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Globe, BookOpen, Calendar, Heart, ArrowRight, Newspaper, Star, Users } from "lucide-react";
+import { Globe, BookOpen, Calendar, Heart, ArrowRight, Newspaper, Star, Users, Moon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { AuthDialog } from "@/components/AuthDialog";
 
 const features = [
-  { icon: Newspaper, title: "Public News", desc: "Read the latest announcements and updates from the community", path: "/news", gradient: "gradient-blue" },
-  { icon: BookOpen, title: "Islamic Resources", desc: "Access curated Qur'an, Hadith, and Islamic learning materials", path: "/resources", gradient: "gradient-green" },
-  { icon: Calendar, title: "Events Calendar", desc: "View upcoming community events and programs", path: "/events", gradient: "gradient-pink" },
-  { icon: Heart, title: "Donate / Sadaqah", desc: "Support Muslim students with charitable donations", path: "/support", gradient: "gradient-gold" },
+  { icon: "📖", title: "Quran Study", gradient: "gradient-green" },
+  { icon: "📚", title: "Hadith", gradient: "gradient-blue" },
+  { icon: "🤲", title: "Prayer", gradient: "gradient-teal" },
+  { icon: "🕌", title: "Events", gradient: "gradient-pink" },
+  { icon: "🌙", title: "Mority", gradient: "gradient-gold" },
+  { icon: "🏛️", title: "Islamic History", gradient: "gradient-purple" },
+  { icon: "🎓", title: "Lectures", gradient: "gradient-blue" },
+  { icon: "🌍", title: "Community", gradient: "gradient-green" },
 ];
 
 const impactStats = [
@@ -19,67 +24,94 @@ const impactStats = [
 ];
 
 const GuestPortal = () => {
+  const [authOpen, setAuthOpen] = useState(false);
+
   return (
-    <AppLayout>
-      <div className="p-4 md:p-6 space-y-6 max-w-4xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <div className="w-12 h-12 rounded-xl gradient-purple flex items-center justify-center mx-auto mb-3">
-            <Globe className="h-6 w-6 text-primary-foreground" />
-          </div>
-          <h1 className="font-display text-2xl font-bold text-foreground">Welcome, Guest!</h1>
-          <p className="text-muted-foreground font-body text-sm">Explore what ASTU Muslim Jemea has to offer</p>
+    <div className="min-h-screen" style={{
+      background: "linear-gradient(180deg, hsl(220, 40%, 12%) 0%, hsl(215, 50%, 18%) 40%, hsl(210, 45%, 25%) 70%, hsl(200, 35%, 30%) 100%)"
+    }}>
+      {/* Stars */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {Array.from({ length: 25 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-white"
+            style={{
+              width: Math.random() * 2 + 1,
+              height: Math.random() * 2 + 1,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 40}%`,
+              opacity: Math.random() * 0.5 + 0.2,
+            }}
+            animate={{ opacity: [0.2, 0.8, 0.2] }}
+            transition={{ duration: Math.random() * 3 + 2, repeat: Infinity }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 p-4 md:p-6 space-y-6 max-w-4xl mx-auto">
+        {/* Header */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center pt-6">
+          <h1 className="font-display text-3xl font-bold text-white">Welcome to</h1>
+          <h2 className="font-display text-2xl font-bold text-gold">Amir Home!</h2>
+          <p className="text-white/60 font-body text-sm mt-2">Explore Your Resources & Goals</p>
         </motion.div>
+
+        {/* Feature Icons Grid */}
+        <div className="grid grid-cols-4 gap-3">
+          {features.map((f, i) => (
+            <motion.div key={f.title} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}>
+              <Card className="border-0 bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
+                <CardContent className="p-3 flex flex-col items-center text-center gap-1">
+                  <div className={`w-12 h-12 rounded-xl ${f.gradient} flex items-center justify-center text-xl`}>
+                    {f.icon}
+                  </div>
+                  <p className="font-body text-[10px] font-medium text-white/80">{f.title}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
 
         {/* Impact Stats */}
         <div className="grid grid-cols-3 gap-3">
           {impactStats.map((stat) => (
-            <Card key={stat.label} className="gamification-card">
+            <Card key={stat.label} className="border-0 bg-white/5">
               <CardContent className="p-3 text-center">
-                <stat.icon className="h-6 w-6 text-primary mx-auto mb-1" />
-                <p className="font-display text-xl font-bold">{stat.value}</p>
-                <p className="font-body text-[10px] text-muted-foreground">{stat.label}</p>
+                <stat.icon className="h-5 w-5 text-gold mx-auto mb-1" />
+                <p className="font-display text-xl font-bold text-white">{stat.value}</p>
+                <p className="font-body text-[10px] text-white/50">{stat.label}</p>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {features.map((f, i) => (
-            <motion.div key={f.title} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
-              <Link to={f.path}>
-                <Card className="gamification-card h-full group">
-                  <CardContent className="p-5">
-                    <div className={`w-11 h-11 rounded-xl ${f.gradient} flex items-center justify-center mb-3`}>
-                      <f.icon className="h-5 w-5 text-primary-foreground" />
-                    </div>
-                    <h3 className="font-display text-lg font-bold mb-1 group-hover:text-primary transition-colors">{f.title}</h3>
-                    <p className="text-muted-foreground font-body text-sm mb-3">{f.desc}</p>
-                    <span className="font-body text-xs text-primary font-medium flex items-center gap-1">
-                      Explore <ArrowRight className="h-3 w-3" />
-                    </span>
-                  </CardContent>
-                </Card>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-
         {/* CTA */}
-        <Card className="gamification-card bg-primary/5 border-primary/20">
-          <CardContent className="p-6 text-center">
-            <Star className="h-10 w-10 text-primary mx-auto mb-3" />
-            <h3 className="font-display text-xl font-bold mb-2">Want Full Access?</h3>
-            <p className="text-muted-foreground font-body text-sm mb-4 max-w-md mx-auto">
-              Register as a student member to unlock all portals, community features, and exclusive resources.
-            </p>
-            <Button variant="hero" size="lg" asChild>
-              <Link to="/register">Register Now <ArrowRight className="ml-2 h-4 w-4" /></Link>
-            </Button>
-          </CardContent>
-        </Card>
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+          <Card className="border-0 bg-white/5 backdrop-blur">
+            <CardContent className="p-6 text-center">
+              <Star className="h-8 w-8 text-gold mx-auto mb-3" />
+              <h3 className="font-display text-xl font-bold text-white mb-2">Want Full Access?</h3>
+              <p className="text-white/50 font-body text-sm mb-4">Register to unlock all portals and features</p>
+              <Button
+                onClick={() => setAuthOpen(true)}
+                className="gradient-pink text-white border-0 rounded-xl font-body"
+              >
+                Register Now <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <div className="text-center pb-6">
+          <Button variant="outline" size="sm" className="border-white/20 text-white/60 hover:text-white hover:bg-white/10 rounded-xl font-body">
+            Back
+          </Button>
+        </div>
       </div>
-    </AppLayout>
+
+      <AuthDialog open={authOpen} onOpenChange={setAuthOpen} defaultMode="register" />
+    </div>
   );
 };
 

@@ -1,10 +1,13 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import {
   GraduationCap, Shield, Users, Globe, Bell, Award,
-  BookOpen, Newspaper, Calendar, Moon, HandHeart, Heart
+  BookOpen, Newspaper, Calendar, Moon, HandHeart, Heart, Gift
 } from "lucide-react";
 import { OnboardingDialog } from "@/components/OnboardingDialog";
 
@@ -21,7 +24,7 @@ const quickLinks = [
   { icon: Calendar, title: "Events", path: "/events", gradient: "gradient-pink" },
   { icon: Moon, title: "Ramadan", path: "/ramadan", gradient: "gradient-gold" },
   { icon: HandHeart, title: "Khadims", path: "/khadims", gradient: "gradient-green" },
-  { icon: Heart, title: "Support", path: "/support", gradient: "gradient-purple" },
+  { icon: Gift, title: "Donations", path: "/donations", gradient: "gradient-purple" },
 ];
 
 const announcements = [
@@ -31,6 +34,10 @@ const announcements = [
 ];
 
 const Dashboard = () => {
+  const { user, profile, roles } = useAuth();
+  const navigate = useNavigate();
+  const displayName = profile?.full_name?.split(" ")[0] || "Student";
+
   return (
     <AppLayout>
       <OnboardingDialog />
@@ -38,7 +45,7 @@ const Dashboard = () => {
         {/* Welcome */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground">
-            Assalamu Alaikum ✨
+            Salaam, {displayName}! ✨
           </h1>
           <p className="text-muted-foreground font-body text-sm mt-1">Welcome to your community dashboard</p>
 
@@ -62,20 +69,19 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
-        {/* Portal Cards */}
+        {/* Quick Access Grid */}
         <div>
-          <h3 className="font-display text-lg font-bold text-foreground mb-3">Your Portals</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {portalLinks.map((item, i) => (
-              <motion.div key={item.title} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}>
+          <h3 className="font-display text-lg font-bold text-foreground mb-3">Quick Access</h3>
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+            {quickLinks.map((item, i) => (
+              <motion.div key={item.title} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.04 }}>
                 <Link to={item.path}>
-                  <Card className="gamification-card h-full group">
-                    <CardContent className="p-4 flex flex-col items-center text-center gap-2">
-                      <div className={`w-11 h-11 rounded-xl ${item.gradient} flex items-center justify-center`}>
+                  <Card className="hover:shadow-glow transition-all duration-300 hover:-translate-y-1 h-full border-0 bg-card">
+                    <CardContent className="p-3 flex flex-col items-center text-center gap-1.5">
+                      <div className={`w-10 h-10 rounded-xl ${item.gradient} flex items-center justify-center`}>
                         <item.icon className="h-5 w-5 text-primary-foreground" />
                       </div>
-                      <p className="font-body text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{item.title}</p>
-                      <p className="font-body text-[10px] text-muted-foreground">{item.desc}</p>
+                      <p className="font-body text-xs font-semibold text-foreground">{item.title}</p>
                     </CardContent>
                   </Card>
                 </Link>
@@ -106,19 +112,20 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Quick Links */}
+        {/* Portal Cards */}
         <div>
-          <h3 className="font-display text-lg font-bold text-foreground mb-3">Quick Access</h3>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-            {quickLinks.map((item, i) => (
-              <motion.div key={item.title} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03 }}>
+          <h3 className="font-display text-lg font-bold text-foreground mb-3">Your Portals</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {portalLinks.map((item, i) => (
+              <motion.div key={item.title} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}>
                 <Link to={item.path}>
-                  <Card className="hover:shadow-glow transition-all duration-300 hover:-translate-y-1 h-full border-0 bg-card">
-                    <CardContent className="p-3 flex flex-col items-center text-center gap-1.5">
-                      <div className={`w-10 h-10 rounded-xl ${item.gradient} flex items-center justify-center`}>
+                  <Card className="gamification-card h-full group">
+                    <CardContent className="p-4 flex flex-col items-center text-center gap-2">
+                      <div className={`w-11 h-11 rounded-xl ${item.gradient} flex items-center justify-center`}>
                         <item.icon className="h-5 w-5 text-primary-foreground" />
                       </div>
-                      <p className="font-body text-xs font-semibold text-foreground">{item.title}</p>
+                      <p className="font-body text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{item.title}</p>
+                      <p className="font-body text-[10px] text-muted-foreground">{item.desc}</p>
                     </CardContent>
                   </Card>
                 </Link>
