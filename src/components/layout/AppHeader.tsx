@@ -3,7 +3,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Bell, Moon, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
 
 export function AppHeader() {
   const isMobile = useIsMobile();
@@ -24,9 +23,6 @@ export function AppHeader() {
       </div>
 
       <div className="flex items-center gap-1">
-        <div className="streak-badge mr-2 hidden sm:flex">
-          🔥 7 day streak
-        </div>
         <Button variant="ghost" size="icon" className="relative h-9 w-9">
           <Bell className="h-4 w-4" />
           <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-accent" />
