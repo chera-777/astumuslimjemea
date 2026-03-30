@@ -22,6 +22,7 @@ import News from "./pages/News";
 import Profile from "./pages/Profile";
 import Services from "./pages/Services";
 import Ramadan from "./pages/Ramadan";
+import PrayerTimes from "./pages/PrayerTimes";
 import Events from "./pages/Events";
 import Support from "./pages/Support";
 import Khadims from "./pages/Khadims";
@@ -50,6 +51,7 @@ const App = () => (
             <Route path="/news" element={<ProtectedRoute><News /></ProtectedRoute>} />
             <Route path="/services" element={<ProtectedRoute><Services /></ProtectedRoute>} />
             <Route path="/ramadan" element={<ProtectedRoute><Ramadan /></ProtectedRoute>} />
+            <Route path="/prayer-times" element={<ProtectedRoute><PrayerTimes /></ProtectedRoute>} />
             <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
             <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
             <Route path="/khadims" element={<ProtectedRoute><Khadims /></ProtectedRoute>} />
