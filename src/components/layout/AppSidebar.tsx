@@ -1,7 +1,6 @@
 import {
-  Home, GraduationCap, Shield, Users, Globe, BookOpen, Newspaper,
-  MessageCircle, User, Calendar, Moon, HandHeart, Heart, Gift,
-  Settings, LogOut, ChevronRight, Sparkles
+  Home, BookOpen, Newspaper, MessageCircle, User, Calendar, Moon, HandHeart, Gift, Heart,
+  LogOut, Sparkles, Clock, Shield, Users, Vote, Globe, BarChart3
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -15,6 +14,7 @@ import {
 const studentItems = [
   { title: "Home", url: "/portal/student", icon: Home },
   { title: "Resources", url: "/resources", icon: BookOpen },
+  { title: "Prayer & Calendar", url: "/prayer-times", icon: Clock },
   { title: "News", url: "/news", icon: Newspaper },
   { title: "Community", url: "/community", icon: MessageCircle },
   { title: "Events", url: "/events", icon: Calendar },
@@ -27,6 +27,7 @@ const studentItems = [
 const amirItems = [
   { title: "Dashboard", url: "/portal/amirs", icon: Home },
   { title: "Resources", url: "/resources", icon: BookOpen },
+  { title: "Prayer & Calendar", url: "/prayer-times", icon: Clock },
   { title: "News", url: "/news", icon: Newspaper },
   { title: "Community", url: "/community", icon: MessageCircle },
   { title: "Events", url: "/events", icon: Calendar },
@@ -38,14 +39,18 @@ const amirItems = [
 const committeeItems = [
   { title: "Dashboard", url: "/portal/committee", icon: Home },
   { title: "Resources", url: "/resources", icon: BookOpen },
+  { title: "Prayer & Calendar", url: "/prayer-times", icon: Clock },
   { title: "News", url: "/news", icon: Newspaper },
   { title: "Community", url: "/community", icon: MessageCircle },
   { title: "Events", url: "/events", icon: Calendar },
+  { title: "Governance", url: "/governance", icon: Vote },
   { title: "Donations", url: "/donations", icon: Gift },
 ];
 
 const guestItems = [
   { title: "Explore", url: "/portal/guest", icon: Globe },
+  { title: "Resources", url: "/resources", icon: BookOpen },
+  { title: "Prayer & Calendar", url: "/prayer-times", icon: Clock },
   { title: "News", url: "/news", icon: Newspaper },
   { title: "Events", url: "/events", icon: Calendar },
   { title: "Donations", url: "/donations", icon: Gift },
@@ -58,7 +63,6 @@ export function AppSidebar() {
   const { roles, signOut } = useAuth();
   const isActive = (path: string) => location.pathname === path || (path !== "/portal/student" && path !== "/portal/amirs" && path !== "/portal/committee" && path !== "/portal/guest" && location.pathname.startsWith(path));
 
-  // Determine which items to show based on role
   let items = studentItems;
   let portalLabel = "Student Portal";
   if (roles.includes("admin") || roles.includes("amir")) {
