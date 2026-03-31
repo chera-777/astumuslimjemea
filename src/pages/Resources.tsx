@@ -4,8 +4,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, ChevronRight, Play, ThumbsUp, Eye } from "lucide-react";
+import { Search, ChevronRight, Play, Eye } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const allSurahs = [
   "Al-Fatiha","Al-Baqarah","Aal-E-Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus",
@@ -84,7 +85,7 @@ const Resources = () => {
 
   return (
     <AppLayout>
-      <div className="p-4 md:p-6 space-y-4 max-w-4xl mx-auto">
+      <div className="p-4 md:p-6 space-y-4 max-w-4xl mx-auto overflow-x-hidden">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <h1 className="font-display text-2xl font-bold">Islamic Resources</h1>
           <p className="text-muted-foreground font-body text-sm">Qur'an, Hadith, Kitabs & Videos</p>
@@ -109,21 +110,23 @@ const Resources = () => {
                 const meta = surahMeta[idx];
                 return (
                   <motion.div key={s} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: Math.min(i * 0.008, 0.4) }}>
-                    <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all group">
-                      <CardContent className="p-3 flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                          <span className="font-display text-sm font-bold text-primary">{idx}</span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-body text-xs font-semibold truncate">{s}</p>
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-body text-[9px] text-muted-foreground">{meta?.verses}v</span>
-                            <Badge variant="outline" className="font-body text-[7px] px-1 py-0 h-3.5">{meta?.type}</Badge>
+                    <Link to={`/quran/${idx}`}>
+                      <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all group">
+                        <CardContent className="p-3 flex items-center gap-2.5">
+                          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                            <span className="font-display text-sm font-bold text-primary">{idx}</span>
                           </div>
-                        </div>
-                        <ChevronRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                      </CardContent>
-                    </Card>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-body text-xs font-semibold truncate">{s}</p>
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-body text-[9px] text-muted-foreground">{meta?.verses}v</span>
+                              <Badge variant="outline" className="font-body text-[7px] px-1 py-0 h-3.5">{meta?.type}</Badge>
+                            </div>
+                          </div>
+                          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                        </CardContent>
+                      </Card>
+                    </Link>
                   </motion.div>
                 );
               })}
@@ -134,7 +137,7 @@ const Resources = () => {
             <div className="grid grid-cols-2 gap-2">
               {hadithCollections.map((h, i) => (
                 <motion.div key={h.name} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.04 }}>
-                  <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all group">
+                  <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all">
                     <CardContent className="p-3.5 flex flex-col items-center text-center gap-2">
                       <span className="text-3xl">{h.icon}</span>
                       <div>
@@ -152,7 +155,7 @@ const Resources = () => {
             <div className="grid grid-cols-2 gap-2">
               {kitabs.map((k, i) => (
                 <motion.div key={k.title} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.04 }}>
-                  <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all group">
+                  <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all">
                     <CardContent className="p-3.5 flex flex-col items-center text-center gap-2">
                       <span className="text-3xl">{k.icon}</span>
                       <div>
@@ -173,7 +176,6 @@ const Resources = () => {
                 <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all group overflow-hidden">
                   <CardContent className="p-0">
                     <div className="flex">
-                      {/* Thumbnail */}
                       <div className="w-36 h-24 bg-secondary flex items-center justify-center shrink-0 relative">
                         <span className="text-4xl">{v.thumb}</span>
                         <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -183,15 +185,12 @@ const Resources = () => {
                         </div>
                         <span className="absolute bottom-1 right-1 bg-black/70 text-white text-[9px] px-1.5 py-0.5 rounded font-body">{v.duration}</span>
                       </div>
-                      {/* Info */}
                       <div className="p-3 flex-1 min-w-0">
                         <p className="font-body text-sm font-semibold leading-tight line-clamp-2">{v.title}</p>
                         <p className="font-body text-xs text-muted-foreground mt-1">{v.speaker}</p>
-                        <div className="flex items-center gap-2 mt-1.5">
-                          <span className="flex items-center gap-0.5 font-body text-[10px] text-muted-foreground">
-                            <Eye className="h-3 w-3" /> {v.views}
-                          </span>
-                        </div>
+                        <span className="flex items-center gap-0.5 font-body text-[10px] text-muted-foreground mt-1.5">
+                          <Eye className="h-3 w-3" /> {v.views}
+                        </span>
                       </div>
                     </div>
                   </CardContent>
