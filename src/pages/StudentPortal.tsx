@@ -67,12 +67,12 @@ const StudentPortal = () => {
                 <span className="text-white/80 font-body text-sm">11 Shawwal 1447 AH</span>
               </div>
               <div className="text-center flex-1 flex flex-col items-center justify-center">
-                <div className="w-10 h-10 rounded-full bg-amber-400/90 flex items-center justify-center mb-2">
+                <div className="w-10 h-10 rounded-full bg-accent/90 flex items-center justify-center mb-2">
                   <span className="text-lg">☀️</span>
                 </div>
                 <p className="text-white/70 font-body text-sm">{nextPrayer}</p>
                 <h2 className="text-white text-5xl font-bold font-display tracking-tight">{nextTime}</h2>
-                <p className="text-emerald-300 font-body text-sm mt-1">will start in 2 hours 19 minutes</p>
+                <p className="text-primary-foreground/80 font-body text-sm mt-1">will start in 2 hours 19 minutes</p>
               </div>
               <div className="flex justify-center gap-1.5">
                 <div className="w-2 h-2 rounded-full bg-white/40" />
