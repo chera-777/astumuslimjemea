@@ -3,9 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { Play, Clock, Trophy } from "lucide-react";
+import { Play, Clock, Trophy, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 import mosqueHero from "@/assets/mosque-hero.jpg";
 
 const quickFeatures = [
@@ -15,14 +16,6 @@ const quickFeatures = [
   { icon: "📅", title: "Calendar", link: "/prayer-times" },
   { icon: "📿", title: "Tasbih", link: "/resources" },
   { icon: "🌙", title: "Ramadan", link: "/ramadan" },
-];
-
-const prayerTimes = [
-  { name: "Fajr", time: "5:12 AM" },
-  { name: "Dhuhr", time: "12:27 PM" },
-  { name: "Asr", time: "3:37 PM" },
-  { name: "Maghrib", time: "6:33 PM" },
-  { name: "Isha'a", time: "7:39 PM" },
 ];
 
 const featuredClasses = [
@@ -40,9 +33,7 @@ const tutoringSchedule = [
 const StudentPortal = () => {
   const { profile } = useAuth();
   const displayName = profile?.full_name?.split(" ")[0] || "Student";
-  const currentHour = new Date().getHours();
-  const nextPrayer = currentHour < 5 ? "Fajr" : currentHour < 12 ? "Dhuhr" : currentHour < 15 ? "Asr" : currentHour < 18 ? "Maghrib" : "Isha'a";
-  const nextTime = prayerTimes.find(p => p.name === nextPrayer)?.time || "";
+  const pt = usePrayerTimes();
 
   return (
     <AppLayout>
@@ -50,41 +41,45 @@ const StudentPortal = () => {
         {/* Prayer Time Hero with Mosque Image */}
         <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}>
           <div className="relative w-full h-[280px] md:h-[320px] overflow-hidden">
-            <img
-              src={mosqueHero}
-              alt="Mosque"
-              className="absolute inset-0 w-full h-full object-cover"
-              width={800}
-              height={512}
-            />
+            <img src={mosqueHero} alt="Mosque" className="absolute inset-0 w-full h-full object-cover" width={800} height={512} />
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
             <div className="absolute inset-0 z-10 flex flex-col justify-between p-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-primary/80 flex items-center justify-center text-xs text-primary-foreground font-bold">☪</div>
-                  <span className="text-white/90 font-body text-sm font-medium">Adama</span>
+                  <span className="text-white/90 font-body text-sm font-medium">{pt.city}</span>
                 </div>
-                <span className="text-white/80 font-body text-sm">11 Shawwal 1447 AH</span>
+                <span className="text-white/80 font-body text-sm">{pt.hijriDate}</span>
               </div>
               <div className="text-center flex-1 flex flex-col items-center justify-center">
-                <div className="w-10 h-10 rounded-full bg-accent/90 flex items-center justify-center mb-2">
-                  <span className="text-lg">☀️</span>
-                </div>
-                <p className="text-white/70 font-body text-sm">{nextPrayer}</p>
-                <h2 className="text-white text-5xl font-bold font-display tracking-tight">{nextTime}</h2>
-                <p className="text-primary-foreground/80 font-body text-sm mt-1">will start in 2 hours 19 minutes</p>
+                {pt.loading ? (
+                  <Loader2 className="h-8 w-8 animate-spin text-white/60" />
+                ) : (
+                  <>
+                    <div className="w-10 h-10 rounded-full bg-accent/80 flex items-center justify-center mb-2">
+                      <span className="text-lg">☀️</span>
+                    </div>
+                    <p className="text-white/70 font-body text-sm">{pt.nextPrayer}</p>
+                    <h2 className="text-white text-5xl font-bold font-display tracking-tight">{pt.nextTime}</h2>
+                    <p className="text-white/60 font-body text-sm mt-1">Salaam, {displayName}! 👋</p>
+                  </>
+                )}
               </div>
-              <div className="flex justify-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-white/40" />
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                <div className="w-2 h-2 rounded-full bg-white/40" />
+              {/* Mini prayer row */}
+              <div className="grid grid-cols-5 gap-1">
+                {pt.prayers.map(p => (
+                  <div key={p.name} className={`text-center p-1.5 rounded-lg ${p.name === pt.nextPrayer ? 'bg-white/25' : 'bg-white/10'}`}>
+                    <p className="text-[9px] text-white/60 font-body">{p.name}</p>
+                    <p className="text-[11px] text-white font-body font-medium">{p.time}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </motion.div>
 
         <div className="px-4 space-y-4">
-          {/* Quick Feature Icons - Grid that fits screen */}
+          {/* Quick Feature Icons - Grid */}
           <div className="grid grid-cols-6 gap-2">
             {quickFeatures.map((f, i) => (
               <motion.div key={f.title} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
@@ -100,13 +95,12 @@ const StudentPortal = () => {
             ))}
           </div>
 
-          {/* Pagination dots for features */}
           <div className="flex justify-center gap-1">
             <div className="w-6 h-1.5 rounded-full bg-primary" />
             <div className="w-1.5 h-1.5 rounded-full bg-muted" />
           </div>
 
-          {/* Reading Athkar Card */}
+          {/* Reading Athkar */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <Card className="border-0 bg-card">
               <CardContent className="p-4">
@@ -114,11 +108,9 @@ const StudentPortal = () => {
                   <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                     <span className="text-lg">🌍</span>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-display text-base font-bold flex items-center gap-1">
-                      Reading Athkar <Play className="h-3 w-3 text-primary" />
-                    </h3>
-                  </div>
+                  <h3 className="font-display text-base font-bold flex items-center gap-1">
+                    Reading Athkar <Play className="h-3 w-3 text-primary" />
+                  </h3>
                 </div>
                 <p className="font-body text-sm text-muted-foreground italic">
                   Ya hayyu ya qayyoom, birahmatika astagheeth, aslih lee sha/nee kullah, wala ...
@@ -127,7 +119,7 @@ const StudentPortal = () => {
             </Card>
           </motion.div>
 
-          {/* Verse Daily Card */}
+          {/* Verse Daily */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
             <Card className="border-0 bg-card">
               <CardContent className="p-4">
@@ -149,7 +141,7 @@ const StudentPortal = () => {
             </Card>
           </motion.div>
 
-          {/* Featured Classes & Tutoring */}
+          {/* Classes & Tutoring Tabs */}
           <Tabs defaultValue="classes" className="w-full">
             <TabsList className="w-full grid grid-cols-3 h-auto">
               <TabsTrigger value="classes" className="font-body text-xs py-2">✨ Classes</TabsTrigger>
