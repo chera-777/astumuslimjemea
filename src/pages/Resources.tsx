@@ -4,7 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, ChevronRight, Play, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Search, ChevronRight, Play, Eye, Clock, ThumbsUp, BookOpen, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
@@ -50,45 +51,51 @@ const surahMeta: Record<number, { verses: number; type: "Meccan" | "Medinan" }> 
 };
 
 const hadithCollections = [
-  { name: "Sahih Bukhari", hadiths: 7563, icon: "📕" },
-  { name: "Sahih Muslim", hadiths: 7500, icon: "📗" },
-  { name: "Sunan Abu Dawud", hadiths: 5274, icon: "📘" },
-  { name: "Jami At-Tirmidhi", hadiths: 3956, icon: "📙" },
-  { name: "Sunan An-Nasa'i", hadiths: 5758, icon: "📓" },
-  { name: "Sunan Ibn Majah", hadiths: 4341, icon: "📔" },
-  { name: "Muwatta Malik", hadiths: 1851, icon: "📒" },
-  { name: "40 Nawawi", hadiths: 42, icon: "⭐" },
-  { name: "Riyadh as-Salihin", hadiths: 1896, icon: "🌟" },
+  { name: "Sahih Bukhari", hadiths: 7563, icon: "📕", desc: "Most authentic collection compiled by Imam Bukhari" },
+  { name: "Sahih Muslim", hadiths: 7500, icon: "📗", desc: "Second most authentic, compiled by Imam Muslim" },
+  { name: "Sunan Abu Dawud", hadiths: 5274, icon: "📘", desc: "Covers jurisprudence-related hadiths" },
+  { name: "Jami At-Tirmidhi", hadiths: 3956, icon: "📙", desc: "Includes commentary on hadith rulings" },
+  { name: "Sunan An-Nasa'i", hadiths: 5758, icon: "📓", desc: "Focuses on fiqh and worship practices" },
+  { name: "Sunan Ibn Majah", hadiths: 4341, icon: "📔", desc: "Completes the six major collections" },
+  { name: "Muwatta Malik", hadiths: 1851, icon: "📒", desc: "Earliest written collection of hadith" },
+  { name: "40 Nawawi", hadiths: 42, icon: "⭐", desc: "Essential hadiths for every Muslim" },
+  { name: "Riyadh as-Salihin", hadiths: 1896, icon: "🌟", desc: "Garden of the Righteous — practical guidance" },
 ];
 
 const kitabs = [
-  { title: "Riyadh as-Salihin", author: "Imam Nawawi", chapters: 372, icon: "📖" },
-  { title: "Bulugh al-Maram", author: "Ibn Hajar", chapters: 16, icon: "📜" },
-  { title: "Tafsir Ibn Kathir", author: "Ibn Kathir", chapters: 114, icon: "📚" },
-  { title: "Kitab at-Tawhid", author: "Muhammad ibn Abd al-Wahhab", chapters: 67, icon: "🕌" },
-  { title: "Al-Aqidah Al-Wasitiyyah", author: "Ibn Taymiyyah", chapters: 12, icon: "🌙" },
-  { title: "Zad al-Ma'ad", author: "Ibn al-Qayyim", chapters: 5, icon: "⭐" },
+  { title: "Riyadh as-Salihin", author: "Imam Nawawi", chapters: 372, icon: "📖", category: "Hadith" },
+  { title: "Bulugh al-Maram", author: "Ibn Hajar", chapters: 16, icon: "📜", category: "Fiqh" },
+  { title: "Tafsir Ibn Kathir", author: "Ibn Kathir", chapters: 114, icon: "📚", category: "Tafsir" },
+  { title: "Kitab at-Tawhid", author: "Muhammad ibn Abd al-Wahhab", chapters: 67, icon: "🕌", category: "Aqeedah" },
+  { title: "Al-Aqidah Al-Wasitiyyah", author: "Ibn Taymiyyah", chapters: 12, icon: "🌙", category: "Aqeedah" },
+  { title: "Zad al-Ma'ad", author: "Ibn al-Qayyim", chapters: 5, icon: "⭐", category: "Seerah" },
 ];
 
+const videoCategories = ["All", "Tafsir", "Seerah", "Lectures", "Reminders", "Shorts"];
+
 const videoLectures = [
-  { title: "The Beginning and the End", speaker: "Omar Suleiman", duration: "45 min", views: "2.1M", thumb: "🎬" },
-  { title: "Seerah of the Prophet ﷺ", speaker: "Yasir Qadhi", duration: "60 min", views: "5.3M", thumb: "📽️" },
-  { title: "Tafsir of Surah Al-Kahf", speaker: "Nouman Ali Khan", duration: "35 min", views: "1.8M", thumb: "🎥" },
-  { title: "Stories of the Prophets", speaker: "Mufti Menk", duration: "50 min", views: "3.2M", thumb: "🎞️" },
-  { title: "Heart Softeners", speaker: "Bilal Assad", duration: "40 min", views: "900K", thumb: "💎" },
-  { title: "Purification of the Soul", speaker: "Hamza Yusuf", duration: "55 min", views: "1.5M", thumb: "🌟" },
+  { title: "The Beginning and the End — Signs of the Hour", speaker: "Omar Suleiman", duration: "45:12", views: "2.1M", likes: "89K", thumb: "🎬", category: "Lectures", date: "3 days ago" },
+  { title: "Seerah of the Prophet ﷺ — Part 1: Before Revelation", speaker: "Yasir Qadhi", duration: "1:02:30", views: "5.3M", likes: "210K", thumb: "📽️", category: "Seerah", date: "1 week ago" },
+  { title: "Tafsir of Surah Al-Kahf — Lessons for Modern Life", speaker: "Nouman Ali Khan", duration: "35:45", views: "1.8M", likes: "76K", thumb: "🎥", category: "Tafsir", date: "2 weeks ago" },
+  { title: "Stories of the Prophets — Prophet Yusuf (AS)", speaker: "Mufti Menk", duration: "50:20", views: "3.2M", likes: "145K", thumb: "🎞️", category: "Lectures", date: "5 days ago" },
+  { title: "Heart Softeners — The Reality of Death", speaker: "Bilal Assad", duration: "40:15", views: "900K", likes: "42K", thumb: "💎", category: "Reminders", date: "1 month ago" },
+  { title: "Purification of the Soul — Spiritual Growth", speaker: "Hamza Yusuf", duration: "55:30", views: "1.5M", likes: "68K", thumb: "🌟", category: "Lectures", date: "2 months ago" },
+  { title: "60 Seconds of Gratitude", speaker: "Omar Suleiman", duration: "0:58", views: "4.5M", likes: "320K", thumb: "⚡", category: "Shorts", date: "1 day ago" },
+  { title: "Understanding Surah Yasin — Verse by Verse", speaker: "Nouman Ali Khan", duration: "48:10", views: "2.7M", likes: "120K", thumb: "📖", category: "Tafsir", date: "3 weeks ago" },
 ];
 
 const Resources = () => {
   const [search, setSearch] = useState("");
+  const [videoCategory, setVideoCategory] = useState("All");
   const filteredSurahs = allSurahs.filter(s => s.toLowerCase().includes(search.toLowerCase()));
+  const filteredVideos = videoCategory === "All" ? videoLectures : videoLectures.filter(v => v.category === videoCategory);
 
   return (
     <AppLayout>
       <div className="p-4 md:p-6 space-y-4 max-w-4xl mx-auto overflow-x-hidden">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <h1 className="font-display text-2xl font-bold">Islamic Resources</h1>
-          <p className="text-muted-foreground font-body text-sm">Qur'an, Hadith, Kitabs & Videos</p>
+          <h1 className="font-display text-2xl font-bold">Islamic Library</h1>
+          <p className="text-muted-foreground font-body text-sm">Qur'an · Hadith · Kitabs · Videos</p>
         </motion.div>
 
         <Tabs defaultValue="quran" className="w-full">
@@ -99,6 +106,7 @@ const Resources = () => {
             <TabsTrigger value="videos" className="font-body text-xs py-2">🎬 Videos</TabsTrigger>
           </TabsList>
 
+          {/* QURAN TAB */}
           <TabsContent value="quran" className="mt-4 space-y-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -119,7 +127,7 @@ const Resources = () => {
                           <div className="flex-1 min-w-0">
                             <p className="font-body text-xs font-semibold truncate">{s}</p>
                             <div className="flex items-center gap-1.5">
-                              <span className="font-body text-[9px] text-muted-foreground">{meta?.verses}v</span>
+                              <span className="font-body text-[9px] text-muted-foreground">{meta?.verses} verses</span>
                               <Badge variant="outline" className="font-body text-[7px] px-1 py-0 h-3.5">{meta?.type}</Badge>
                             </div>
                           </div>
@@ -133,17 +141,24 @@ const Resources = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="hadith" className="mt-4">
-            <div className="grid grid-cols-2 gap-2">
+          {/* HADITH TAB */}
+          <TabsContent value="hadith" className="mt-4 space-y-3">
+            <div className="grid grid-cols-2 gap-3">
               {hadithCollections.map((h, i) => (
                 <motion.div key={h.name} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.04 }}>
-                  <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all">
-                    <CardContent className="p-3.5 flex flex-col items-center text-center gap-2">
-                      <span className="text-3xl">{h.icon}</span>
-                      <div>
-                        <p className="font-body text-xs font-semibold">{h.name}</p>
-                        <p className="font-body text-[10px] text-muted-foreground">{h.hadiths.toLocaleString()} hadiths</p>
+                  <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all group h-full">
+                    <CardContent className="p-4 flex flex-col gap-2.5">
+                      <div className="flex items-start gap-3">
+                        <span className="text-3xl">{h.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-body text-sm font-bold leading-tight">{h.name}</p>
+                          <p className="font-body text-[10px] text-primary font-medium">{h.hadiths.toLocaleString()} hadiths</p>
+                        </div>
                       </div>
+                      <p className="font-body text-[10px] text-muted-foreground leading-relaxed">{h.desc}</p>
+                      <Button variant="ghost" size="sm" className="w-full mt-auto h-7 text-[10px] font-body group-hover:bg-primary/10">
+                        <BookOpen className="h-3 w-3 mr-1" /> Browse Collection
+                      </Button>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -151,17 +166,26 @@ const Resources = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="kitabs" className="mt-4">
-            <div className="grid grid-cols-2 gap-2">
+          {/* KITABS TAB */}
+          <TabsContent value="kitabs" className="mt-4 space-y-3">
+            <div className="grid grid-cols-2 gap-3">
               {kitabs.map((k, i) => (
                 <motion.div key={k.title} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.04 }}>
-                  <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all">
-                    <CardContent className="p-3.5 flex flex-col items-center text-center gap-2">
-                      <span className="text-3xl">{k.icon}</span>
+                  <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all group h-full">
+                    <CardContent className="p-4 flex flex-col gap-2">
+                      <div className="flex items-start justify-between">
+                        <span className="text-3xl">{k.icon}</span>
+                        <Badge variant="secondary" className="font-body text-[8px] px-1.5">{k.category}</Badge>
+                      </div>
                       <div>
-                        <p className="font-body text-xs font-semibold">{k.title}</p>
-                        <p className="font-body text-[10px] text-muted-foreground">{k.author}</p>
-                        <p className="font-body text-[9px] text-muted-foreground">{k.chapters} chapters</p>
+                        <p className="font-body text-sm font-bold leading-tight">{k.title}</p>
+                        <p className="font-body text-[10px] text-muted-foreground mt-0.5">{k.author}</p>
+                      </div>
+                      <div className="flex items-center justify-between mt-auto">
+                        <span className="font-body text-[9px] text-muted-foreground">{k.chapters} chapters</span>
+                        <Button variant="ghost" size="sm" className="h-6 text-[10px] font-body px-2 group-hover:bg-primary/10">
+                          Read <ExternalLink className="h-2.5 w-2.5 ml-1" />
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -170,33 +194,63 @@ const Resources = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="videos" className="mt-4 space-y-3">
-            {videoLectures.map((v, i) => (
-              <motion.div key={v.title} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
-                <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all group overflow-hidden">
-                  <CardContent className="p-0">
-                    <div className="flex">
-                      <div className="w-36 h-24 bg-secondary flex items-center justify-center shrink-0 relative">
-                        <span className="text-4xl">{v.thumb}</span>
-                        <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <div className="w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center">
-                            <Play className="h-5 w-5 text-primary-foreground ml-0.5" />
+          {/* VIDEOS TAB — YouTube-style */}
+          <TabsContent value="videos" className="mt-4 space-y-4">
+            {/* Category pills */}
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+              {videoCategories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setVideoCategory(cat)}
+                  className={`px-3 py-1.5 rounded-lg font-body text-xs whitespace-nowrap transition-all ${
+                    videoCategory === cat
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-foreground hover:bg-secondary/80"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Video grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {filteredVideos.map((v, i) => (
+                <motion.div key={v.title} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
+                  <Card className="border border-border bg-card hover:shadow-glow cursor-pointer transition-all group overflow-hidden">
+                    <CardContent className="p-0">
+                      {/* Thumbnail */}
+                      <div className="relative aspect-video bg-gradient-to-br from-secondary to-secondary/50 flex items-center justify-center">
+                        <span className="text-5xl">{v.thumb}</span>
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full bg-primary/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
+                            <Play className="h-6 w-6 text-primary-foreground ml-0.5" />
                           </div>
                         </div>
-                        <span className="absolute bottom-1 right-1 bg-black/70 text-white text-[9px] px-1.5 py-0.5 rounded font-body">{v.duration}</span>
-                      </div>
-                      <div className="p-3 flex-1 min-w-0">
-                        <p className="font-body text-sm font-semibold leading-tight line-clamp-2">{v.title}</p>
-                        <p className="font-body text-xs text-muted-foreground mt-1">{v.speaker}</p>
-                        <span className="flex items-center gap-0.5 font-body text-[10px] text-muted-foreground mt-1.5">
-                          <Eye className="h-3 w-3" /> {v.views}
+                        <span className="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded font-body font-medium">
+                          {v.duration}
                         </span>
+                        {v.category === "Shorts" && (
+                          <Badge className="absolute top-2 left-2 bg-destructive text-destructive-foreground text-[8px] px-1.5">
+                            SHORT
+                          </Badge>
+                        )}
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                      {/* Info */}
+                      <div className="p-3">
+                        <p className="font-body text-sm font-semibold leading-tight line-clamp-2 mb-1.5">{v.title}</p>
+                        <p className="font-body text-xs text-muted-foreground">{v.speaker}</p>
+                        <div className="flex items-center gap-3 mt-2 font-body text-[10px] text-muted-foreground">
+                          <span className="flex items-center gap-0.5"><Eye className="h-3 w-3" /> {v.views}</span>
+                          <span className="flex items-center gap-0.5"><ThumbsUp className="h-3 w-3" /> {v.likes}</span>
+                          <span className="flex items-center gap-0.5"><Clock className="h-3 w-3" /> {v.date}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
           </TabsContent>
         </Tabs>
       </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,17 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Heart, HandHeart, TrendingUp, Users, Sparkles, Gift } from "lucide-react";
 
 const campaigns = [
-  { id: "general", name: "General Sadaqah", icon: Heart, gradient: "gradient-teal", desc: "Support overall community programs" },
-  { id: "ramadan", name: "Ramadan Fund", icon: Gift, gradient: "gradient-gold", desc: "Iftar, suhoor & meal cards" },
-  { id: "education", name: "Education Support", icon: TrendingUp, gradient: "gradient-blue", desc: "Books, tutoring & scholarships" },
-  { id: "masjid", name: "Masjid Maintenance", icon: HandHeart, gradient: "gradient-green", desc: "Prayer space upkeep" },
+  { id: "general", name: "General Sadaqah", icon: Heart, gradient: "gradient-teal", desc: "Support overall community programs", goal: 50000 },
+  { id: "ramadan", name: "Ramadan Fund", icon: Gift, gradient: "gradient-gold", desc: "Iftar, suhoor & meal cards", goal: 30000 },
+  { id: "education", name: "Education Support", icon: TrendingUp, gradient: "gradient-blue", desc: "Books, tutoring & scholarships", goal: 20000 },
+  { id: "masjid", name: "Masjid Maintenance", icon: HandHeart, gradient: "gradient-green", desc: "Prayer space upkeep", goal: 40000 },
 ];
 
 const quickAmounts = [10, 25, 50, 100, 250, 500];
@@ -27,6 +27,46 @@ const Donations = () => {
   const [campaign, setCampaign] = useState("general");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [campaignTotals, setCampaignTotals] = useState<Record<string, number>>({});
+  const [totalDonors, setTotalDonors] = useState(0);
+  const [totalRaised, setTotalRaised] = useState(0);
+  const [myDonations, setMyDonations] = useState<{ amount: number; campaign: string | null; created_at: string }[]>([]);
+
+  const fetchStats = async () => {
+    // Fetch all donations for the user's university
+    if (!profile?.university_id) return;
+    const { data } = await supabase
+      .from("donations")
+      .select("amount, campaign, donor_id, created_at")
+      .eq("university_id", profile.university_id);
+
+    if (data) {
+      const totals: Record<string, number> = {};
+      const donorSet = new Set<string>();
+      let raised = 0;
+      data.forEach(d => {
+        totals[d.campaign || "general"] = (totals[d.campaign || "general"] || 0) + Number(d.amount);
+        if (d.donor_id) donorSet.add(d.donor_id);
+        raised += Number(d.amount);
+      });
+      setCampaignTotals(totals);
+      setTotalDonors(donorSet.size);
+      setTotalRaised(raised);
+    }
+
+    // Fetch user's own donations
+    if (user) {
+      const { data: mine } = await supabase
+        .from("donations")
+        .select("amount, campaign, created_at")
+        .eq("donor_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(5);
+      if (mine) setMyDonations(mine);
+    }
+  };
+
+  useEffect(() => { fetchStats(); }, [profile?.university_id, user]);
 
   const handleDonate = async () => {
     if (!user) { toast.error("Please sign in to donate"); return; }
@@ -47,9 +87,14 @@ const Donations = () => {
     } else {
       toast.success("🤲 JazakAllahu Khairan! Donation recorded.");
       setAmount("");
+      fetchStats();
     }
     setLoading(false);
   };
+
+  const selectedCampaign = campaigns.find(c => c.id === campaign)!;
+  const campaignRaised = campaignTotals[campaign] || 0;
+  const campaignProgress = Math.min((campaignRaised / selectedCampaign.goal) * 100, 100);
 
   return (
     <AppLayout>
@@ -67,29 +112,32 @@ const Donations = () => {
 
         {/* Campaign Cards */}
         <div className="grid grid-cols-2 gap-3">
-          {campaigns.map((c, i) => (
-            <motion.div
-              key={c.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.05 }}
-            >
-              <button
-                onClick={() => setCampaign(c.id)}
-                className={`w-full text-left p-4 rounded-2xl border-2 transition-all ${
-                  campaign === c.id
-                    ? "border-primary bg-primary/5 shadow-glow"
-                    : "border-border bg-card hover:border-primary/30"
-                }`}
-              >
-                <div className={`w-10 h-10 rounded-xl ${c.gradient} flex items-center justify-center mb-2`}>
-                  <c.icon className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <p className="font-body text-sm font-bold text-foreground">{c.name}</p>
-                <p className="font-body text-[10px] text-muted-foreground mt-0.5">{c.desc}</p>
-              </button>
-            </motion.div>
-          ))}
+          {campaigns.map((c, i) => {
+            const raised = campaignTotals[c.id] || 0;
+            const prog = Math.min((raised / c.goal) * 100, 100);
+            return (
+              <motion.div key={c.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}>
+                <button
+                  onClick={() => setCampaign(c.id)}
+                  className={`w-full text-left p-4 rounded-2xl border-2 transition-all ${
+                    campaign === c.id ? "border-primary bg-primary/5 shadow-glow" : "border-border bg-card hover:border-primary/30"
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-xl ${c.gradient} flex items-center justify-center mb-2`}>
+                    <c.icon className="h-5 w-5 text-primary-foreground" />
+                  </div>
+                  <p className="font-body text-sm font-bold text-foreground">{c.name}</p>
+                  <p className="font-body text-[10px] text-muted-foreground mt-0.5">{c.desc}</p>
+                  <div className="mt-2">
+                    <Progress value={prog} className="h-1.5" />
+                    <p className="font-body text-[9px] text-muted-foreground mt-1">
+                      {raised.toLocaleString()} / {c.goal.toLocaleString()} ETB
+                    </p>
+                  </div>
+                </button>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Amount */}
@@ -98,6 +146,18 @@ const Donations = () => {
             <h3 className="font-display text-lg font-bold text-foreground flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-gold" /> Select Amount (ETB)
             </h3>
+
+            {/* Campaign progress */}
+            <div className="p-3 rounded-xl bg-primary/5 border border-primary/20">
+              <div className="flex justify-between items-center mb-1.5">
+                <span className="font-body text-xs font-semibold">{selectedCampaign.name}</span>
+                <span className="font-body text-xs text-primary font-bold">{Math.round(campaignProgress)}%</span>
+              </div>
+              <Progress value={campaignProgress} className="h-2" />
+              <p className="font-body text-[10px] text-muted-foreground mt-1">
+                {campaignRaised.toLocaleString()} ETB raised of {selectedCampaign.goal.toLocaleString()} ETB goal
+              </p>
+            </div>
 
             <div className="grid grid-cols-3 gap-2">
               {quickAmounts.map(a => (
@@ -117,20 +177,12 @@ const Donations = () => {
 
             <div>
               <Label className="font-body text-sm">Custom Amount</Label>
-              <Input
-                type="number"
-                value={amount}
-                onChange={e => setAmount(e.target.value)}
-                placeholder="Enter amount"
-                className="mt-1"
-              />
+              <Input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="Enter amount" className="mt-1" />
             </div>
 
             <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary">
               <Checkbox id="anon" checked={isAnonymous} onCheckedChange={(v) => setIsAnonymous(!!v)} />
-              <Label htmlFor="anon" className="font-body text-xs cursor-pointer">
-                Donate anonymously
-              </Label>
+              <Label htmlFor="anon" className="font-body text-xs cursor-pointer">Donate anonymously</Label>
             </div>
 
             <Button
@@ -153,9 +205,9 @@ const Donations = () => {
         {/* Impact stats */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { label: "Total Raised", value: "15,000 ETB", icon: TrendingUp, gradient: "gradient-teal" },
-            { label: "Donors", value: "127", icon: Users, gradient: "gradient-blue" },
-            { label: "Campaigns", value: "4", icon: Gift, gradient: "gradient-pink" },
+            { label: "Total Raised", value: `${totalRaised.toLocaleString()} ETB`, icon: TrendingUp, gradient: "gradient-teal" },
+            { label: "Donors", value: String(totalDonors), icon: Users, gradient: "gradient-blue" },
+            { label: "Campaigns", value: String(campaigns.length), icon: Gift, gradient: "gradient-pink" },
           ].map((s, i) => (
             <Card key={i} className="gamification-card">
               <CardContent className="p-3 text-center">
@@ -168,6 +220,28 @@ const Donations = () => {
             </Card>
           ))}
         </div>
+
+        {/* Recent donations */}
+        {myDonations.length > 0 && (
+          <Card className="gamification-card">
+            <CardContent className="p-4">
+              <h3 className="font-display text-sm font-bold mb-3">Your Recent Donations</h3>
+              <div className="space-y-2">
+                {myDonations.map((d, i) => (
+                  <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-secondary">
+                    <div>
+                      <p className="font-body text-xs font-semibold capitalize">{d.campaign || "General"}</p>
+                      <p className="font-body text-[10px] text-muted-foreground">
+                        {new Date(d.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <span className="font-display text-sm font-bold text-primary">{d.amount} ETB</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </AppLayout>
   );
