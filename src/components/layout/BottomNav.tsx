@@ -1,4 +1,4 @@
-import { Home, BookOpen, Newspaper, MessageCircle, User, Plus, Clock } from "lucide-react";
+import { Home, BookOpen, MessageCircle, User, Plus, Newspaper } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const quickActions = [
   { label: "📰 News", path: "/news" },
-  { label: "🕌 Ramadan", path: "/ramadan" },
+  { label: "🔔 Azan", path: "/azan" },
   { label: "🤝 Khadims", path: "/khadims" },
   { label: "📅 Events", path: "/events" },
   { label: "💝 Donations", path: "/donations" },
@@ -18,6 +18,9 @@ export function BottomNav() {
   const location = useLocation();
   const [showActions, setShowActions] = useState(false);
   const { roles } = useAuth();
+
+  // Hide bottom nav in active chat conversation
+  if (location.pathname === "/community" && location.hash === "#chat") return null;
 
   const homePath = roles.includes("admin") || roles.includes("amir")
     ? "/portal/amirs"
@@ -68,7 +71,8 @@ export function BottomNav() {
       </AnimatePresence>
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-lg border-t border-border safe-area-pb">
-        <div className="flex items-center justify-around h-16 px-2">
+        <div className="flex items-center h-16 px-1">
+          {/* First two items */}
           {navItems.slice(0, 2).map((item) => {
             const active = location.pathname === item.path || (item.path !== homePath && location.pathname.startsWith(item.path));
             return (
@@ -76,7 +80,7 @@ export function BottomNav() {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all min-w-[48px]",
+                  "flex-1 flex flex-col items-center justify-center gap-0.5 py-1 rounded-xl transition-all",
                   active ? "text-primary" : "text-muted-foreground"
                 )}
               >
@@ -86,20 +90,24 @@ export function BottomNav() {
             );
           })}
 
-          <button
-            onClick={() => setShowActions(!showActions)}
-            className={cn(
-              "relative -mt-6 flex items-center justify-center w-14 h-14 rounded-full shadow-glow transition-all",
-              showActions ? "gradient-pink rotate-45" : "gradient-teal"
-            )}
-          >
-            {showActions ? (
-              <Plus className="h-6 w-6 text-primary-foreground" />
-            ) : (
-              <Newspaper className="h-6 w-6 text-primary-foreground" />
-            )}
-          </button>
+          {/* Center button */}
+          <div className="flex-1 flex items-center justify-center">
+            <button
+              onClick={() => setShowActions(!showActions)}
+              className={cn(
+                "relative -mt-6 flex items-center justify-center w-14 h-14 rounded-full shadow-glow transition-all",
+                showActions ? "gradient-pink rotate-45" : "gradient-teal"
+              )}
+            >
+              {showActions ? (
+                <Plus className="h-6 w-6 text-primary-foreground" />
+              ) : (
+                <Newspaper className="h-6 w-6 text-primary-foreground" />
+              )}
+            </button>
+          </div>
 
+          {/* Last two items */}
           {navItems.slice(2).map((item) => {
             const active = location.pathname.startsWith(item.path);
             return (
@@ -107,7 +115,7 @@ export function BottomNav() {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all min-w-[48px]",
+                  "flex-1 flex flex-col items-center justify-center gap-0.5 py-1 rounded-xl transition-all",
                   active ? "text-primary" : "text-muted-foreground"
                 )}
               >

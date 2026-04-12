@@ -6,7 +6,6 @@ import { MessageCircle, Send, Phone, Video, Users, Search, ArrowLeft } from "luc
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const contacts = [
   { name: "Br. Yusuf K.", lastMsg: "JazakAllahu Khairan!", time: "2m ago", unread: 2 },
@@ -31,21 +30,20 @@ const messages = [
 
 type Tab = "chats" | "groups" | "active";
 
-const CommunityContent = () => {
+const Community = () => {
   const [message, setMessage] = useState("");
   const [activeTab, setActiveTab] = useState<Tab>("chats");
 
   const tabs: { key: Tab; label: string; icon: React.ReactNode; count?: number }[] = [
     { key: "chats", label: "Chats", icon: <MessageCircle className="h-4 w-4" />, count: 3 },
     { key: "groups", label: "Groups", icon: <Users className="h-4 w-4" />, count: 8 },
-    { key: "active", label: "Active", icon: <Send className="h-4 w-4" /> },
   ];
 
-  // When in active chat, render without sidebar/bottom nav
+  // Active chat — full screen, NO AppLayout, NO bottom nav
   if (activeTab === "active") {
     return (
       <div className="h-screen flex flex-col bg-background fixed inset-0 z-50">
-        {/* Chat contact header */}
+        {/* Chat header */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-card shrink-0">
           <div className="flex items-center gap-2">
             <button onClick={() => setActiveTab("chats")} className="p-1 hover:bg-secondary rounded-lg">
@@ -67,16 +65,18 @@ const CommunityContent = () => {
         {/* Messages */}
         <div className="flex-1 overflow-auto p-4 space-y-3 scrollbar-hide">
           {messages.map((m, i) => (
-            <div key={i} className={`flex ${m.mine ? "justify-end" : "justify-start"}`}>
+            <motion.div key={i} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
+              className={`flex ${m.mine ? "justify-end" : "justify-start"}`}
+            >
               <div className={`max-w-[75%] p-3 rounded-2xl ${m.mine ? "gradient-teal text-primary-foreground rounded-br-sm" : "bg-secondary rounded-bl-sm"}`}>
                 <p className="font-body text-sm">{m.text}</p>
                 <p className={`font-body text-[10px] mt-1 ${m.mine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>{m.time}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-        {/* Input */}
-        <div className="flex gap-2 p-3 border-t border-border shrink-0">
+        {/* Input — no bottom nav behind this */}
+        <div className="flex gap-2 p-3 border-t border-border bg-card shrink-0">
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -91,12 +91,13 @@ const CommunityContent = () => {
     );
   }
 
+  // Chat list / Groups list — with AppLayout
   return (
-    <>
+    <AppLayout>
       {/* Chat Tab Header */}
       <div className="sticky top-14 z-30 bg-card/95 backdrop-blur-lg border-b border-border">
         <div className="flex items-center justify-center gap-1 px-2 py-2">
-          {tabs.filter(t => t.key !== "active").map((tab) => (
+          {tabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
@@ -122,7 +123,7 @@ const CommunityContent = () => {
 
       <AnimatePresence mode="wait">
         {activeTab === "chats" && (
-          <motion.div key="chats" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 space-y-2">
+          <motion.div key="chats" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 space-y-2 pb-24">
             <div className="relative mb-3">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input placeholder="Search conversations..." className="pl-9 font-body rounded-xl" />
@@ -130,18 +131,18 @@ const CommunityContent = () => {
             {contacts.map((c) => (
               <Card key={c.name} className="cursor-pointer hover:bg-secondary/50 transition-colors border border-border bg-card" onClick={() => setActiveTab("active")}>
                 <CardContent className="p-3 flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-full gradient-teal flex items-center justify-center">
+                  <div className="w-11 h-11 rounded-full gradient-teal flex items-center justify-center shrink-0">
                     <span className="font-body text-sm font-bold text-primary-foreground">{c.name[4]}</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <p className="font-body text-sm font-semibold truncate">{c.name}</p>
-                      <span className="font-body text-[10px] text-muted-foreground">{c.time}</span>
+                      <span className="font-body text-[10px] text-muted-foreground shrink-0">{c.time}</span>
                     </div>
                     <p className="font-body text-xs text-muted-foreground truncate">{c.lastMsg}</p>
                   </div>
                   {c.unread > 0 && (
-                    <span className="w-5 h-5 rounded-full bg-accent flex items-center justify-center text-[10px] font-body font-bold text-accent-foreground">{c.unread}</span>
+                    <span className="w-5 h-5 rounded-full bg-accent flex items-center justify-center text-[10px] font-body font-bold text-accent-foreground shrink-0">{c.unread}</span>
                   )}
                 </CardContent>
               </Card>
@@ -150,22 +151,22 @@ const CommunityContent = () => {
         )}
 
         {activeTab === "groups" && (
-          <motion.div key="groups" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 space-y-2">
+          <motion.div key="groups" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 space-y-2 pb-24">
             {groupChats.map((g) => (
               <Card key={g.name} className="cursor-pointer hover:bg-secondary/50 transition-colors border border-border bg-card">
                 <CardContent className="p-3 flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-full gradient-purple flex items-center justify-center">
+                  <div className="w-11 h-11 rounded-full gradient-purple flex items-center justify-center shrink-0">
                     <Users className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <p className="font-body text-sm font-semibold truncate">{g.name}</p>
-                      <span className="font-body text-[10px] text-muted-foreground">{g.time}</span>
+                      <span className="font-body text-[10px] text-muted-foreground shrink-0">{g.time}</span>
                     </div>
                     <p className="font-body text-xs text-muted-foreground truncate">{g.members} members • {g.lastMsg}</p>
                   </div>
                   {g.unread > 0 && (
-                    <span className="w-5 h-5 rounded-full bg-accent flex items-center justify-center text-[10px] font-body font-bold text-accent-foreground">{g.unread}</span>
+                    <span className="w-5 h-5 rounded-full bg-accent flex items-center justify-center text-[10px] font-body font-bold text-accent-foreground shrink-0">{g.unread}</span>
                   )}
                 </CardContent>
               </Card>
@@ -173,14 +174,6 @@ const CommunityContent = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
-  );
-};
-
-const Community = () => {
-  return (
-    <AppLayout>
-      <CommunityContent />
     </AppLayout>
   );
 };
