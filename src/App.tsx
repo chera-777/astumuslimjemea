@@ -27,6 +27,11 @@ import PrayerTimes from "./pages/PrayerTimes";
 import Events from "./pages/Events";
 import Support from "./pages/Support";
 import Khadims from "./pages/Khadims";
+import DuaPage from "./pages/DuaPage";
+import HadithPage from "./pages/HadithPage";
+import AdhkarPage from "./pages/AdhkarPage";
+import TasbihPage from "./pages/TasbihPage";
+import AzanPage from "./pages/AzanPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -58,6 +63,11 @@ const App = () => (
             <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
             <Route path="/khadims" element={<ProtectedRoute><Khadims /></ProtectedRoute>} />
             <Route path="/governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
+            <Route path="/dua" element={<ProtectedRoute><DuaPage /></ProtectedRoute>} />
+            <Route path="/hadith" element={<ProtectedRoute><HadithPage /></ProtectedRoute>} />
+            <Route path="/adhkar" element={<ProtectedRoute><AdhkarPage /></ProtectedRoute>} />
+            <Route path="/tasbih" element={<ProtectedRoute><TasbihPage /></ProtectedRoute>} />
+            <Route path="/azan" element={<ProtectedRoute><AzanPage /></ProtectedRoute>} />
 
             {/* Role-restricted portals */}
             <Route path="/portal/student" element={<ProtectedRoute allowedRoles={["student", "admin"]}><StudentPortal /></ProtectedRoute>} />
