@@ -148,11 +148,11 @@ const StudentPortal = () => {
   const pt = usePrayerTimes();
 
   const prayerList = [
-    { name: "Fajr", time: pt.times?.Fajr, icon: Sunrise },
-    { name: "Dhuhr", time: pt.times?.Dhuhr, icon: Sparkles },
-    { name: "Asr", time: pt.times?.Asr, icon: Sparkles },
-    { name: "Maghrib", time: pt.times?.Maghrib, icon: Sunset },
-    { name: "Isha", time: pt.times?.Isha, icon: Moon },
+    { name: "Fajr", time: pt.fajr, icon: Sunrise },
+    { name: "Dhuhr", time: pt.dhuhr, icon: Sparkles },
+    { name: "Asr", time: pt.asr, icon: Sparkles },
+    { name: "Maghrib", time: pt.maghrib, icon: Sunset },
+    { name: "Isha", time: pt.isha, icon: Moon },
   ];
 
   return (
