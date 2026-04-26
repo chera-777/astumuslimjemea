@@ -116,14 +116,14 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)} className="data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-primary-foreground">
-                    <NavLink to={item.url} end={item.url.startsWith("/portal/")} activeClassName="bg-sidebar-accent text-sidebar-foreground font-semibold">
+                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title} className="data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-primary-foreground overflow-hidden">
+                    <NavLink to={item.url} end={item.url.startsWith("/portal/")} activeClassName="bg-sidebar-accent text-sidebar-foreground font-semibold" className="min-w-0">
                       <item.icon className="mr-2 h-4 w-4 shrink-0" />
                       {!collapsed && (
                         <>
-                          <span className="flex-1 text-xs">{item.title}</span>
+                          <span className="flex-1 text-xs truncate min-w-0">{item.title}</span>
                           {"badge" in item && item.badge && (
-                            <span className="ml-auto bg-sidebar-primary text-sidebar-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-full">{item.badge as number}</span>
+                            <span className="ml-auto shrink-0 bg-sidebar-primary text-sidebar-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-full">{item.badge as number}</span>
                           )}
                         </>
                       )}
