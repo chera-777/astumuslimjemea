@@ -265,20 +265,6 @@ const QuranReader = () => {
           </Button>
         </div>
 
-        {/* Surah navigation */}
-        <div className="flex justify-between px-4 pb-3 shrink-0">
-          {num > 1 && (
-            <Button variant="outline" size="sm" onClick={() => navigate(`/quran/${num - 1}`)}>
-              <ChevronLeft className="h-3 w-3 mr-1" /> Prev Surah
-            </Button>
-          )}
-          <div />
-          {num < 114 && (
-            <Button variant="outline" size="sm" onClick={() => navigate(`/quran/${num + 1}`)}>
-              Next Surah <ChevronRight className="h-3 w-3 ml-1" />
-            </Button>
-          )}
-        </div>
       </div>
     );
   }
