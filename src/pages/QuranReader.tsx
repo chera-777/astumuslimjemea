@@ -449,19 +449,8 @@ const QuranReader = () => {
           </div>
         )}
 
-        {/* Navigation footer */}
-        <div className="flex justify-between pt-4 pb-20">
-          {num > 1 ? (
-            <Button variant="outline" onClick={() => navigate(`/quran/${num - 1}`)} className="font-body">
-              <ChevronLeft className="h-4 w-4 mr-1" /> Previous
-            </Button>
-          ) : <div />}
-          {num < 114 && (
-            <Button onClick={() => navigate(`/quran/${num + 1}`)} className="font-body bg-primary text-primary-foreground">
-              Next <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
-          )}
-        </div>
+        <div className="pb-20" />
+
       </div>
     </AppLayout>
   );
