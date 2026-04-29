@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,24 +26,6 @@ const accentColors = [
   { name: "Purple", hsl: "270 60% 55%", class: "bg-[hsl(270,60%,55%)]" },
 ];
 
-const mockProfile = {
-  name: "Ahmed Mohammed",
-  id: "ASTU/1234/15",
-  phone: "+251 912 345 678",
-  email: "ahmed@astu.edu.et",
-  university: "ASTU (Adama)",
-  department: "Computer Science",
-  year: "3rd Year",
-  gender: "Brother",
-  cafe: true,
-  group: "Group 7",
-  role: "Student",
-  joinedDate: "Sep 2023",
-  xp: 750,
-  level: 5,
-  completionPct: 72,
-};
-
 const achievements = [
   { icon: "📖", title: "Quran Explorer", desc: "Read 15 Juz", unlocked: true },
   { icon: "🤲", title: "Zikr Master", desc: "500 daily zikr", unlocked: true },
@@ -51,12 +33,6 @@ const achievements = [
   { icon: "💡", title: "Top Donor", desc: "Donate 5000 ETB", unlocked: false },
   { icon: "🎓", title: "Academic Star", desc: "Help 10 students", unlocked: true },
   { icon: "🏆", title: "Community Leader", desc: "Complete all challenges", unlocked: false },
-];
-
-const donations = [
-  { campaign: "Ramadan Iftar Fund", amount: 200, date: "Mar 5, 2026" },
-  { campaign: "Scholarship Fund", amount: 500, date: "Feb 20, 2026" },
-  { campaign: "Masjid Renovation", amount: 100, date: "Jan 15, 2026" },
 ];
 
 const activityLog = [
@@ -67,10 +43,37 @@ const activityLog = [
 ];
 
 const Profile = () => {
-  const { signOut, profile: authProfile } = useAuth();
+  const { signOut, profile: authProfile, user, roles } = useAuth();
   const navigate = useNavigate();
   const [theme, setTheme] = useState<"dark" | "light" | "system">("dark");
   const [selectedAccent, setSelectedAccent] = useState(0);
+  const [donations, setDonations] = useState<{ campaign: string | null; amount: number; created_at: string }[]>([]);
+  const [universityName, setUniversityName] = useState<string>("—");
+
+  useEffect(() => {
+    const fetchExtras = async () => {
+      if (!user) return;
+      const { supabase } = await import("@/integrations/supabase/client");
+      // donations
+      const { data: dons } = await supabase
+        .from("donations")
+        .select("campaign, amount, created_at")
+        .eq("donor_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10);
+      setDonations(dons || []);
+      // university
+      if (authProfile?.university_id) {
+        const { data: uni } = await supabase
+          .from("universities")
+          .select("name, short_name, city")
+          .eq("id", authProfile.university_id)
+          .maybeSingle();
+        if (uni) setUniversityName(`${uni.short_name} (${uni.city})`);
+      }
+    };
+    fetchExtras();
+  }, [user, authProfile?.university_id]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -86,8 +89,17 @@ const Profile = () => {
     }
   };
 
-  const displayName = authProfile?.full_name || mockProfile.name;
-  const initials = displayName.split(" ").map(n => n[0]).join("").slice(0, 2);
+  const displayName = authProfile?.full_name || user?.email?.split("@")[0] || "Guest";
+  const initials = displayName.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
+  const totalDonated = donations.reduce((s, d) => s + Number(d.amount || 0), 0);
+  const completionPct = (() => {
+    if (!authProfile) return 0;
+    const fields = [authProfile.full_name, authProfile.phone, authProfile.gender, authProfile.department, authProfile.batch_year, authProfile.student_id, authProfile.profile_photo_url];
+    const filled = fields.filter(Boolean).length;
+    return Math.round((filled / fields.length) * 100);
+  })();
+  const role = roles[0] ? roles[0].charAt(0).toUpperCase() + roles[0].slice(1) : "Student";
+  const joinedDate = user?.created_at ? new Date(user.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "—";
 
   return (
     <AppLayout>
@@ -103,12 +115,16 @@ const Profile = () => {
                 </Avatar>
                 <div className="flex-1">
                   <h1 className="font-display text-xl font-bold">{displayName}</h1>
-                  <p className="font-body text-xs text-muted-foreground">{mockProfile.id} • {mockProfile.department}</p>
-                  <div className="flex items-center gap-2 mt-1">
+                  <p className="font-body text-xs text-muted-foreground">
+                    {authProfile?.student_id || user?.email || "—"} {authProfile?.department && `• ${authProfile.department}`}
+                  </p>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
                     <Badge className="font-body text-[10px] bg-primary/10 text-primary border-0">
-                      <Award className="h-3 w-3 mr-1" /> Lvl {mockProfile.level}
+                      <Award className="h-3 w-3 mr-1" /> {role}
                     </Badge>
-                    <Badge variant="outline" className="font-body text-[10px]">{mockProfile.xp} XP</Badge>
+                    {authProfile?.is_verified && (
+                      <Badge variant="outline" className="font-body text-[10px]">✓ Verified</Badge>
+                    )}
                   </div>
                 </div>
                 <Button variant="outline" size="sm" className="font-body rounded-xl text-xs">
@@ -118,10 +134,10 @@ const Profile = () => {
               <div className="mt-4 p-3 rounded-xl bg-secondary">
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-body text-xs font-medium">Profile Completion</span>
-                  <span className="font-body text-xs text-primary font-bold">{mockProfile.completionPct}%</span>
+                  <span className="font-body text-xs text-primary font-bold">{completionPct}%</span>
                 </div>
-                <Progress value={mockProfile.completionPct} className="h-2" />
-                <p className="font-body text-[10px] text-muted-foreground mt-1">Upload ID card & photo to reach 100%</p>
+                <Progress value={completionPct} className="h-2" />
+                <p className="font-body text-[10px] text-muted-foreground mt-1">Complete your profile details to reach 100%</p>
               </div>
             </CardContent>
           </Card>
@@ -142,18 +158,18 @@ const Profile = () => {
                 <CardContent className="p-4 space-y-2">
                   <h3 className="font-display text-base font-bold">Personal Info</h3>
                   {[
-                    { icon: Phone, label: "Phone", value: mockProfile.phone },
-                    { icon: Mail, label: "Email", value: mockProfile.email },
-                    { icon: User, label: "Gender", value: mockProfile.gender },
-                    { icon: Calendar, label: "Joined", value: mockProfile.joinedDate },
+                    { icon: Phone, label: "Phone", value: authProfile?.phone || "Not set" },
+                    { icon: Mail, label: "Email", value: user?.email || "Not set" },
+                    { icon: User, label: "Gender", value: authProfile?.gender || "Not set" },
+                    { icon: Calendar, label: "Joined", value: joinedDate },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                         <item.icon className="h-4 w-4 text-primary" />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <p className="font-body text-[10px] text-muted-foreground">{item.label}</p>
-                        <p className="font-body text-sm">{item.value}</p>
+                        <p className="font-body text-sm truncate">{item.value}</p>
                       </div>
                     </div>
                   ))}
@@ -163,22 +179,22 @@ const Profile = () => {
                 <CardContent className="p-4 space-y-2">
                   <h3 className="font-display text-base font-bold">Academic & Community</h3>
                   {[
-                    { icon: Building, label: "University", value: mockProfile.university },
-                    { icon: GraduationCap, label: "Year", value: mockProfile.year },
-                    { icon: User, label: "Group", value: mockProfile.group },
-                    { icon: Shield, label: "Role", value: mockProfile.role },
+                    { icon: Building, label: "University", value: universityName },
+                    { icon: GraduationCap, label: "Department", value: authProfile?.department || "Not set" },
+                    { icon: User, label: "Batch Year", value: authProfile?.batch_year || "Not set" },
+                    { icon: Shield, label: "Role", value: role },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary">
-                      <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
                         <item.icon className="h-4 w-4 text-accent" />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <p className="font-body text-[10px] text-muted-foreground">{item.label}</p>
-                        <p className="font-body text-sm">{item.value}</p>
+                        <p className="font-body text-sm truncate">{item.value}</p>
                       </div>
                     </div>
                   ))}
-                  {mockProfile.cafe && (
+                  {authProfile?.is_cafe_student && (
                     <Badge className="font-body bg-gold/10 text-gold border-gold/30">☕ Café Student</Badge>
                   )}
                 </CardContent>
@@ -252,15 +268,23 @@ const Profile = () => {
                   <TrendingUp className="h-4 w-4 text-primary" /> Donation History
                 </h3>
                 <div className="space-y-2">
-                  {donations.map((d, i) => (
+                  {donations.length === 0 ? (
+                    <p className="font-body text-xs text-muted-foreground text-center py-4">No donations yet. Be the first to give! 💝</p>
+                  ) : donations.map((d, i) => (
                     <div key={i} className="flex items-center justify-between p-2.5 rounded-xl bg-secondary">
-                      <div>
-                        <p className="font-body text-sm font-medium">{d.campaign}</p>
-                        <p className="font-body text-[10px] text-muted-foreground">{d.date}</p>
+                      <div className="min-w-0">
+                        <p className="font-body text-sm font-medium truncate">{d.campaign || "General"}</p>
+                        <p className="font-body text-[10px] text-muted-foreground">{new Date(d.created_at).toLocaleDateString()}</p>
                       </div>
-                      <span className="font-body text-sm font-bold text-primary">{d.amount} ETB</span>
+                      <span className="font-body text-sm font-bold text-primary shrink-0 ml-2">{Number(d.amount).toFixed(0)} ETB</span>
                     </div>
                   ))}
+                  {totalDonated > 0 && (
+                    <div className="pt-2 border-t border-border flex justify-between text-sm font-body font-semibold">
+                      <span>Total</span>
+                      <span className="text-primary">{totalDonated.toFixed(0)} ETB</span>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

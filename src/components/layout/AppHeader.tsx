@@ -1,6 +1,6 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Bell, MessageSquare, Settings, Search, ChevronDown } from "lucide-react";
+import { Bell, MessageSquare, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -45,14 +45,9 @@ export function AppHeader() {
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-accent" />
         </Button>
         {!isMobile && (
-          <>
-            <Button variant="ghost" size="icon" className="h-9 w-9" asChild>
-              <Link to="/community"><MessageSquare className="h-4 w-4" /></Link>
-            </Button>
-            <Button variant="ghost" size="icon" className="h-9 w-9" asChild>
-              <Link to="/profile"><Settings className="h-4 w-4" /></Link>
-            </Button>
-          </>
+          <Button variant="ghost" size="icon" className="h-9 w-9" asChild>
+            <Link to="/community"><MessageSquare className="h-4 w-4" /></Link>
+          </Button>
         )}
         <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full" asChild>
           <Link to="/profile">

@@ -124,14 +124,41 @@ const QuranReader = () => {
 
   useEffect(() => { return () => { if (audioRef.current) audioRef.current.pause(); }; }, []);
 
-  // Swipe handlers for Mushaf mode
+  // Keyboard navigation: arrow keys for surah/page navigation
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (viewMode === "mushaf") {
+        if (e.key === "ArrowLeft") {
+          if (currentPage < pages.length - 1) setCurrentPage(p => p + 1);
+          else if (num < 114) navigate(`/quran/${num + 1}`);
+        } else if (e.key === "ArrowRight") {
+          if (currentPage > 0) setCurrentPage(p => p - 1);
+          else if (num > 1) navigate(`/quran/${num - 1}`);
+        }
+      } else {
+        if (e.key === "ArrowLeft" && num > 1) navigate(`/quran/${num - 1}`);
+        else if (e.key === "ArrowRight" && num < 114) navigate(`/quran/${num + 1}`);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [viewMode, currentPage, pages.length, num, navigate]);
+
+  // Swipe handlers for Mushaf mode (mobile only)
   const handleTouchStart = (e: TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
   const handleTouchEnd = (e: TouchEvent) => {
     touchEndX.current = e.changedTouches[0].clientX;
     const diff = touchStartX.current - touchEndX.current;
     if (Math.abs(diff) > 50) {
-      if (diff > 0 && currentPage < pages.length - 1) setCurrentPage(p => p + 1);
-      else if (diff < 0 && currentPage > 0) setCurrentPage(p => p - 1);
+      if (diff > 0) {
+        // swipe left -> next page or next surah
+        if (currentPage < pages.length - 1) setCurrentPage(p => p + 1);
+        else if (num < 114) navigate(`/quran/${num + 1}`);
+      } else {
+        if (currentPage > 0) setCurrentPage(p => p - 1);
+        else if (num > 1) navigate(`/quran/${num - 1}`);
+      }
     }
   };
 
