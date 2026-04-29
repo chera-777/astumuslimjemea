@@ -272,7 +272,18 @@ const QuranReader = () => {
   // ========== READING MODE — Tabs: Arabic, Translation, More ==========
   return (
     <AppLayout>
-      <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-4">
+      <div
+        className="p-4 md:p-6 max-w-3xl mx-auto space-y-4"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={(e) => {
+          touchEndX.current = e.changedTouches[0].clientX;
+          const diff = touchStartX.current - touchEndX.current;
+          if (Math.abs(diff) > 80) {
+            if (diff > 0 && num < 114) navigate(`/quran/${num + 1}`);
+            else if (diff < 0 && num > 1) navigate(`/quran/${num - 1}`);
+          }
+        }}
+      >
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center justify-between mb-2">
