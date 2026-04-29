@@ -281,18 +281,7 @@ const QuranReader = () => {
                 <ChevronLeft className="h-4 w-4 mr-1" /> Surahs
               </Button>
             </Link>
-            <div className="flex gap-1">
-              {num > 1 && (
-                <Button variant="outline" size="sm" onClick={() => navigate(`/quran/${num - 1}`)} className="font-body text-xs">
-                  <ChevronLeft className="h-3 w-3" />
-                </Button>
-              )}
-              {num < 114 && (
-                <Button variant="outline" size="sm" onClick={() => navigate(`/quran/${num + 1}`)} className="font-body text-xs">
-                  <ChevronRight className="h-3 w-3" />
-                </Button>
-              )}
-            </div>
+            <span className="font-body text-[10px] text-muted-foreground hidden sm:inline">Use ← / → keys or swipe to navigate</span>
           </div>
 
           {/* Surah info card */}
