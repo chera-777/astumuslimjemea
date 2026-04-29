@@ -268,15 +268,23 @@ const Profile = () => {
                   <TrendingUp className="h-4 w-4 text-primary" /> Donation History
                 </h3>
                 <div className="space-y-2">
-                  {donations.map((d, i) => (
+                  {donations.length === 0 ? (
+                    <p className="font-body text-xs text-muted-foreground text-center py-4">No donations yet. Be the first to give! 💝</p>
+                  ) : donations.map((d, i) => (
                     <div key={i} className="flex items-center justify-between p-2.5 rounded-xl bg-secondary">
-                      <div>
-                        <p className="font-body text-sm font-medium">{d.campaign}</p>
-                        <p className="font-body text-[10px] text-muted-foreground">{d.date}</p>
+                      <div className="min-w-0">
+                        <p className="font-body text-sm font-medium truncate">{d.campaign || "General"}</p>
+                        <p className="font-body text-[10px] text-muted-foreground">{new Date(d.created_at).toLocaleDateString()}</p>
                       </div>
-                      <span className="font-body text-sm font-bold text-primary">{d.amount} ETB</span>
+                      <span className="font-body text-sm font-bold text-primary shrink-0 ml-2">{Number(d.amount).toFixed(0)} ETB</span>
                     </div>
                   ))}
+                  {totalDonated > 0 && (
+                    <div className="pt-2 border-t border-border flex justify-between text-sm font-body font-semibold">
+                      <span>Total</span>
+                      <span className="text-primary">{totalDonated.toFixed(0)} ETB</span>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
