@@ -24,6 +24,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           </main>
           {isMobile && <BottomNav />}
         </div>
+        <ProfileCompletionPrompt />
       </div>
     </SidebarProvider>
   );
