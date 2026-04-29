@@ -53,7 +53,7 @@ export function BottomNav() {
               initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.9 }}
-              className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-card rounded-2xl shadow-glow border border-border p-3 grid grid-cols-3 gap-2 min-w-[260px]"
+              className="fixed bottom-20 left-4 right-4 mx-auto z-50 bg-card rounded-2xl shadow-glow border border-border p-3 grid grid-cols-3 gap-2 max-w-[340px]"
             >
               {quickActions.map((action) => (
                 <Link
