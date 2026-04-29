@@ -191,3 +191,24 @@
     display: none;
   }
 }
+
+/* Prevent any horizontal page scroll & make all scrollbars thin */
+html, body, #root {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted-foreground) / 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.25) transparent;
+}

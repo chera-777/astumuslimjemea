@@ -1,7 +1,7 @@
 import {
-  Home, BookOpen, Newspaper, MessageCircle, User, Calendar, Moon, HandHeart, Gift, Heart,
-  LogOut, Sparkles, Clock, Users, Vote, Globe, GraduationCap, Film, Building2,
-  PhoneCall, MoreHorizontal, Trophy
+  Home, BookOpen, Newspaper, Calendar, Moon, HandHeart, Gift, Heart,
+  Sparkles, Clock, Users, Vote, Globe, GraduationCap, Building2,
+  MoreHorizontal, Trophy, MessageCircle
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -15,31 +15,28 @@ import {
 const studentItems = [
   { title: "Home", url: "/portal/student", icon: Home },
   { title: "Resources", url: "/resources", icon: BookOpen },
-  { title: "News & Announcements", url: "/news", icon: Newspaper },
-  { title: "Governance & Elections", url: "/governance", icon: Vote },
+  { title: "News", url: "/news", icon: Newspaper },
+  { title: "Governance", url: "/governance", icon: Vote },
   { title: "Community", url: "/community", icon: MessageCircle, badge: 14 },
   { title: "Groups", url: "/groups", icon: Users },
-  { title: "Academic & Tutoring", url: "/resources?tab=tutoring", icon: GraduationCap },
-  { title: "Events & Calendar", url: "/events", icon: Calendar },
-  { title: "Challenges & Zikr", url: "/portal/student#challenges", icon: Trophy },
-  { title: "Multimedia", url: "/resources?tab=videos", icon: Film },
-  { title: "Support & Charity", url: "/donations", icon: Heart },
-  { title: "University Services", url: "/services", icon: Building2 },
-  { title: "Messages", url: "/community", icon: MessageCircle },
-  { title: "Calls & Meetings", url: "/community#calls", icon: PhoneCall },
+  { title: "Academic", url: "/resources?tab=tutoring", icon: GraduationCap },
+  { title: "Events", url: "/events", icon: Calendar },
+  { title: "Challenges", url: "/portal/student#challenges", icon: Trophy },
+  { title: "Charity", url: "/donations", icon: Heart },
+  { title: "University", url: "/services", icon: Building2 },
 ];
 
 const amirItems = [
   { title: "Dashboard", url: "/portal/amirs", icon: Home },
   { title: "Resources", url: "/resources", icon: BookOpen },
-  { title: "News & Announcements", url: "/news", icon: Newspaper },
+  { title: "News", url: "/news", icon: Newspaper },
   { title: "Community", url: "/community", icon: MessageCircle },
   { title: "Groups", url: "/groups", icon: Users },
-  { title: "Events & Calendar", url: "/events", icon: Calendar },
+  { title: "Events", url: "/events", icon: Calendar },
   { title: "Ramadan", url: "/ramadan", icon: Moon },
   { title: "Khadims", url: "/khadims", icon: HandHeart },
   { title: "Donations", url: "/donations", icon: Gift },
-  { title: "University Services", url: "/services", icon: Building2 },
+  { title: "University", url: "/services", icon: Building2 },
 ];
 
 const committeeItems = [
@@ -55,7 +52,7 @@ const committeeItems = [
 const guestItems = [
   { title: "Explore", url: "/portal/guest", icon: Globe },
   { title: "Resources", url: "/resources", icon: BookOpen },
-  { title: "Prayer & Calendar", url: "/prayer-times", icon: Clock },
+  { title: "Prayer", url: "/prayer-times", icon: Clock },
   { title: "News", url: "/news", icon: Newspaper },
   { title: "Events", url: "/events", icon: Calendar },
   { title: "Donations", url: "/donations", icon: Gift },
@@ -65,7 +62,7 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
-  const { roles, signOut, profile } = useAuth();
+  const { roles, profile } = useAuth();
   const isActive = (path: string) => {
     const base = path.split("?")[0].split("#")[0];
     return location.pathname === base ||
@@ -149,7 +146,7 @@ export function AppSidebar() {
       <SidebarFooter className="border-t border-sidebar-border p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/profile")}>
+            <SidebarMenuButton asChild isActive={isActive("/profile")} tooltip="Profile & Settings">
               <NavLink to="/profile" activeClassName="bg-sidebar-accent text-sidebar-foreground font-semibold">
                 <div className="w-6 h-6 rounded-full gradient-teal flex items-center justify-center mr-2 shrink-0">
                   <span className="text-[10px] text-primary-foreground font-bold">{initial}</span>
@@ -162,12 +159,6 @@ export function AppSidebar() {
                 )}
                 {!collapsed && <MoreHorizontal className="h-3 w-3 text-sidebar-foreground/60" />}
               </NavLink>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton onClick={signOut} className="text-destructive hover:text-destructive hover:bg-destructive/10">
-              <LogOut className="mr-2 h-4 w-4" />
-              {!collapsed && <span className="text-xs">Sign Out</span>}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

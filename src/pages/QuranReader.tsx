@@ -265,20 +265,6 @@ const QuranReader = () => {
           </Button>
         </div>
 
-        {/* Surah navigation */}
-        <div className="flex justify-between px-4 pb-3 shrink-0">
-          {num > 1 && (
-            <Button variant="outline" size="sm" onClick={() => navigate(`/quran/${num - 1}`)}>
-              <ChevronLeft className="h-3 w-3 mr-1" /> Prev Surah
-            </Button>
-          )}
-          <div />
-          {num < 114 && (
-            <Button variant="outline" size="sm" onClick={() => navigate(`/quran/${num + 1}`)}>
-              Next Surah <ChevronRight className="h-3 w-3 ml-1" />
-            </Button>
-          )}
-        </div>
       </div>
     );
   }
@@ -286,7 +272,18 @@ const QuranReader = () => {
   // ========== READING MODE — Tabs: Arabic, Translation, More ==========
   return (
     <AppLayout>
-      <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-4">
+      <div
+        className="p-4 md:p-6 max-w-3xl mx-auto space-y-4"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={(e) => {
+          touchEndX.current = e.changedTouches[0].clientX;
+          const diff = touchStartX.current - touchEndX.current;
+          if (Math.abs(diff) > 80) {
+            if (diff > 0 && num < 114) navigate(`/quran/${num + 1}`);
+            else if (diff < 0 && num > 1) navigate(`/quran/${num - 1}`);
+          }
+        }}
+      >
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center justify-between mb-2">
@@ -295,18 +292,7 @@ const QuranReader = () => {
                 <ChevronLeft className="h-4 w-4 mr-1" /> Surahs
               </Button>
             </Link>
-            <div className="flex gap-1">
-              {num > 1 && (
-                <Button variant="outline" size="sm" onClick={() => navigate(`/quran/${num - 1}`)} className="font-body text-xs">
-                  <ChevronLeft className="h-3 w-3" />
-                </Button>
-              )}
-              {num < 114 && (
-                <Button variant="outline" size="sm" onClick={() => navigate(`/quran/${num + 1}`)} className="font-body text-xs">
-                  <ChevronRight className="h-3 w-3" />
-                </Button>
-              )}
-            </div>
+            <span className="font-body text-[10px] text-muted-foreground hidden sm:inline">Use ← / → keys or swipe to navigate</span>
           </div>
 
           {/* Surah info card */}
@@ -474,19 +460,8 @@ const QuranReader = () => {
           </div>
         )}
 
-        {/* Navigation footer */}
-        <div className="flex justify-between pt-4 pb-20">
-          {num > 1 ? (
-            <Button variant="outline" onClick={() => navigate(`/quran/${num - 1}`)} className="font-body">
-              <ChevronLeft className="h-4 w-4 mr-1" /> Previous
-            </Button>
-          ) : <div />}
-          {num < 114 && (
-            <Button onClick={() => navigate(`/quran/${num + 1}`)} className="font-body bg-primary text-primary-foreground">
-              Next <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
-          )}
-        </div>
+        <div className="pb-20" />
+
       </div>
     </AppLayout>
   );
