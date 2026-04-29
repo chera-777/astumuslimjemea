@@ -14,11 +14,11 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="min-h-screen flex w-full overflow-x-hidden">
         {!isMobile && <AppSidebar />}
-        <div className="flex-1 flex flex-col min-h-screen">
+        <div className="flex-1 flex flex-col min-h-screen min-w-0 overflow-x-hidden">
           <AppHeader />
-          <main className="flex-1 pb-20 md:pb-0">
+          <main className="flex-1 pb-20 md:pb-0 min-w-0 overflow-x-hidden">
             {children}
           </main>
           {isMobile && <BottomNav />}
