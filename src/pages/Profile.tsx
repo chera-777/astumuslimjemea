@@ -115,12 +115,16 @@ const Profile = () => {
                 </Avatar>
                 <div className="flex-1">
                   <h1 className="font-display text-xl font-bold">{displayName}</h1>
-                  <p className="font-body text-xs text-muted-foreground">{mockProfile.id} • {mockProfile.department}</p>
-                  <div className="flex items-center gap-2 mt-1">
+                  <p className="font-body text-xs text-muted-foreground">
+                    {authProfile?.student_id || user?.email || "—"} {authProfile?.department && `• ${authProfile.department}`}
+                  </p>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
                     <Badge className="font-body text-[10px] bg-primary/10 text-primary border-0">
-                      <Award className="h-3 w-3 mr-1" /> Lvl {mockProfile.level}
+                      <Award className="h-3 w-3 mr-1" /> {role}
                     </Badge>
-                    <Badge variant="outline" className="font-body text-[10px]">{mockProfile.xp} XP</Badge>
+                    {authProfile?.is_verified && (
+                      <Badge variant="outline" className="font-body text-[10px]">✓ Verified</Badge>
+                    )}
                   </div>
                 </div>
                 <Button variant="outline" size="sm" className="font-body rounded-xl text-xs">
@@ -130,10 +134,10 @@ const Profile = () => {
               <div className="mt-4 p-3 rounded-xl bg-secondary">
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-body text-xs font-medium">Profile Completion</span>
-                  <span className="font-body text-xs text-primary font-bold">{mockProfile.completionPct}%</span>
+                  <span className="font-body text-xs text-primary font-bold">{completionPct}%</span>
                 </div>
-                <Progress value={mockProfile.completionPct} className="h-2" />
-                <p className="font-body text-[10px] text-muted-foreground mt-1">Upload ID card & photo to reach 100%</p>
+                <Progress value={completionPct} className="h-2" />
+                <p className="font-body text-[10px] text-muted-foreground mt-1">Complete your profile details to reach 100%</p>
               </div>
             </CardContent>
           </Card>
@@ -154,18 +158,18 @@ const Profile = () => {
                 <CardContent className="p-4 space-y-2">
                   <h3 className="font-display text-base font-bold">Personal Info</h3>
                   {[
-                    { icon: Phone, label: "Phone", value: mockProfile.phone },
-                    { icon: Mail, label: "Email", value: mockProfile.email },
-                    { icon: User, label: "Gender", value: mockProfile.gender },
-                    { icon: Calendar, label: "Joined", value: mockProfile.joinedDate },
+                    { icon: Phone, label: "Phone", value: authProfile?.phone || "Not set" },
+                    { icon: Mail, label: "Email", value: user?.email || "Not set" },
+                    { icon: User, label: "Gender", value: authProfile?.gender || "Not set" },
+                    { icon: Calendar, label: "Joined", value: joinedDate },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                         <item.icon className="h-4 w-4 text-primary" />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <p className="font-body text-[10px] text-muted-foreground">{item.label}</p>
-                        <p className="font-body text-sm">{item.value}</p>
+                        <p className="font-body text-sm truncate">{item.value}</p>
                       </div>
                     </div>
                   ))}
@@ -175,22 +179,22 @@ const Profile = () => {
                 <CardContent className="p-4 space-y-2">
                   <h3 className="font-display text-base font-bold">Academic & Community</h3>
                   {[
-                    { icon: Building, label: "University", value: mockProfile.university },
-                    { icon: GraduationCap, label: "Year", value: mockProfile.year },
-                    { icon: User, label: "Group", value: mockProfile.group },
-                    { icon: Shield, label: "Role", value: mockProfile.role },
+                    { icon: Building, label: "University", value: universityName },
+                    { icon: GraduationCap, label: "Department", value: authProfile?.department || "Not set" },
+                    { icon: User, label: "Batch Year", value: authProfile?.batch_year || "Not set" },
+                    { icon: Shield, label: "Role", value: role },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary">
-                      <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
                         <item.icon className="h-4 w-4 text-accent" />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <p className="font-body text-[10px] text-muted-foreground">{item.label}</p>
-                        <p className="font-body text-sm">{item.value}</p>
+                        <p className="font-body text-sm truncate">{item.value}</p>
                       </div>
                     </div>
                   ))}
-                  {mockProfile.cafe && (
+                  {authProfile?.is_cafe_student && (
                     <Badge className="font-body bg-gold/10 text-gold border-gold/30">☕ Café Student</Badge>
                   )}
                 </CardContent>
