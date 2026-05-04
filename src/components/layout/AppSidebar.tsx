@@ -19,10 +19,10 @@ const studentItems = [
   { title: "Governance", url: "/governance", icon: Vote },
   { title: "Community", url: "/community", icon: MessageCircle, badge: 14 },
   { title: "Groups", url: "/groups", icon: Users },
-  { title: "Academic", url: "/resources?tab=tutoring", icon: GraduationCap },
+  { title: "Academic", url: "/academic", icon: GraduationCap },
   { title: "Events", url: "/events", icon: Calendar },
-  { title: "Challenges", url: "/portal/student#challenges", icon: Trophy },
-  { title: "Charity", url: "/donations", icon: Heart },
+  { title: "Challenges", url: "/challenges", icon: Trophy },
+  { title: "Charity", url: "/charity", icon: Heart },
   { title: "University", url: "/services", icon: Building2 },
 ];
 
