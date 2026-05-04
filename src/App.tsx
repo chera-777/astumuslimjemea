@@ -32,6 +32,9 @@ import HadithPage from "./pages/HadithPage";
 import AdhkarPage from "./pages/AdhkarPage";
 import TasbihPage from "./pages/TasbihPage";
 import AzanPage from "./pages/AzanPage";
+import Academic from "./pages/Academic";
+import Challenges from "./pages/Challenges";
+import Charity from "./pages/Charity";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -68,6 +71,9 @@ const App = () => (
             <Route path="/adhkar" element={<ProtectedRoute><AdhkarPage /></ProtectedRoute>} />
             <Route path="/tasbih" element={<ProtectedRoute><TasbihPage /></ProtectedRoute>} />
             <Route path="/azan" element={<ProtectedRoute><AzanPage /></ProtectedRoute>} />
+            <Route path="/academic" element={<ProtectedRoute><Academic /></ProtectedRoute>} />
+            <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
+            <Route path="/charity" element={<ProtectedRoute><Charity /></ProtectedRoute>} />
 
             {/* Role-restricted portals */}
             <Route path="/portal/student" element={<ProtectedRoute allowedRoles={["student", "admin"]}><StudentPortal /></ProtectedRoute>} />
