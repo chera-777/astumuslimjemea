@@ -65,7 +65,9 @@ const quickAccess = [
   { label: "Calendar", icon: CalendarIcon, link: "/prayer-times", color: "bg-gold/15 text-gold" },
   { label: "Dua", icon: Heart, link: "/dua", color: "bg-pink-500/15 text-pink-500" },
   { label: "Adhkar", icon: Sparkles, link: "/adhkar", color: "bg-primary/15 text-primary" },
-  { label: "Qibla", icon: Compass, link: "/prayer-times", color: "bg-teal-500/15 text-primary" },
+  { label: "Academic", icon: GradCap, link: "/academic", color: "bg-blue-500/15 text-blue-500" },
+  { label: "Challenges", icon: Trophy, link: "/challenges", color: "bg-gold/15 text-gold" },
+  { label: "Charity", icon: Heart, link: "/charity", color: "bg-accent/15 text-accent" },
   { label: "More", icon: MoreHorizontal, link: "/resources", color: "bg-muted text-muted-foreground" },
 ];
 
