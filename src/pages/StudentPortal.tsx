@@ -20,7 +20,7 @@ import eventFiqh from "@/assets/event-fiqh.jpg";
 import eventMath from "@/assets/event-math.jpg";
 import eventCoding from "@/assets/event-coding.jpg";
 import eventChallenge from "@/assets/event-challenge.jpg";
-// Progress import removed (unused)
+import { Progress } from "@/components/ui/progress";
 
 type EventItem = {
   title: string; subtitle: string; time: string; location: string;
