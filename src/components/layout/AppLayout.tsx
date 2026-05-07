@@ -15,11 +15,12 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full overflow-x-hidden">
+      {/* overflow-x-clip preserves sticky positioning, unlike overflow-x-hidden */}
+      <div className="min-h-screen flex w-full overflow-x-clip">
         {!isMobile && <AppSidebar />}
-        <div className="flex-1 flex flex-col min-h-screen min-w-0 overflow-x-hidden">
+        <div className="flex-1 flex flex-col min-h-screen min-w-0 overflow-x-clip">
           <AppHeader />
-          <main className="flex-1 pb-20 md:pb-0 min-w-0 overflow-x-hidden">
+          <main className="flex-1 pb-20 md:pb-0 min-w-0 overflow-x-clip">
             {children}
           </main>
           {isMobile && <BottomNav />}
