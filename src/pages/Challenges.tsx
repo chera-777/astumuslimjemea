@@ -40,32 +40,44 @@ const Challenges = () => {
       <div className="w-full max-w-5xl mx-auto p-3 md:p-5 space-y-4 overflow-x-hidden">
         {/* Hero */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="overflow-hidden border-border/50 bg-gradient-to-br from-gold/30 via-pink-500/10 to-card relative">
-            <div className="absolute -right-6 -top-6 opacity-10">
-              <Trophy className="h-44 w-44" />
+          <Card className="overflow-hidden border-border/50 relative bg-[radial-gradient(ellipse_at_top_right,hsl(42_85%_55%/0.35),transparent_60%),radial-gradient(ellipse_at_bottom_left,hsl(340_75%_55%/0.3),transparent_55%),linear-gradient(135deg,hsl(var(--card)),hsl(var(--card)))]">
+            <div className="absolute -right-10 -top-10 opacity-20 animate-pulse">
+              <Trophy className="h-56 w-56 text-gold" />
+            </div>
+            <div className="absolute -left-6 -bottom-6 opacity-10">
+              <Crown className="h-32 w-32 text-pink-500" />
             </div>
             <CardContent className="p-5 relative">
-              <Badge className="bg-gold/20 text-gold border-gold/30 text-[10px] mb-2">Gamification</Badge>
-              <h1 className="font-display text-2xl md:text-3xl font-bold">Islamic Challenges</h1>
+              <Badge className="bg-gold/30 text-gold border-gold/40 text-[10px] mb-2 backdrop-blur">🎮 Gamified</Badge>
+              <h1 className="font-display text-2xl md:text-3xl font-bold bg-gradient-to-r from-gold via-pink-500 to-accent bg-clip-text text-transparent">
+                Islamic Challenges
+              </h1>
               <p className="font-body text-xs text-muted-foreground mt-1">
-                Compete, earn XP, unlock badges and climb the leaderboard.
+                Compete, earn XP, unlock badges & climb the leaderboard.
               </p>
               <div className="grid grid-cols-3 gap-2 mt-4">
-                <div className="rounded-xl bg-card/70 backdrop-blur p-3 text-center border border-border/50">
-                  <Zap className="h-4 w-4 mx-auto text-gold" />
-                  <p className="font-display text-lg font-bold text-gold">2,180</p>
-                  <p className="font-body text-[9px] text-muted-foreground">Total XP</p>
+                {[
+                  { icon: Zap, label: "Total XP", value: "2,180", color: "text-gold", bg: "from-gold/20" },
+                  { icon: Flame, label: "Day Streak", value: "21", color: "text-accent", bg: "from-accent/20" },
+                  { icon: Star, label: "Badges", value: "3", color: "text-primary", bg: "from-primary/20" },
+                ].map((s) => (
+                  <motion.div
+                    key={s.label}
+                    whileHover={{ y: -2, scale: 1.03 }}
+                    className={`rounded-2xl bg-gradient-to-br ${s.bg} to-card backdrop-blur p-3 text-center border border-border/50 shadow-sm`}
+                  >
+                    <s.icon className={`h-5 w-5 mx-auto ${s.color}`} />
+                    <p className={`font-display text-lg font-bold ${s.color} mt-1`}>{s.value}</p>
+                    <p className="font-body text-[9px] text-muted-foreground">{s.label}</p>
+                  </motion.div>
+                ))}
+              </div>
+              <div className="mt-3 rounded-xl bg-card/50 backdrop-blur border border-border/40 p-2.5">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-body text-[10px] text-muted-foreground">Next badge: <strong className="text-foreground">Dhikr Master</strong></span>
+                  <span className="font-display text-[10px] font-bold text-primary">68%</span>
                 </div>
-                <div className="rounded-xl bg-card/70 backdrop-blur p-3 text-center border border-border/50">
-                  <Flame className="h-4 w-4 mx-auto text-accent" />
-                  <p className="font-display text-lg font-bold text-accent">21</p>
-                  <p className="font-body text-[9px] text-muted-foreground">Day Streak</p>
-                </div>
-                <div className="rounded-xl bg-card/70 backdrop-blur p-3 text-center border border-border/50">
-                  <Star className="h-4 w-4 mx-auto text-primary" />
-                  <p className="font-display text-lg font-bold text-primary">3</p>
-                  <p className="font-body text-[9px] text-muted-foreground">Badges</p>
-                </div>
+                <Progress value={68} className="h-1.5" />
               </div>
             </CardContent>
           </Card>

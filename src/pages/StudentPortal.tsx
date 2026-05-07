@@ -5,11 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import {
-  Clock, MapPin, ChevronRight, BookOpen, Users,
-  CreditCard, Trophy, Calendar as CalendarIcon, Compass,
+  Clock, MapPin, ChevronRight, BookOpen, Trophy, Calendar as CalendarIcon,
   AlarmClock, FileText, Library, GraduationCap as GradCap, Utensils, Bed,
   Bus, Stethoscope, Search, HelpCircle, Heart, MoreHorizontal,
-  BookText, Music2, Sparkles, Megaphone, BookMarked
+  BookText, Music2, Sparkles
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -49,12 +48,7 @@ const eventsItems: EventItem[] = [
   { title: "Ramadan Iftar Program", subtitle: "Community iftar with dua", time: "May 29 · 6:00 PM", location: "Main Masjid", image: eventFiqh, tag: "Ramadan", tagColor: "bg-primary/20 text-primary border-primary/30" },
 ];
 
-const summaryCards = [
-  { title: "Daily Goal", subtitle: "Qur'an & Zikr", progress: 75, footer: "10 / 14 today", icon: BookMarked, gradient: "from-primary/30 via-primary/10 to-card", accent: "text-primary", link: "/quran/1" },
-  { title: "Group Sessions", subtitle: "Group 7B", value: "Halaqa Tonight", footer: "14 members · 8:00 PM", icon: Users, gradient: "from-blue-500/30 via-blue-500/10 to-card", accent: "text-blue-500", link: "/groups" },
-  { title: "Café Student", subtitle: "Meal Card", value: "Active", footer: "Lunch & Dinner", icon: CreditCard, gradient: "from-green-500/30 via-green-500/10 to-card", accent: "text-green-500", link: "/services" },
-  { title: "Announcements", subtitle: "From Amirs", value: "5 New", footer: "Tap to view", icon: Megaphone, gradient: "from-pink-500/30 via-pink-500/10 to-card", accent: "text-pink-500", link: "/news" },
-];
+// summaryCards removed — content relocated to Profile / News
 
 const quickAccess = [
   { label: "Qur'an", icon: BookOpen, link: "/quran/1", color: "bg-primary/15 text-primary" },
@@ -231,40 +225,7 @@ const StudentPortal = () => {
           </CardContent>
         </Card>
 
-        {/* ---- 4. Summary cards ---- */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {summaryCards.map((c, i) => (
-            <motion.div key={c.title} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
-              <Link to={c.link}>
-                <Card className={`bg-gradient-to-br ${c.gradient} border-border/60 hover:shadow-glow transition-all h-full overflow-hidden relative`}>
-                  <div className="absolute -right-3 -top-3 opacity-10">
-                    <c.icon className="h-16 w-16" />
-                  </div>
-                  <CardContent className="p-3.5 relative">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className={`w-8 h-8 rounded-xl bg-card/70 backdrop-blur flex items-center justify-center`}>
-                        <c.icon className={`h-4 w-4 ${c.accent}`} />
-                      </div>
-                      <Badge variant="outline" className="text-[8px] font-body border-border/60">{c.subtitle}</Badge>
-                    </div>
-                    <p className="font-display text-base font-bold text-foreground leading-tight">{c.title}</p>
-                    {c.progress !== undefined ? (
-                      <div className="mt-2.5">
-                        <div className="flex items-end justify-between mb-1">
-                          <span className={`font-display text-xl font-bold ${c.accent}`}>{c.progress}%</span>
-                        </div>
-                        <Progress value={c.progress} className="h-1.5" />
-                      </div>
-                    ) : (
-                      <p className={`font-display text-lg font-bold ${c.accent} mt-2`}>{c.value}</p>
-                    )}
-                    <p className="font-body text-[10px] text-muted-foreground mt-1.5 truncate">{c.footer}</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+        {/* (Summary cards moved: Daily Goal & Group Sessions → Profile, Café → Profile, Announcements → News) */}
 
         {/* ---- 5. Tabs: Classes / Tutoring / Challenges / Events ---- */}
         <div id="challenges">

@@ -153,6 +153,45 @@ const Profile = () => {
           </TabsList>
 
           <TabsContent value="info" className="space-y-3 mt-4">
+            {/* Daily Goal · Group Sessions · Café — relocated from Home */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <Card className="bg-gradient-to-br from-primary/25 via-primary/10 to-card border-border/60">
+                <CardContent className="p-3.5">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <BookOpen className="h-4 w-4 text-primary" />
+                    <p className="font-display text-xs font-bold">Daily Goal</p>
+                  </div>
+                  <p className="font-display text-2xl font-bold text-primary">75%</p>
+                  <Progress value={75} className="h-1.5 mt-1.5" />
+                  <p className="font-body text-[10px] text-muted-foreground mt-1">10 / 14 today · Qur'an & Zikr</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-blue-500/25 via-blue-500/10 to-card border-border/60">
+                <CardContent className="p-3.5">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <User className="h-4 w-4 text-blue-500" />
+                    <p className="font-display text-xs font-bold">Group Session</p>
+                  </div>
+                  <p className="font-display text-base font-bold text-blue-500">Halaqa Tonight</p>
+                  <p className="font-body text-[10px] text-muted-foreground mt-1">Group 7B · 8:00 PM · 14 members</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-green-500/25 via-green-500/10 to-card border-border/60">
+                <CardContent className="p-3.5">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Gift className="h-4 w-4 text-green-500" />
+                    <p className="font-display text-xs font-bold">Café Student</p>
+                  </div>
+                  <p className="font-display text-base font-bold text-green-500">
+                    {authProfile?.is_cafe_student ? "Active" : "Not enrolled"}
+                  </p>
+                  <p className="font-body text-[10px] text-muted-foreground mt-1">
+                    {authProfile?.is_cafe_student ? "Lunch & Dinner included" : "Apply via University Services"}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <Card className="border border-border bg-card">
                 <CardContent className="p-4 space-y-2">
