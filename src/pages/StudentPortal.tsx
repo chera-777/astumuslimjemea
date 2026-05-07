@@ -49,12 +49,7 @@ const eventsItems: EventItem[] = [
   { title: "Ramadan Iftar Program", subtitle: "Community iftar with dua", time: "May 29 · 6:00 PM", location: "Main Masjid", image: eventFiqh, tag: "Ramadan", tagColor: "bg-primary/20 text-primary border-primary/30" },
 ];
 
-const summaryCards = [
-  { title: "Daily Goal", subtitle: "Qur'an & Zikr", progress: 75, footer: "10 / 14 today", icon: BookMarked, gradient: "from-primary/30 via-primary/10 to-card", accent: "text-primary", link: "/quran/1" },
-  { title: "Group Sessions", subtitle: "Group 7B", value: "Halaqa Tonight", footer: "14 members · 8:00 PM", icon: Users, gradient: "from-blue-500/30 via-blue-500/10 to-card", accent: "text-blue-500", link: "/groups" },
-  { title: "Café Student", subtitle: "Meal Card", value: "Active", footer: "Lunch & Dinner", icon: CreditCard, gradient: "from-green-500/30 via-green-500/10 to-card", accent: "text-green-500", link: "/services" },
-  { title: "Announcements", subtitle: "From Amirs", value: "5 New", footer: "Tap to view", icon: Megaphone, gradient: "from-pink-500/30 via-pink-500/10 to-card", accent: "text-pink-500", link: "/news" },
-];
+// summaryCards removed — content relocated to Profile / News
 
 const quickAccess = [
   { label: "Qur'an", icon: BookOpen, link: "/quran/1", color: "bg-primary/15 text-primary" },
