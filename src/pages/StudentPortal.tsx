@@ -5,11 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import {
-  Clock, MapPin, ChevronRight, BookOpen, Users,
-  CreditCard, Trophy, Calendar as CalendarIcon, Compass,
+  Clock, MapPin, ChevronRight, BookOpen, Trophy, Calendar as CalendarIcon,
   AlarmClock, FileText, Library, GraduationCap as GradCap, Utensils, Bed,
   Bus, Stethoscope, Search, HelpCircle, Heart, MoreHorizontal,
-  BookText, Music2, Sparkles, Megaphone, BookMarked
+  BookText, Music2, Sparkles
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -21,7 +20,7 @@ import eventFiqh from "@/assets/event-fiqh.jpg";
 import eventMath from "@/assets/event-math.jpg";
 import eventCoding from "@/assets/event-coding.jpg";
 import eventChallenge from "@/assets/event-challenge.jpg";
-import { Progress } from "@/components/ui/progress";
+// Progress import removed (unused)
 
 type EventItem = {
   title: string; subtitle: string; time: string; location: string;
