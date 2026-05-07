@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
-import { BottomNav } from "@/components/layout/BottomNav";
+import { BottomNav, DesktopFAB } from "@/components/layout/BottomNav";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ProfileCompletionPrompt } from "@/components/ProfileCompletionPrompt";
@@ -25,6 +25,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           </main>
           {isMobile && <BottomNav />}
         </div>
+        <DesktopFAB />
         <ProfileCompletionPrompt />
       </div>
     </SidebarProvider>
