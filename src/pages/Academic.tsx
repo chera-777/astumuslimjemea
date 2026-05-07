@@ -45,23 +45,29 @@ const Academic = () => {
       <div className="w-full max-w-5xl mx-auto p-3 md:p-5 space-y-4 overflow-x-hidden">
         {/* Hero */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="overflow-hidden border-border/50 bg-gradient-to-br from-blue-500/20 via-primary/10 to-card relative">
-            <div className="absolute -right-6 -top-6 opacity-10">
-              <GraduationCap className="h-44 w-44" />
+          <Card className="overflow-hidden border-border/50 relative bg-[radial-gradient(ellipse_at_top_left,hsl(215_80%_55%/0.35),transparent_55%),radial-gradient(ellipse_at_bottom_right,hsl(168_65%_45%/0.3),transparent_55%),linear-gradient(135deg,hsl(var(--card)),hsl(var(--card)))]">
+            <div className="absolute -right-10 -top-10 opacity-15">
+              <GraduationCap className="h-52 w-52 text-blue-500" />
             </div>
             <CardContent className="p-5 relative">
-              <Badge className="bg-blue-500/20 text-blue-500 border-blue-500/30 text-[10px] mb-2">Academic Hub</Badge>
-              <h1 className="font-display text-2xl md:text-3xl font-bold">Learn. Grow. Excel.</h1>
+              <Badge className="bg-blue-500/25 text-blue-400 border-blue-500/40 text-[10px] mb-2 backdrop-blur">🎓 Academic Hub</Badge>
+              <h1 className="font-display text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 via-primary to-teal-400 bg-clip-text text-transparent">
+                Learn. Grow. Excel.
+              </h1>
               <p className="font-body text-xs text-muted-foreground mt-1">
                 Tutoring, study materials, exam schedules and academic mentorship — all in one place.
               </p>
               <div className="grid grid-cols-4 gap-2 mt-4">
                 {myStats.map((s) => (
-                  <div key={s.label} className="rounded-xl bg-card/70 backdrop-blur p-2 text-center border border-border/50">
+                  <motion.div
+                    key={s.label}
+                    whileHover={{ y: -2, scale: 1.04 }}
+                    className="rounded-2xl bg-card/70 backdrop-blur p-2.5 text-center border border-border/50 shadow-sm"
+                  >
                     <s.icon className={`h-4 w-4 mx-auto ${s.color}`} />
                     <p className={`font-display text-base font-bold mt-1 ${s.color}`}>{s.value}</p>
                     <p className="font-body text-[9px] text-muted-foreground leading-tight">{s.label}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </CardContent>
