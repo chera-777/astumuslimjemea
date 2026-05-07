@@ -231,40 +231,7 @@ const StudentPortal = () => {
           </CardContent>
         </Card>
 
-        {/* ---- 4. Summary cards ---- */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {summaryCards.map((c, i) => (
-            <motion.div key={c.title} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
-              <Link to={c.link}>
-                <Card className={`bg-gradient-to-br ${c.gradient} border-border/60 hover:shadow-glow transition-all h-full overflow-hidden relative`}>
-                  <div className="absolute -right-3 -top-3 opacity-10">
-                    <c.icon className="h-16 w-16" />
-                  </div>
-                  <CardContent className="p-3.5 relative">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className={`w-8 h-8 rounded-xl bg-card/70 backdrop-blur flex items-center justify-center`}>
-                        <c.icon className={`h-4 w-4 ${c.accent}`} />
-                      </div>
-                      <Badge variant="outline" className="text-[8px] font-body border-border/60">{c.subtitle}</Badge>
-                    </div>
-                    <p className="font-display text-base font-bold text-foreground leading-tight">{c.title}</p>
-                    {c.progress !== undefined ? (
-                      <div className="mt-2.5">
-                        <div className="flex items-end justify-between mb-1">
-                          <span className={`font-display text-xl font-bold ${c.accent}`}>{c.progress}%</span>
-                        </div>
-                        <Progress value={c.progress} className="h-1.5" />
-                      </div>
-                    ) : (
-                      <p className={`font-display text-lg font-bold ${c.accent} mt-2`}>{c.value}</p>
-                    )}
-                    <p className="font-body text-[10px] text-muted-foreground mt-1.5 truncate">{c.footer}</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+        {/* (Summary cards moved: Daily Goal & Group Sessions → Profile, Café → Profile, Announcements → News) */}
 
         {/* ---- 5. Tabs: Classes / Tutoring / Challenges / Events ---- */}
         <div id="challenges">
