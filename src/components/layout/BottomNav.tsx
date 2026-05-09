@@ -26,12 +26,31 @@ const quickActions = [
 
 function RadialMenu({ onClose, originRight = false }: { onClose: () => void; originRight?: boolean }) {
   const isMobile = useIsMobile();
-  // Radius and arc tuned so 10 icons fan out without overlap
-  const radius = isMobile ? 120 : 165;
   const total = quickActions.length;
-  // Arc from 200° down to -20° (≈220° fan above the FAB)
-  const startDeg = 200;
-  const endDeg = -20;
+
+  // Compute viewport-aware radius so icons never overflow.
+  // We use a half-circle arc (180°) above the FAB for centered (mobile) layouts,
+  // and a quarter+ arc tucked into the upper-left for the desktop corner FAB.
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1024;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 768;
+
+  let startDeg: number, endDeg: number, radius: number;
+
+  if (originRight) {
+    // Desktop FAB anchored at bottom-right. Fan from straight-up (90°) round to ~190°.
+    startDeg = 90;
+    endDeg = 190;
+    const maxR = Math.min(vw - 120, vh - 140, 320);
+    radius = Math.max(180, maxR);
+  } else {
+    // Centered above bottom nav. 180° arc keeps every icon strictly above the FAB.
+    startDeg = 180;
+    endDeg = 0;
+    // Constrain by viewport width so end-icons don't get clipped.
+    const safeR = Math.min((vw - 90) / 2, vh - 220, isMobile ? 150 : 220);
+    radius = Math.max(120, safeR);
+  }
+
   const stepDeg = (startDeg - endDeg) / (total - 1);
 
   return (
@@ -42,10 +61,13 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-40 bg-background/85 backdrop-blur-md"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Anchor sits where the FAB is */}
       <div
+        role="menu"
+        aria-label="Quick navigation"
         className={cn(
           "fixed z-50 pointer-events-none",
           originRight
@@ -72,9 +94,12 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
                 <Link
                   to={a.path}
                   onClick={onClose}
+                  role="menuitem"
+                  aria-label={a.label}
+                  title={a.label}
                   className="group flex flex-col items-center -translate-x-1/2 -translate-y-1/2"
                 >
-                  <span className="font-body text-[10px] md:text-xs text-foreground/85 mb-1 whitespace-nowrap">
+                  <span className="font-body text-[10px] md:text-xs text-foreground/85 mb-1 whitespace-nowrap drop-shadow">
                     {a.label}
                   </span>
                   <div
@@ -83,7 +108,7 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
                       a.color
                     )}
                   >
-                    <a.icon className="h-5 w-5" />
+                    <a.icon className="h-5 w-5" aria-hidden="true" />
                   </div>
                 </Link>
               </motion.div>

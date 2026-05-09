@@ -13,7 +13,7 @@ import { OnboardingDialog } from "@/components/OnboardingDialog";
 const quickLinks = [
   { icon: Newspaper, title: "News", path: "/news", gradient: "gradient-blue" },
   { icon: BookOpen, title: "Resources", path: "/resources", gradient: "gradient-teal" },
-  { icon: Calendar, title: "Events", path: "/events", gradient: "gradient-pink" },
+  { icon: Calendar, title: "Events", path: "/news#events", gradient: "gradient-pink" },
   { icon: Moon, title: "Ramadan", path: "/ramadan", gradient: "gradient-gold" },
   { icon: HandHeart, title: "Khadims", path: "/khadims", gradient: "gradient-green" },
   { icon: Gift, title: "Donations", path: "/donations", gradient: "gradient-purple" },

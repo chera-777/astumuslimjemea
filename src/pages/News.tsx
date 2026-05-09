@@ -1,8 +1,10 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Newspaper, Calendar, Star, MapPin, Clock, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import eventTafsir from "@/assets/event-tafsir.jpg";
 import eventHadith from "@/assets/event-hadith.jpg";
 import eventFiqh from "@/assets/event-fiqh.jpg";
@@ -58,9 +60,22 @@ const categoryColors: Record<string, string> = {
   Governance: "bg-purple-500/15 text-purple-500 border-purple-500/30",
 };
 
+const eventCategories = new Set(["Ramadan", "Qira'at", "Social"]);
+
 const News = () => {
-  const featured = newsItems.find(n => n.featured) || newsItems[0];
-  const rest = newsItems.filter(n => n !== featured);
+  const [tab, setTab] = useState<"all" | "news" | "events">("all");
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#events") {
+      setTab("events");
+    }
+  }, []);
+
+  const filtered = newsItems.filter((n) =>
+    tab === "all" ? true : tab === "events" ? eventCategories.has(n.category) : !eventCategories.has(n.category)
+  );
+  const featured = filtered.find((n) => n.featured) || filtered[0];
+  const rest = filtered.filter((n) => n !== featured);
 
   return (
     <AppLayout>
@@ -70,66 +85,75 @@ const News = () => {
             <Newspaper className="h-5 w-5 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="font-display text-xl md:text-2xl font-bold text-foreground">Campus News Hub</h1>
-            <p className="text-muted-foreground font-body text-xs">University updates, Islamic events & announcements</p>
+            <h1 className="font-display text-xl md:text-2xl font-bold text-foreground">News & Events</h1>
+            <p className="text-muted-foreground font-body text-xs">Unified hub for university updates and Islamic events</p>
           </div>
         </motion.div>
 
-        {/* Featured hero */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="overflow-hidden border-border/60 hover:shadow-glow transition-all cursor-pointer group">
-            <div className="relative h-48 md:h-64 overflow-hidden">
-              <img src={featured.image} alt={featured.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/70 to-transparent" />
-              <Badge className="absolute top-3 left-3 bg-gold/90 text-background border-0 text-[10px] font-body">
-                <Star className="h-3 w-3 mr-1" /> Featured
-              </Badge>
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <Badge className={`${categoryColors[featured.category]} text-[10px] font-body border mb-2`}>{featured.category}</Badge>
-                <h2 className="font-display text-lg md:text-2xl font-bold text-foreground leading-tight">{featured.title}</h2>
-                <p className="font-body text-xs md:text-sm text-muted-foreground mt-1 line-clamp-2">{featured.summary}</p>
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-[10px] text-muted-foreground font-body">
-                  <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {featured.date}</span>
-                  <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {featured.readTime}</span>
-                  <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {featured.location}</span>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </motion.div>
-
-        {/* News grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {rest.map((n, i) => (
-            <motion.div key={n.title} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-              <Card className="overflow-hidden border-border/60 hover:shadow-glow hover:-translate-y-0.5 transition-all cursor-pointer group h-full">
-                <div className="flex flex-col">
-                  <div className="relative h-32 overflow-hidden">
-                    <img src={n.image} alt={n.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-card/90 to-transparent" />
-                    <Badge className={`absolute top-2 left-2 ${categoryColors[n.category]} text-[9px] font-body border`}>{n.category}</Badge>
-                    {n.featured && (
-                      <Badge className="absolute top-2 right-2 bg-gold/90 text-background border-0 text-[9px] font-body">
-                        <Star className="h-2.5 w-2.5 mr-0.5" /> Featured
-                      </Badge>
-                    )}
-                  </div>
-                  <CardContent className="p-3 flex flex-col gap-1.5">
-                    <h3 className="font-display text-sm font-bold text-foreground leading-tight line-clamp-2">{n.title}</h3>
-                    <p className="font-body text-xs text-muted-foreground line-clamp-2">{n.summary}</p>
-                    <div className="flex items-center justify-between mt-1 pt-2 border-t border-border/50">
-                      <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-body">
-                        <span className="flex items-center gap-0.5"><Calendar className="h-3 w-3" /> {n.date}</span>
-                        <span className="flex items-center gap-0.5"><Clock className="h-3 w-3" /> {n.readTime}</span>
+        <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
+          <TabsList className="grid grid-cols-3 w-full max-w-md">
+            <TabsTrigger value="all" className="text-xs font-body">📰 All</TabsTrigger>
+            <TabsTrigger value="news" className="text-xs font-body">🗞️ News</TabsTrigger>
+            <TabsTrigger value="events" id="events" className="text-xs font-body">📅 Events</TabsTrigger>
+          </TabsList>
+          <TabsContent value={tab} className="mt-5 space-y-5">
+            {featured && (
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                <Card className="overflow-hidden border-border/60 hover:shadow-glow transition-all cursor-pointer group">
+                  <div className="relative h-48 md:h-64 overflow-hidden">
+                    <img src={featured.image} alt={featured.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/70 to-transparent" />
+                    <Badge className="absolute top-3 left-3 bg-gold/90 text-background border-0 text-[10px] font-body">
+                      <Star className="h-3 w-3 mr-1" /> Featured
+                    </Badge>
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <Badge className={`${categoryColors[featured.category]} text-[10px] font-body border mb-2`}>{featured.category}</Badge>
+                      <h2 className="font-display text-lg md:text-2xl font-bold text-foreground leading-tight">{featured.title}</h2>
+                      <p className="font-body text-xs md:text-sm text-muted-foreground mt-1 line-clamp-2">{featured.summary}</p>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-[10px] text-muted-foreground font-body">
+                        <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {featured.date}</span>
+                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {featured.readTime}</span>
+                        <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {featured.location}</span>
                       </div>
-                      <ChevronRight className="h-3.5 w-3.5 text-primary" />
                     </div>
-                  </CardContent>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+                  </div>
+                </Card>
+              </motion.div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {rest.map((n, i) => (
+                <motion.div key={n.title} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                  <Card className="overflow-hidden border-border/60 hover:shadow-glow hover:-translate-y-0.5 transition-all cursor-pointer group h-full">
+                    <div className="flex flex-col">
+                      <div className="relative h-32 overflow-hidden">
+                        <img src={n.image} alt={n.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-card/90 to-transparent" />
+                        <Badge className={`absolute top-2 left-2 ${categoryColors[n.category]} text-[9px] font-body border`}>{n.category}</Badge>
+                        {n.featured && (
+                          <Badge className="absolute top-2 right-2 bg-gold/90 text-background border-0 text-[9px] font-body">
+                            <Star className="h-2.5 w-2.5 mr-0.5" /> Featured
+                          </Badge>
+                        )}
+                      </div>
+                      <CardContent className="p-3 flex flex-col gap-1.5">
+                        <h3 className="font-display text-sm font-bold text-foreground leading-tight line-clamp-2">{n.title}</h3>
+                        <p className="font-body text-xs text-muted-foreground line-clamp-2">{n.summary}</p>
+                        <div className="flex items-center justify-between mt-1 pt-2 border-t border-border/50">
+                          <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-body">
+                            <span className="flex items-center gap-0.5"><Calendar className="h-3 w-3" /> {n.date}</span>
+                            <span className="flex items-center gap-0.5"><MapPin className="h-3 w-3" /> {n.location}</span>
+                          </div>
+                          <ChevronRight className="h-3.5 w-3.5 text-primary" />
+                        </div>
+                      </CardContent>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </AppLayout>
   );
