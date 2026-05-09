@@ -1,7 +1,7 @@
 import {
-  Home, BookOpen, MessageCircle, User, Plus,
+  Home, MessageCircle, User, Plus, X,
   Newspaper, Bell, Heart, Calendar, Trophy, GraduationCap,
-  Building2, Users, Vote, HandHeart, Library, X,
+  Building2, Users, Vote, HandHeart, Library, Shield,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -10,72 +10,87 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// 12 quick-access actions in a clean grid
+// 10 quick-access actions arranged in a circular/radial fan above the FAB
 const quickActions = [
-  { label: "News", icon: Newspaper, path: "/news", color: "from-purple-500 to-fuchsia-500" },
-  { label: "Adhan", icon: Bell, path: "/azan", color: "from-yellow-400 to-amber-500" },
-  { label: "Khadims", icon: HandHeart, path: "/khadims", color: "from-amber-500 to-orange-600" },
-  { label: "Events", icon: Calendar, path: "/events", color: "from-pink-500 to-rose-500" },
-  { label: "Donations", icon: Heart, path: "/donations", color: "from-red-500 to-rose-600" },
-  { label: "Prayers", icon: HandHeart, path: "/prayer-times", color: "from-orange-400 to-red-500" },
-  { label: "Challenges", icon: Trophy, path: "/challenges", color: "from-cyan-400 to-blue-500" },
-  { label: "Services", icon: Building2, path: "/services", color: "from-amber-700 to-yellow-700" },
-  { label: "Charity", icon: HandHeart, path: "/charity", color: "from-green-500 to-emerald-500" },
-  { label: "Academic", icon: GraduationCap, path: "/academic", color: "from-indigo-500 to-blue-600" },
-  { label: "Groups", icon: Users, path: "/groups", color: "from-blue-500 to-sky-500" },
-  { label: "Vote", icon: Vote, path: "/governance", color: "from-violet-500 to-purple-600" },
+  { label: "News",         icon: Newspaper,    path: "/news",         color: "from-purple-500 to-fuchsia-500" },
+  { label: "Adhan",        icon: Bell,         path: "/azan",         color: "from-yellow-400 to-amber-500" },
+  { label: "Khadim",       icon: Shield,       path: "/khadims",      color: "from-amber-500 to-orange-600" },
+  { label: "Donations",    icon: Heart,        path: "/donations",    color: "from-red-500 to-rose-600" },
+  { label: "Prayers",      icon: HandHeart,    path: "/prayer-times", color: "from-orange-400 to-red-500" },
+  { label: "Challenges",   icon: Trophy,       path: "/challenges",   color: "from-cyan-400 to-blue-500" },
+  { label: "University",   icon: Building2,    path: "/services",     color: "from-amber-700 to-yellow-700" },
+  { label: "Academic",     icon: GraduationCap,path: "/academic",     color: "from-indigo-500 to-blue-600" },
+  { label: "Group prayers",icon: Users,        path: "/groups",       color: "from-blue-500 to-sky-500" },
+  { label: "Governance",   icon: Vote,         path: "/governance",   color: "from-violet-500 to-purple-600" },
 ];
 
-function QuickMenu({ onClose }: { onClose: () => void }) {
+function RadialMenu({ onClose, originRight = false }: { onClose: () => void; originRight?: boolean }) {
+  const isMobile = useIsMobile();
+  // Radius and arc tuned so 10 icons fan out without overlap
+  const radius = isMobile ? 120 : 165;
+  const total = quickActions.length;
+  // Arc from 200° down to -20° (≈220° fan above the FAB)
+  const startDeg = 200;
+  const endDeg = -20;
+  const stepDeg = (startDeg - endDeg) / (total - 1);
+
   return (
     <>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-40 bg-background/80 backdrop-blur-md"
+        className="fixed inset-0 z-40 bg-background/85 backdrop-blur-md"
         onClick={onClose}
       />
-      <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.92 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 30, scale: 0.92 }}
-        transition={{ type: "spring", stiffness: 320, damping: 26 }}
-        className="fixed bottom-24 left-1/2 -translate-x-1/2 md:bottom-24 md:right-6 md:left-auto md:translate-x-0 z-50 w-[calc(100vw-2rem)] max-w-[360px] rounded-3xl border border-border bg-card/95 backdrop-blur-xl shadow-glow p-4"
+
+      {/* Anchor sits where the FAB is */}
+      <div
+        className={cn(
+          "fixed z-50 pointer-events-none",
+          originRight
+            ? "bottom-12 right-12"
+            : "left-1/2 -translate-x-1/2 bottom-20"
+        )}
       >
-        <div className="flex items-center justify-between mb-3 px-1">
-          <p className="font-display text-sm font-bold">Quick Actions</p>
-          <button onClick={onClose} className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center hover:bg-muted transition">
-            <X className="h-3.5 w-3.5" />
-          </button>
-        </div>
-        <div className="grid grid-cols-4 gap-2.5">
-          {quickActions.map((a, i) => (
-            <motion.div
-              key={a.label}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.025 }}
-            >
-              <Link
-                to={a.path}
-                onClick={onClose}
-                className="flex flex-col items-center gap-1.5 py-1 group"
+        <div className="relative">
+          {quickActions.map((a, i) => {
+            const deg = startDeg - stepDeg * i;
+            const rad = (deg * Math.PI) / 180;
+            const x = Math.cos(rad) * radius;
+            const y = -Math.sin(rad) * radius;
+            return (
+              <motion.div
+                key={a.label}
+                initial={{ opacity: 0, x: 0, y: 0, scale: 0.3 }}
+                animate={{ opacity: 1, x, y, scale: 1 }}
+                exit={{ opacity: 0, x: 0, y: 0, scale: 0.3 }}
+                transition={{ type: "spring", stiffness: 260, damping: 22, delay: i * 0.025 }}
+                className="absolute pointer-events-auto"
+                style={{ left: 0, top: 0 }}
               >
-                <div className={cn(
-                  "w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform bg-gradient-to-br",
-                  a.color
-                )}>
-                  <a.icon className="h-5 w-5" />
-                </div>
-                <span className="font-body text-[10px] text-foreground/90 text-center leading-tight font-medium">
-                  {a.label}
-                </span>
-              </Link>
-            </motion.div>
-          ))}
+                <Link
+                  to={a.path}
+                  onClick={onClose}
+                  className="group flex flex-col items-center -translate-x-1/2 -translate-y-1/2"
+                >
+                  <span className="font-body text-[10px] md:text-xs text-foreground/85 mb-1 whitespace-nowrap">
+                    {a.label}
+                  </span>
+                  <div
+                    className={cn(
+                      "w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center text-white shadow-lg ring-2 ring-background/60 bg-gradient-to-br group-hover:scale-110 transition-transform",
+                      a.color
+                    )}
+                  >
+                    <a.icon className="h-5 w-5" />
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
-      </motion.div>
+      </div>
     </>
   );
 }
@@ -105,7 +120,7 @@ export function BottomNav() {
   return (
     <>
       <AnimatePresence>
-        {showActions && <QuickMenu onClose={() => setShowActions(false)} />}
+        {showActions && <RadialMenu onClose={() => setShowActions(false)} />}
       </AnimatePresence>
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-lg border-t border-border safe-area-pb">
@@ -131,7 +146,7 @@ export function BottomNav() {
               )}
               aria-label="Quick menu"
             >
-              <Plus className="h-6 w-6 text-primary-foreground" />
+              {showActions ? <X className="h-6 w-6 text-primary-foreground" /> : <Plus className="h-6 w-6 text-primary-foreground" />}
             </button>
           </div>
 
@@ -163,7 +178,7 @@ export function DesktopFAB() {
   return (
     <>
       <AnimatePresence>
-        {showActions && <QuickMenu onClose={() => setShowActions(false)} />}
+        {showActions && <RadialMenu onClose={() => setShowActions(false)} originRight />}
       </AnimatePresence>
       <button
         onClick={() => setShowActions(!showActions)}
@@ -173,7 +188,7 @@ export function DesktopFAB() {
         )}
         aria-label="Quick menu"
       >
-        <Plus className="h-6 w-6 text-primary-foreground" />
+        {showActions ? <X className="h-6 w-6 text-primary-foreground" /> : <Plus className="h-6 w-6 text-primary-foreground" />}
       </button>
     </>
   );

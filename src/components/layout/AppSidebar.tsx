@@ -20,9 +20,8 @@ const studentItems = [
   { title: "Community", url: "/community", icon: MessageCircle, badge: 14 },
   { title: "Groups", url: "/groups", icon: Users },
   { title: "Academic", url: "/academic", icon: GraduationCap },
-  { title: "Events", url: "/events", icon: Calendar },
   { title: "Challenges", url: "/challenges", icon: Trophy },
-  { title: "Charity", url: "/charity", icon: Heart },
+  { title: "Donations", url: "/donations", icon: Gift },
   { title: "University", url: "/services", icon: Building2 },
 ];
 
@@ -32,7 +31,6 @@ const amirItems = [
   { title: "News", url: "/news", icon: Newspaper },
   { title: "Community", url: "/community", icon: MessageCircle },
   { title: "Groups", url: "/groups", icon: Users },
-  { title: "Events", url: "/events", icon: Calendar },
   { title: "Ramadan", url: "/ramadan", icon: Moon },
   { title: "Khadims", url: "/khadims", icon: HandHeart },
   { title: "Donations", url: "/donations", icon: Gift },
@@ -44,7 +42,6 @@ const committeeItems = [
   { title: "Resources", url: "/resources", icon: BookOpen },
   { title: "News", url: "/news", icon: Newspaper },
   { title: "Community", url: "/community", icon: MessageCircle },
-  { title: "Events", url: "/events", icon: Calendar },
   { title: "Governance", url: "/governance", icon: Vote },
   { title: "Donations", url: "/donations", icon: Gift },
 ];
@@ -54,7 +51,6 @@ const guestItems = [
   { title: "Resources", url: "/resources", icon: BookOpen },
   { title: "Prayer", url: "/prayer-times", icon: Clock },
   { title: "News", url: "/news", icon: Newspaper },
-  { title: "Events", url: "/events", icon: Calendar },
   { title: "Donations", url: "/donations", icon: Gift },
 ];
 
