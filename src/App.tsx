@@ -24,7 +24,6 @@ import Profile from "./pages/Profile";
 import Services from "./pages/Services";
 import Ramadan from "./pages/Ramadan";
 import PrayerTimes from "./pages/PrayerTimes";
-import Events from "./pages/Events";
 import Support from "./pages/Support";
 import Khadims from "./pages/Khadims";
 import DuaPage from "./pages/DuaPage";
@@ -34,7 +33,6 @@ import TasbihPage from "./pages/TasbihPage";
 import AzanPage from "./pages/AzanPage";
 import Academic from "./pages/Academic";
 import Challenges from "./pages/Challenges";
-import Charity from "./pages/Charity";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -62,7 +60,6 @@ const App = () => (
             <Route path="/services" element={<ProtectedRoute><Services /></ProtectedRoute>} />
             <Route path="/ramadan" element={<ProtectedRoute><Ramadan /></ProtectedRoute>} />
             <Route path="/prayer-times" element={<ProtectedRoute><PrayerTimes /></ProtectedRoute>} />
-            <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
             <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
             <Route path="/khadims" element={<ProtectedRoute><Khadims /></ProtectedRoute>} />
             <Route path="/governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
@@ -73,7 +70,6 @@ const App = () => (
             <Route path="/azan" element={<ProtectedRoute><AzanPage /></ProtectedRoute>} />
             <Route path="/academic" element={<ProtectedRoute><Academic /></ProtectedRoute>} />
             <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
-            <Route path="/charity" element={<ProtectedRoute><Charity /></ProtectedRoute>} />
 
             {/* Role-restricted portals */}
             <Route path="/portal/student" element={<ProtectedRoute allowedRoles={["student", "admin"]}><StudentPortal /></ProtectedRoute>} />

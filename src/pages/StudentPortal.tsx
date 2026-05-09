@@ -61,7 +61,7 @@ const quickAccess = [
   { label: "Adhkar", icon: Sparkles, link: "/adhkar", color: "bg-primary/15 text-primary" },
   { label: "Academic", icon: GradCap, link: "/academic", color: "bg-blue-500/15 text-blue-500" },
   { label: "Challenges", icon: Trophy, link: "/challenges", color: "bg-gold/15 text-gold" },
-  { label: "Charity", icon: Heart, link: "/charity", color: "bg-accent/15 text-accent" },
+  { label: "Donate", icon: Heart, link: "/donations", color: "bg-accent/15 text-accent" },
   { label: "More", icon: MoreHorizontal, link: "/resources", color: "bg-muted text-muted-foreground" },
 ];
 

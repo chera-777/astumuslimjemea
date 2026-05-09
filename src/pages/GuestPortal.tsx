@@ -11,7 +11,7 @@ const features = [
   { icon: "📖", title: "Quran", link: "/resources" },
   { icon: "📚", title: "Hadith", link: "/resources" },
   { icon: "🤲", title: "Prayer", link: "/prayer-times" },
-  { icon: "🕌", title: "Events", link: "/events" },
+  { icon: "🕌", title: "Khadims", link: "/khadims" },
   { icon: "🌙", title: "Ramadan", link: "/ramadan" },
   { icon: "🎓", title: "Lectures", link: "/resources" },
   { icon: "💝", title: "Donate", link: "/donations" },
