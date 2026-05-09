@@ -1,8 +1,10 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Newspaper, Calendar, Star, MapPin, Clock, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import eventTafsir from "@/assets/event-tafsir.jpg";
 import eventHadith from "@/assets/event-hadith.jpg";
 import eventFiqh from "@/assets/event-fiqh.jpg";
