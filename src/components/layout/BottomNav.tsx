@@ -100,9 +100,11 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
                   role="menuitem"
                   aria-label={a.label}
                   title={a.label}
-                  className="group flex flex-col items-center -translate-x-1/2 -translate-y-1/2"
+                  className="group relative flex items-center justify-center -translate-x-1/2 -translate-y-1/2"
+                  style={{ minWidth: 44, minHeight: 44 }}
                 >
-                  <span className="font-body text-[10px] md:text-xs text-foreground/85 mb-1 whitespace-nowrap drop-shadow">
+                  {/* Label sits clearly above the icon, never overlapping it */}
+                  <span className="absolute -top-6 left-1/2 -translate-x-1/2 font-body text-[10px] md:text-xs text-foreground/90 whitespace-nowrap drop-shadow pointer-events-none">
                     {a.label}
                   </span>
                   <div
