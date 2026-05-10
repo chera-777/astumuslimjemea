@@ -37,18 +37,21 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
   let startDeg: number, endDeg: number, radius: number;
 
   if (originRight) {
-    // Desktop FAB anchored at bottom-right. Fan from straight-up (90°) round to ~190°.
+    // Desktop FAB anchored at bottom-right. Fan strictly into the upper-left
+    // quadrant (90° → 180°) so no icon ever drops below the anchor and clips
+    // the bottom of the viewport.
     startDeg = 90;
-    endDeg = 190;
+    endDeg = 180;
     const maxR = Math.min(vw - 120, vh - 140, 320);
     radius = Math.max(180, maxR);
   } else {
     // Centered above bottom nav. 180° arc keeps every icon strictly above the FAB.
     startDeg = 180;
     endDeg = 0;
-    // Constrain by viewport width so end-icons don't get clipped.
+    // Constrain by viewport width so end-icons don't get clipped. Min radius
+    // is large enough that adjacent icons (44px) keep a comfortable gap.
     const safeR = Math.min((vw - 90) / 2, vh - 220, isMobile ? 150 : 220);
-    radius = Math.max(120, safeR);
+    radius = Math.max(130, safeR);
   }
 
   const stepDeg = (startDeg - endDeg) / (total - 1);
