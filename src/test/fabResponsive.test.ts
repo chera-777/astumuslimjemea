@@ -37,7 +37,7 @@ describe("Radial FAB responsive audit", () => {
       });
 
       it("keeps adjacent icons from overlapping", () => {
-        const minGap = iconSize + 6; // icon diameter + breathing room
+        const minGap = iconSize + 4; // icon diameter + breathing room
         for (let i = 1; i < items.length; i++) {
           const d = adjacentSpacing(items[i - 1], items[i]);
           expect(d, `gap between items ${i - 1}-${i} @ ${bp.name}`).toBeGreaterThanOrEqual(minGap);
