@@ -40,14 +40,14 @@ export function computeFabLayout(opts: {
 
   if (originRight) {
     startDeg = 90;
-    endDeg = 190;
+    endDeg = 180;
     const maxR = Math.min(vw - 120, vh - 140, 320);
     radius = Math.max(180, maxR);
   } else {
     startDeg = 180;
     endDeg = 0;
     const safeR = Math.min((vw - 90) / 2, vh - 220, isMobile ? 150 : 220);
-    radius = Math.max(120, safeR);
+    radius = Math.max(130, safeR);
   }
 
   const anchor: FabAnchor = originRight
