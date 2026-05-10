@@ -84,36 +84,50 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
             const rad = (deg * Math.PI) / 180;
             const x = Math.cos(rad) * radius;
             const y = -Math.sin(rad) * radius;
+            // Label sits radially outward from each icon so it never overlaps neighbours.
+            const labelOffset = 40;
+            const lx = Math.cos(rad) * (radius + labelOffset);
+            const ly = -Math.sin(rad) * (radius + labelOffset);
             return (
               <motion.div
                 key={a.label}
-                initial={{ opacity: 0, x: 0, y: 0, scale: 0.3 }}
-                animate={{ opacity: 1, x, y, scale: 1 }}
-                exit={{ opacity: 0, x: 0, y: 0, scale: 0.3 }}
+                initial={{ opacity: 0, scale: 0.3 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.3 }}
                 transition={{ type: "spring", stiffness: 260, damping: 22, delay: i * 0.025 }}
                 className="absolute pointer-events-auto"
                 style={{ left: 0, top: 0 }}
               >
-                <Link
-                  to={a.path}
-                  onClick={onClose}
-                  role="menuitem"
-                  aria-label={a.label}
-                  title={a.label}
-                  className="group flex flex-col items-center -translate-x-1/2 -translate-y-1/2"
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1, x: lx, y: ly }}
+                  exit={{ opacity: 0 }}
+                  transition={{ delay: 0.15 + i * 0.025 }}
+                  className="absolute -translate-x-1/2 -translate-y-1/2 font-body text-[10px] md:text-xs font-medium text-foreground/90 whitespace-nowrap drop-shadow pointer-events-none select-none"
+                  aria-hidden="true"
                 >
-                  <span className="font-body text-[10px] md:text-xs text-foreground/85 mb-1 whitespace-nowrap drop-shadow">
-                    {a.label}
-                  </span>
-                  <div
-                    className={cn(
-                      "w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center text-white shadow-lg ring-2 ring-background/60 bg-gradient-to-br group-hover:scale-110 transition-transform",
-                      a.color
-                    )}
+                  {a.label}
+                </motion.span>
+                <motion.div animate={{ x, y }} transition={{ type: "spring", stiffness: 260, damping: 22, delay: i * 0.025 }}>
+                  <Link
+                    to={a.path}
+                    onClick={onClose}
+                    role="menuitem"
+                    aria-label={a.label}
+                    title={a.label}
+                    className="group relative flex items-center justify-center -translate-x-1/2 -translate-y-1/2"
+                    style={{ minWidth: 44, minHeight: 44 }}
                   >
-                    <a.icon className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                </Link>
+                    <div
+                      className={cn(
+                        "w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center text-white shadow-lg ring-2 ring-background/60 bg-gradient-to-br group-hover:scale-110 transition-transform",
+                        a.color
+                      )}
+                    >
+                      <a.icon className="h-5 w-5" aria-hidden="true" />
+                    </div>
+                  </Link>
+                </motion.div>
               </motion.div>
             );
           })}
