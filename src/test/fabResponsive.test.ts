@@ -65,7 +65,7 @@ describe("Radial FAB responsive audit", () => {
       it("labels do not overlap neighbouring icons", () => {
         // Labels are positioned radially outward from each icon (radius + 32px)
         // along the same angle, so they fan out and never collide with neighbours.
-        const labelOffset = 32;
+        const labelOffset = 40;
         const labelHalfW = 45; // ~90px wide label
         const labelHalfH = LABEL_HEIGHT / 2;
         const stepDeg = (layout.startDeg - layout.endDeg) / (FAB_ITEM_COUNT - 1);
