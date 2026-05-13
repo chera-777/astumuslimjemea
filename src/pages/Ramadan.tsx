@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +24,7 @@ const ramadanDays = Array.from({ length: 10 }, (_, i) => ({
 const Ramadan = () => {
   return (
     <AppLayout>
+      <SEO title="Ramadan Programme — ASTU Muslim Jemea" description="Ramadan schedule, iftar timings, meal cards, and special programmes for the holy month." path="/ramadan" />
       <div className="p-4 md:p-6 space-y-6">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center gap-3 mb-1">

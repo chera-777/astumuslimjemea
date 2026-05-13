@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -69,6 +70,7 @@ const Resources = () => {
 
   return (
     <AppLayout>
+      <SEO title="Islamic Resources — Quran, Hadith & Lectures" description="Explore the Quran, Hadith collections, tafsir, and video lectures from trusted scholars." path="/resources" jsonLd={{ "@context": "https://schema.org", "@type": "CollectionPage", name: "Islamic Resources Library", url: "https://astu-jemea-connect.lovable.app/resources" }} />
       <div className="p-4 md:p-6 space-y-4 max-w-4xl mx-auto overflow-x-hidden pb-24">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <h1 className="font-display text-2xl font-bold">Islamic Library</h1>

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { SEO } from "@/components/SEO";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
@@ -47,6 +48,7 @@ const Dashboard = () => {
 
   return (
     <AppLayout>
+      <SEO title="Dashboard — ASTU Muslim Jemea" description="Your personal dashboard with prayer times, announcements, and quick access to community features." path="/dashboard" />
       <OnboardingDialog />
       <div className="p-4 md:p-6 space-y-6 max-w-5xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>

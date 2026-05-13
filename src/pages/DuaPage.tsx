@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -28,6 +29,7 @@ const DuaPage = () => {
 
   return (
     <AppLayout>
+      <SEO title="Dua Collection — ASTU Muslim Jemea" description="A curated collection of authentic duas for morning, evening, protection, travel, and more." path="/dua" jsonLd={{ "@context": "https://schema.org", "@type": "CollectionPage", name: "Dua Collection", url: "https://astu-jemea-connect.lovable.app/dua" }} />
       <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-4 pb-24">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-3">

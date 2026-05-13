@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -98,6 +99,7 @@ const Donations = () => {
 
   return (
     <AppLayout>
+      <SEO title="Donations — Support Our Community" description="Contribute to active donation campaigns supporting the ASTU Muslim community." path="/donations" />
       <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-6">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">

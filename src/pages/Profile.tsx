@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -103,6 +104,7 @@ const Profile = () => {
 
   return (
     <AppLayout>
+      <SEO title="My Profile — ASTU Muslim Jemea" description="Manage your profile, achievements, badges, and account preferences." path="/profile" />
       <div className="p-4 md:p-6 space-y-5 max-w-4xl mx-auto">
         {/* Profile Card */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>

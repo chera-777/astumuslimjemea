@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -94,6 +95,7 @@ const Community = () => {
   // Chat list / Groups list — with AppLayout
   return (
     <AppLayout>
+      <SEO title="Community Chats & Groups — ASTU Muslim Jemea" description="Connect with fellow students through direct chats and group conversations." path="/community" />
       {/* Chat Tab Header */}
       <div className="sticky top-14 z-30 bg-card/95 backdrop-blur-lg border-b border-border">
         <div className="flex items-center justify-center gap-1 px-2 py-2">

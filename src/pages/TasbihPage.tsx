@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ const TasbihPage = () => {
 
   return (
     <AppLayout>
+      <SEO title="Digital Tasbih — ASTU Muslim Jemea" description="Use the digital tasbih counter for daily dhikr and remembrance." path="/tasbih" />
       <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-6 pb-24">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <h1 className="font-display text-2xl font-bold">📿 Tasbih Counter</h1>
