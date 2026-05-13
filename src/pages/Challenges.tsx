@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,7 @@ const myBadges = [
 const Challenges = () => {
   return (
     <AppLayout>
+      <SEO title="Spiritual Challenges & Leaderboard" description="Join active spiritual and learning challenges and climb the leaderboard." path="/challenges" />
       <div className="w-full max-w-5xl mx-auto p-3 md:p-5 space-y-4 overflow-x-hidden">
         {/* Hero */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>

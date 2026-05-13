@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -46,20 +47,20 @@ const Community = () => {
         {/* Chat header */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-card shrink-0">
           <div className="flex items-center gap-2">
-            <button onClick={() => setActiveTab("chats")} className="p-1 hover:bg-secondary rounded-lg">
+            <button onClick={() => setActiveTab("chats")} aria-label="Back to chats" className="p-1 hover:bg-secondary rounded-lg">
               <ArrowLeft className="h-4 w-4" />
             </button>
             <div className="w-8 h-8 rounded-full gradient-teal flex items-center justify-center">
               <span className="font-body text-xs font-bold text-primary-foreground">Y</span>
             </div>
             <div>
-              <p className="font-body text-sm font-semibold">Br. Yusuf K.</p>
+              <h1 className="font-body text-sm font-semibold">Br. Yusuf K.</h1>
               <p className="font-body text-[10px] text-muted-foreground">Online</p>
             </div>
           </div>
           <div className="flex gap-1">
-            <Button size="icon" variant="ghost" className="h-8 w-8"><Phone className="h-4 w-4" /></Button>
-            <Button size="icon" variant="ghost" className="h-8 w-8"><Video className="h-4 w-4" /></Button>
+            <Button size="icon" variant="ghost" className="h-8 w-8" aria-label="Voice call"><Phone className="h-4 w-4" /></Button>
+            <Button size="icon" variant="ghost" className="h-8 w-8" aria-label="Video call"><Video className="h-4 w-4" /></Button>
           </div>
         </div>
         {/* Messages */}
@@ -83,7 +84,7 @@ const Community = () => {
             placeholder="Type a message..."
             className="font-body rounded-xl"
           />
-          <Button size="icon" className="gradient-teal text-primary-foreground border-0 rounded-xl shrink-0">
+          <Button size="icon" aria-label="Send message" className="gradient-teal text-primary-foreground border-0 rounded-xl shrink-0">
             <Send className="h-4 w-4" />
           </Button>
         </div>
@@ -94,6 +95,8 @@ const Community = () => {
   // Chat list / Groups list — with AppLayout
   return (
     <AppLayout>
+      <SEO title="Community Chats & Groups — ASTU Muslim Jemea" description="Connect with fellow students through direct chats and group conversations." path="/community" />
+      <h1 className="sr-only">Community Chats &amp; Groups</h1>
       {/* Chat Tab Header */}
       <div className="sticky top-14 z-30 bg-card/95 backdrop-blur-lg border-b border-border">
         <div className="flex items-center justify-center gap-1 px-2 py-2">
@@ -125,8 +128,8 @@ const Community = () => {
         {activeTab === "chats" && (
           <motion.div key="chats" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 space-y-2 pb-24">
             <div className="relative mb-3">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search conversations..." className="pl-9 font-body rounded-xl" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <Input aria-label="Search conversations" placeholder="Search conversations..." className="pl-9 font-body rounded-xl" />
             </div>
             {contacts.map((c) => (
               <Card key={c.name} className="cursor-pointer hover:bg-secondary/50 transition-colors border border-border bg-card" onClick={() => setActiveTab("active")}>

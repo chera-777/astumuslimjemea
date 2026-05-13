@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ const myStats = [
 const Academic = () => {
   return (
     <AppLayout>
+      <SEO title="Academic Support — Tutoring & Study Materials" description="Access tutoring sessions, study materials, exam schedules, and academic support." path="/academic" />
       <div className="w-full max-w-5xl mx-auto p-3 md:p-5 space-y-4 overflow-x-hidden">
         {/* Hero */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>

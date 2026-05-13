@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -56,6 +57,7 @@ const PrayerTimes = () => {
 
   return (
     <AppLayout>
+      <SEO title="Prayer Times & Hijri Calendar — ASTU Muslim Jemea" description="Daily prayer times, Qibla direction, and the Hijri calendar for the ASTU Muslim community." path="/prayer-times" />
       <div className="p-4 md:p-6 space-y-4 max-w-4xl mx-auto">
         {/* Location Header */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">

@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -61,6 +62,7 @@ const Governance = () => {
 
   return (
     <AppLayout>
+      <SEO title="Governance & Elections — ASTU Muslim Jemea" description="Leadership, sector Amirs, and seasonal election workflow for the ASTU Muslim community." path="/governance" />
       <div className="w-full max-w-3xl mx-auto p-3 md:p-5 space-y-4">
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="overflow-hidden border-border/50 bg-gradient-to-br from-violet-500/20 via-primary/10 to-card relative">

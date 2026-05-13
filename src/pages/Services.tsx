@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -65,6 +66,7 @@ const Services = () => {
 
   return (
     <AppLayout>
+      <SEO title="Services — ASTU Muslim Jemea" description="Browse community services available to ASTU Muslim members." path="/services" />
       <div className="p-3 md:p-5 space-y-4 max-w-6xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="font-display text-2xl font-bold text-foreground">University Services</h1>

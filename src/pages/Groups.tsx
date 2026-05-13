@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Crown, Shield, GraduationCap, User } from "lucide-react";
@@ -36,6 +37,7 @@ const groups = [
 const Groups = () => {
   return (
     <AppLayout>
+      <SEO title="Student Groups — ASTU Muslim Jemea" description="Browse and join the 14-student community groups led by appointed Amirs." path="/groups" />
       <div className="p-4 md:p-6 space-y-6">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center gap-3 mb-1">

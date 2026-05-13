@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -34,6 +35,7 @@ const HadithPage = () => {
     const col = collections.find(c => c.name === selectedCollection);
     return (
       <AppLayout>
+      <SEO title="Hadith Collections — Bukhari, Muslim & More" description="Browse authentic Hadith collections including Bukhari, Muslim, Tirmidhi, and others." path="/hadith" jsonLd={{ "@context": "https://schema.org", "@type": "CollectionPage", name: "Hadith Collections", url: "https://astu-jemea-connect.lovable.app/hadith" }} />
         <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-4 pb-24">
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={() => setSelectedCollection(null)} className="font-body text-xs">

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, TouchEvent } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -272,6 +273,11 @@ const QuranReader = () => {
   // ========== READING MODE — Tabs: Arabic, Translation, More ==========
   return (
     <AppLayout>
+      <SEO
+        title={surahInfo ? `Surah ${surahInfo.englishName} — Quran Reader` : "Quran Reader — ASTU Muslim Jemea"}
+        description={surahInfo ? `Read Surah ${surahInfo.englishName} (${surahInfo.englishNameTranslation}) with translation and recitation.` : "Read the Quran with translation and recitation."}
+        path={`/quran/${num}`}
+      />
       <div
         className="p-4 md:p-6 max-w-3xl mx-auto space-y-4"
         onTouchStart={handleTouchStart}
@@ -302,7 +308,7 @@ const QuranReader = () => {
                 backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"
               }} />
               <p className="text-4xl mb-1" style={{ fontFamily: QURAN_FONT }}>{surahInfo?.name}</p>
-              <h2 className="font-display text-xl font-bold">{surahInfo?.englishName}</h2>
+              <h1 className="font-display text-xl font-bold">{surahInfo?.englishName}</h1>
               <p className="font-body text-sm text-muted-foreground">{surahInfo?.englishNameTranslation}</p>
               <div className="flex items-center justify-center gap-2 mt-2">
                 <Badge variant="outline" className="font-body text-[10px]">{surahInfo?.revelationType}</Badge>

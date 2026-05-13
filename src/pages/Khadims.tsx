@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,7 @@ const Khadims = () => {
 
   return (
     <AppLayout>
+      <SEO title="Khadims — Volunteer Scheduling" description="Volunteer scheduling and management for Khadims serving during Ramadan and beyond." path="/khadims" />
       <div className="p-4 md:p-6 space-y-6">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center gap-3 mb-1">

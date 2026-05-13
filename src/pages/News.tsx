@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -79,6 +80,19 @@ const News = () => {
 
   return (
     <AppLayout>
+      <SEO
+        title="News & Events — ASTU Muslim Jemea"
+        description="Latest news, announcements, and upcoming community events from ASTU Muslim Jemea."
+        path="/news"
+        jsonLd={newsItems.map((n) => ({
+          "@context": "https://schema.org",
+          "@type": "NewsArticle",
+          headline: n.title,
+          description: n.summary,
+          datePublished: n.date,
+          articleSection: n.category,
+        }))}
+      />
       <div className="p-3 md:p-6 space-y-5 max-w-4xl mx-auto overflow-x-hidden">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl gradient-blue flex items-center justify-center shrink-0">

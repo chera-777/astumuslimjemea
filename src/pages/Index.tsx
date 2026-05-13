@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthDialog } from "@/components/AuthDialog";
 import { Moon, Star, Sparkles } from "lucide-react";
+import { SEO } from "@/components/SEO";
 import { useEffect } from "react";
 
 const Index = () => {
@@ -45,6 +46,12 @@ const Index = () => {
   const openSignIn = () => { setAuthMode("signin"); setAuthOpen(true); };
 
   return (
+    <>
+    <SEO
+      title="ASTU Muslim Jemea — Learn, Engage & Grow in Faith"
+      description="ASTU Muslim Jemea connects students with prayer times, Quran, Hadith, lectures, donations, Khadims and community portals — all in one place."
+      path="/"
+    />
     <div className="h-screen overflow-hidden flex flex-col relative" style={{
       background: "linear-gradient(180deg, hsl(220, 40%, 12%) 0%, hsl(215, 50%, 18%) 40%, hsl(210, 45%, 25%) 70%, hsl(200, 35%, 30%) 100%)"
     }}>
@@ -186,6 +193,7 @@ const Index = () => {
         showAdminOption={showAdminReg}
       />
     </div>
+    </>
   );
 };
 
