@@ -128,8 +128,8 @@ const Community = () => {
         {activeTab === "chats" && (
           <motion.div key="chats" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 space-y-2 pb-24">
             <div className="relative mb-3">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search conversations..." className="pl-9 font-body rounded-xl" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <Input aria-label="Search conversations" placeholder="Search conversations..." className="pl-9 font-body rounded-xl" />
             </div>
             {contacts.map((c) => (
               <Card key={c.name} className="cursor-pointer hover:bg-secondary/50 transition-colors border border-border bg-card" onClick={() => setActiveTab("active")}>
