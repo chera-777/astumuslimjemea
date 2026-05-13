@@ -47,20 +47,20 @@ const Community = () => {
         {/* Chat header */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-card shrink-0">
           <div className="flex items-center gap-2">
-            <button onClick={() => setActiveTab("chats")} className="p-1 hover:bg-secondary rounded-lg">
+            <button onClick={() => setActiveTab("chats")} aria-label="Back to chats" className="p-1 hover:bg-secondary rounded-lg">
               <ArrowLeft className="h-4 w-4" />
             </button>
             <div className="w-8 h-8 rounded-full gradient-teal flex items-center justify-center">
               <span className="font-body text-xs font-bold text-primary-foreground">Y</span>
             </div>
             <div>
-              <p className="font-body text-sm font-semibold">Br. Yusuf K.</p>
+              <h1 className="font-body text-sm font-semibold">Br. Yusuf K.</h1>
               <p className="font-body text-[10px] text-muted-foreground">Online</p>
             </div>
           </div>
           <div className="flex gap-1">
-            <Button size="icon" variant="ghost" className="h-8 w-8"><Phone className="h-4 w-4" /></Button>
-            <Button size="icon" variant="ghost" className="h-8 w-8"><Video className="h-4 w-4" /></Button>
+            <Button size="icon" variant="ghost" className="h-8 w-8" aria-label="Voice call"><Phone className="h-4 w-4" /></Button>
+            <Button size="icon" variant="ghost" className="h-8 w-8" aria-label="Video call"><Video className="h-4 w-4" /></Button>
           </div>
         </div>
         {/* Messages */}
