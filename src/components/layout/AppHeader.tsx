@@ -29,8 +29,8 @@ export function AppHeader() {
       {/* Search bar — desktop only */}
       {!isMobile && (
         <div className="flex-1 max-w-md mx-auto relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-          <Input placeholder="Search anything…" className="h-9 pl-9 bg-secondary/60 border-0 text-xs rounded-full" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
+          <Input aria-label="Search the site" placeholder="Search anything…" className="h-9 pl-9 bg-secondary/60 border-0 text-xs rounded-full" />
         </div>
       )}
 
