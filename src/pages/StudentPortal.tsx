@@ -120,7 +120,7 @@ const StudentPortal = () => {
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="relative overflow-hidden border-border/50 min-h-[200px]">
             <div className="absolute inset-0">
-              <img src={mosqueHero} alt="Mosque" className="w-full h-full object-cover" />
+              <img src={mosqueHero} alt="ASTU Muslim Jemea community mosque at sunset" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
             </div>
             <CardContent className="relative p-4 md:p-6 text-white">
