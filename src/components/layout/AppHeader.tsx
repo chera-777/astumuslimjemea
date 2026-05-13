@@ -40,16 +40,16 @@ export function AppHeader() {
             ASTU <ChevronDown className="h-3 w-3" />
           </button>
         )}
-        <Button variant="ghost" size="icon" className="relative h-9 w-9">
+        <Button variant="ghost" size="icon" className="relative h-9 w-9" aria-label="Notifications">
           <Bell className="h-4 w-4" />
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-accent" />
         </Button>
         {!isMobile && (
-          <Button variant="ghost" size="icon" className="h-9 w-9" asChild>
+          <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Open community messages" asChild>
             <Link to="/community"><MessageSquare className="h-4 w-4" /></Link>
           </Button>
         )}
-        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full" asChild>
+        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full" aria-label="Open your profile" asChild>
           <Link to="/profile">
             <div className="w-7 h-7 rounded-full gradient-teal flex items-center justify-center ring-2 ring-primary/30">
               <span className="text-[11px] text-primary-foreground font-bold">{initial}</span>
