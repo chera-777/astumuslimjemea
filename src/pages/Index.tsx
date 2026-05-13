@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthDialog } from "@/components/AuthDialog";
 import { Moon, Star, Sparkles } from "lucide-react";
+import { SEO } from "@/components/SEO";
 import { useEffect } from "react";
 
 const Index = () => {
