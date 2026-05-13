@@ -96,6 +96,7 @@ const Community = () => {
   return (
     <AppLayout>
       <SEO title="Community Chats & Groups — ASTU Muslim Jemea" description="Connect with fellow students through direct chats and group conversations." path="/community" />
+      <h1 className="sr-only">Community Chats &amp; Groups</h1>
       {/* Chat Tab Header */}
       <div className="sticky top-14 z-30 bg-card/95 backdrop-blur-lg border-b border-border">
         <div className="flex items-center justify-center gap-1 px-2 py-2">
