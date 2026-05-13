@@ -84,7 +84,7 @@ const Community = () => {
             placeholder="Type a message..."
             className="font-body rounded-xl"
           />
-          <Button size="icon" className="gradient-teal text-primary-foreground border-0 rounded-xl shrink-0">
+          <Button size="icon" aria-label="Send message" className="gradient-teal text-primary-foreground border-0 rounded-xl shrink-0">
             <Send className="h-4 w-4" />
           </Button>
         </div>
