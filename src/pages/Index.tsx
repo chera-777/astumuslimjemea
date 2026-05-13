@@ -114,18 +114,19 @@ const Index = () => {
           className="max-w-md"
         >
           {/* Logo (5-click for admin) */}
-          <button onClick={handleLogoClick} className="mx-auto mb-6 focus:outline-none">
+          <button
+            onClick={handleLogoClick}
+            className="mx-auto mb-6 focus:outline-none"
+            aria-label="ASTU Muslim Jemea logo (tap 5 times for admin registration)"
+          >
             <div className="w-16 h-16 rounded-2xl gradient-teal flex items-center justify-center shadow-glow">
-              <Moon className="h-8 w-8 text-primary-foreground" />
+              <Moon className="h-8 w-8 text-primary-foreground" aria-hidden="true" />
             </div>
           </button>
 
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white leading-tight mb-2">
-            Welcome to
+            Welcome to <span className="text-gold">ASTU Muslim Jemea</span> — Learn, Engage &amp; Grow in Faith
           </h1>
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-3">
-            <span className="text-gold">ASTU Muslim Jemea</span>
-          </h2>
 
           <p className="font-body text-white/60 text-sm md:text-base mb-10 leading-relaxed">
             Learn, Engage & Grow in Faith
