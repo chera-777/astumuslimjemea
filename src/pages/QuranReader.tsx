@@ -273,6 +273,11 @@ const QuranReader = () => {
   // ========== READING MODE — Tabs: Arabic, Translation, More ==========
   return (
     <AppLayout>
+      <SEO
+        title={surahInfo ? `Surah ${surahInfo.englishName} — Quran Reader` : "Quran Reader — ASTU Muslim Jemea"}
+        description={surahInfo ? `Read Surah ${surahInfo.englishName} (${surahInfo.englishNameTranslation}) with translation and recitation.` : "Read the Quran with translation and recitation."}
+        path={`/quran/${num}`}
+      />
       <div
         className="p-4 md:p-6 max-w-3xl mx-auto space-y-4"
         onTouchStart={handleTouchStart}
