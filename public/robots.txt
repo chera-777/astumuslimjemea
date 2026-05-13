@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://astu-jemea-connect.lovable.app/sitemap.xml
