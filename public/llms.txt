@@ -1,0 +1,24 @@
+# ASTU Muslim Jemea
+
+> Islamic community platform for ASTU Muslim students — prayer times, Quran, Hadith, lectures, donations, Khadims and community portals.
+
+## Pages
+
+- [Home](/): Welcome and registration entry point.
+- [Dashboard](/dashboard): Personal dashboard for signed-in members.
+- [Resources](/resources): Quran, Hadith, lectures and Islamic library.
+- [Prayer Times](/prayer-times): Daily prayer times and Qibla direction.
+- [News & Events](/news): Community announcements and events.
+- [Donations](/donations): Active donation campaigns and history.
+- [Khadims](/khadims): Volunteer scheduling, especially for Ramadan.
+- [Ramadan](/ramadan): Ramadan programme and meal cards.
+- [Community](/community): Group chats and member discussions.
+- [Groups](/groups): Student group system (14-student units).
+- [Governance](/governance): Leadership, Amirs and committees.
+- [Academic](/academic): Academic resources and study support.
+- [Challenges](/challenges): Spiritual and learning challenges.
+
+## Optional
+
+- [Dua](/dua), [Hadith](/hadith), [Adhkar](/adhkar), [Tasbih](/tasbih), [Azan](/azan)
+- [Services](/services), [Support](/support)
