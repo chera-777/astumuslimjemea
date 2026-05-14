@@ -84,10 +84,9 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
             const rad = (deg * Math.PI) / 180;
             const x = Math.cos(rad) * radius;
             const y = -Math.sin(rad) * radius;
-            // Label sits radially outward from each icon so it never overlaps neighbours.
-            const labelOffset = 40;
-            const lx = Math.cos(rad) * (radius + labelOffset);
-            const ly = -Math.sin(rad) * (radius + labelOffset);
+            // Labels sit directly above each icon (fixed vertical offset)
+            // so they never collide horizontally with neighbouring icons.
+            const labelDy = -(layout_iconHalf + 14);
             return (
               <motion.div
                 key={a.label}
