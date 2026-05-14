@@ -37,13 +37,12 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
   let startDeg: number, endDeg: number, radius: number;
 
   if (originRight) {
-    // Desktop FAB anchored at bottom-right. Arc 60°→180° spans the upper-left
-    // quadrant with enough angular spread (120°) to keep 10 icons from
-    // crowding each other.
-    startDeg = 60;
+    // Desktop FAB anchored at bottom-right. Arc 90°→180° fans strictly into
+    // the upper-left quadrant so no icon overlaps the FAB or drops below it.
+    startDeg = 90;
     endDeg = 180;
-    const maxR = Math.min(vw - 160, vh - 200, 320);
-    radius = Math.max(240, maxR);
+    const maxR = Math.min(vw - 96, vh - 200, 360);
+    radius = Math.max(300, maxR);
   } else {
     // Centered above bottom nav. Use a full 180°→0° arc so adjacent icons
     // get the maximum angular gap (20°). The anchor sits well above the
