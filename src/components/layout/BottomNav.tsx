@@ -37,21 +37,21 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
   let startDeg: number, endDeg: number, radius: number;
 
   if (originRight) {
-    // Desktop FAB anchored at bottom-right. Tuck arc into upper-left quadrant
-    // but pull endpoints inward (110°→170°) so the first/last icons don't sit
-    // flush against viewport edges or the FAB itself.
-    startDeg = 110;
-    endDeg = 170;
-    const maxR = Math.min(vw - 160, vh - 180, 340);
-    radius = Math.max(220, maxR);
+    // Desktop FAB anchored at bottom-right. Arc 60°→180° spans the upper-left
+    // quadrant with enough angular spread (120°) to keep 10 icons from
+    // crowding each other.
+    startDeg = 60;
+    endDeg = 180;
+    const maxR = Math.min(vw - 160, vh - 200, 320);
+    radius = Math.max(240, maxR);
   } else {
-    // Centered above bottom nav. Use a 160°→20° arc (instead of full 180°→0°)
-    // so the two endpoint icons lift well above the bottom navigation bar
-    // and never get clipped by it. Reserve label height + nav height in vh.
-    startDeg = 160;
-    endDeg = 20;
-    const safeR = Math.min((vw - 110) / 2, vh - 240, isMobile ? 145 : 200);
-    radius = Math.max(135, safeR);
+    // Centered above bottom nav. Use a full 180°→0° arc so adjacent icons
+    // get the maximum angular gap (20°). The anchor sits well above the
+    // bottom navigation bar so the two endpoint icons clear it.
+    startDeg = 180;
+    endDeg = 0;
+    const safeR = Math.min((vw - 90) / 2, vh - 220, isMobile ? 145 : 200);
+    radius = Math.max(140, safeR);
   }
 
   const stepDeg = (startDeg - endDeg) / (total - 1);
