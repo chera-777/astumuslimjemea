@@ -39,15 +39,15 @@ export function computeFabLayout(opts: {
   let startDeg: number, endDeg: number, radius: number;
 
   if (originRight) {
-    startDeg = 90;
-    endDeg = 180;
-    const maxR = Math.min(vw - 120, vh - 140, 320);
-    radius = Math.max(180, maxR);
+    startDeg = 110;
+    endDeg = 170;
+    const maxR = Math.min(vw - 160, vh - 180, 340);
+    radius = Math.max(220, maxR);
   } else {
-    startDeg = 180;
-    endDeg = 0;
-    const safeR = Math.min((vw - 90) / 2, vh - 220, isMobile ? 150 : 220);
-    radius = Math.max(130, safeR);
+    startDeg = 160;
+    endDeg = 20;
+    const safeR = Math.min((vw - 110) / 2, vh - 240, isMobile ? 145 : 200);
+    radius = Math.max(135, safeR);
   }
 
   const anchor: FabAnchor = originRight
