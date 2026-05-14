@@ -82,20 +82,18 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
             const x = Math.cos(rad) * radius;
             const y = -Math.sin(rad) * radius;
             const iconHalf = 24;
-            // Place labels radially OUTWARD from the FAB anchor so they fan
-            // out alongside their icon and never stack on top of a neighbour.
-            // On the mobile half-circle we alternate the radial offset
-            // (near/far) so adjacent labels sit on two different rings and
-            // can't collide horizontally even at narrow angular gaps.
-            const baseOffset = iconHalf + 14;
-            const stagger = originRight ? 0 : (i % 2 === 0 ? 0 : 22);
-            const labelOffset = baseOffset + stagger;
-            const lx = originRight
-              ? x - Math.cos(rad) * labelOffset
-              : x + Math.cos(rad) * labelOffset;
+            // Mobile (half-circle): place labels ABOVE each icon, but
+            // alternate the vertical offset (near/far) so adjacent labels
+            // sit on two different rows and never collide horizontally.
+            // Desktop (upper-left quadrant): labels are pushed radially
+            // INWARD toward the FAB so vertically-stacked icons stay clear.
+            const labelInward = iconHalf + 16;
+            const lx = originRight ? x - Math.cos(rad) * labelInward : x;
+            const labelLiftBase = iconHalf + 12;
+            const labelLiftStagger = i % 2 === 0 ? 0 : 22;
             const ly = originRight
-              ? y + Math.sin(rad) * labelOffset
-              : y - Math.sin(rad) * labelOffset;
+              ? y + Math.sin(rad) * labelInward
+              : y - (labelLiftBase + labelLiftStagger);
             return (
               <motion.div
                 key={a.label}
