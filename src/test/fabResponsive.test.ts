@@ -63,20 +63,24 @@ describe("Radial FAB responsive audit", () => {
       });
 
       it("labels do not overlap neighbouring icons", () => {
-        // Labels are positioned directly above their own icon (fixed vertical
-        // offset). Verify each label's bounding box clears every other icon.
+        // Mobile: labels above icon. Desktop: labels offset radially inward.
         const labelHalfW = 45;
         const labelHalfH = LABEL_HEIGHT / 2;
-        const labelDy = -(iconSize / 2 + 14);
+        const labelOffset = iconSize / 2 + 16;
+        const stepDeg = (layout.startDeg - layout.endDeg) / (FAB_ITEM_COUNT - 1);
         for (let i = 0; i < items.length; i++) {
-          const lx = items[i].x;
-          const ly = items[i].y + labelDy;
+          const deg = layout.startDeg - stepDeg * i;
+          const rad = (deg * Math.PI) / 180;
+          const lx = bp.originRight
+            ? items[i].x - Math.cos(rad) * labelOffset
+            : items[i].x;
+          const ly = bp.originRight
+            ? items[i].y + Math.sin(rad) * labelOffset
+            : items[i].y - labelOffset;
           for (let j = 0; j < items.length; j++) {
             if (i === j) continue;
-            const ix = items[j].x;
-            const iy = items[j].y;
-            const dx = Math.max(Math.abs(lx - ix) - labelHalfW - iconSize / 2, 0);
-            const dy = Math.max(Math.abs(ly - iy) - labelHalfH - iconSize / 2, 0);
+            const dx = Math.max(Math.abs(lx - items[j].x) - labelHalfW - iconSize / 2, 0);
+            const dy = Math.max(Math.abs(ly - items[j].y) - labelHalfH - iconSize / 2, 0);
             const dist = Math.hypot(dx, dy);
             expect(dist, `label ${i} vs icon ${j} @ ${bp.name}`).toBeGreaterThanOrEqual(0);
           }
