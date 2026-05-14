@@ -39,10 +39,10 @@ export function computeFabLayout(opts: {
   let startDeg: number, endDeg: number, radius: number;
 
   if (originRight) {
-    startDeg = 60;
+    startDeg = 90;
     endDeg = 180;
-    const maxR = Math.min(vw - 160, vh - 200, 320);
-    radius = Math.max(240, maxR);
+    const maxR = Math.min(vw - 96, vh - 200, 360);
+    radius = Math.max(300, maxR);
   } else {
     startDeg = 180;
     endDeg = 0;
