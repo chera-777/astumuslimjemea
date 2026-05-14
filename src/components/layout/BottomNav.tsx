@@ -44,9 +44,7 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
     const maxR = Math.min(vw - 96, vh - 200, 360);
     radius = Math.max(300, maxR);
   } else {
-    // Centered above bottom nav. Use a full 180°→0° arc so adjacent icons
-    // get the maximum angular gap (20°). The anchor sits well above the
-    // bottom navigation bar so the two endpoint icons clear it.
+    // Centered above bottom nav. 180°→0° gives the maximum 20° angular gap.
     startDeg = 180;
     endDeg = 0;
     const safeR = Math.min((vw - 90) / 2, vh - 220, isMobile ? 145 : 200);
@@ -83,16 +81,19 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
             const rad = (deg * Math.PI) / 180;
             const x = Math.cos(rad) * radius;
             const y = -Math.sin(rad) * radius;
-            const iconHalf = 24; // ~half of w-12
-            // Mobile half-circle: labels sit above each icon (icons fan
-            // horizontally so vertical stacking doesn't collide).
-            // Desktop upper-left quadrant: icons stack vertically near the
-            // top of the arc, so above-labels would overlap the next icon.
-            // Instead, place labels radially INWARD (toward the FAB anchor)
-            // by a fixed offset — keeping a clear gap from every icon.
-            const labelOffset = iconHalf + 16;
-            const lx = originRight ? x - Math.cos(rad) * labelOffset : x;
-            const ly = originRight ? y + Math.sin(rad) * labelOffset : y - labelOffset;
+            const iconHalf = 24;
+            // Mobile (half-circle): place labels ABOVE each icon, but
+            // alternate the vertical offset (near/far) so adjacent labels
+            // sit on two different rows and never collide horizontally.
+            // Desktop (upper-left quadrant): labels are pushed radially
+            // INWARD toward the FAB so vertically-stacked icons stay clear.
+            const labelInward = iconHalf + 16;
+            const lx = originRight ? x - Math.cos(rad) * labelInward : x;
+            const labelLiftBase = iconHalf + 12;
+            const labelLiftStagger = i % 2 === 0 ? 0 : 22;
+            const ly = originRight
+              ? y + Math.sin(rad) * labelInward
+              : y - (labelLiftBase + labelLiftStagger);
             return (
               <motion.div
                 key={a.label}
