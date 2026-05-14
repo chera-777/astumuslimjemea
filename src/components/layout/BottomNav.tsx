@@ -44,13 +44,14 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
     const maxR = Math.min(vw - 96, vh - 200, 360);
     radius = Math.max(300, maxR);
   } else {
-    // Centered above bottom nav. Use a full 180°→0° arc so adjacent icons
-    // get the maximum angular gap (20°). The anchor sits well above the
-    // bottom navigation bar so the two endpoint icons clear it.
-    startDeg = 180;
-    endDeg = 0;
-    const safeR = Math.min((vw - 90) / 2, vh - 220, isMobile ? 145 : 200);
-    radius = Math.max(140, safeR);
+    // Centered above bottom nav. Use a slightly inset arc so the two
+    // endpoint icons sit *above* the bottom nav (not flat at y=0) and so
+    // their outward labels never clip the viewport edge.
+    startDeg = 170;
+    endDeg = 10;
+    // Reserve room for an outward label on each endpoint icon (~ 90px label + 38px offset).
+    const safeR = Math.min((vw - 220) / 2, vh - 240, isMobile ? 130 : 180);
+    radius = Math.max(110, safeR);
   }
 
   const stepDeg = (startDeg - endDeg) / (total - 1);
