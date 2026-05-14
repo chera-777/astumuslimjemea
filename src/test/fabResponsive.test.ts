@@ -63,20 +63,24 @@ describe("Radial FAB responsive audit", () => {
       });
 
       it("labels do not overlap neighbouring icons", () => {
-        // Mobile: labels above icon. Desktop: labels offset radially inward.
+        // Labels are placed radially OUTWARD from the FAB anchor on every
+        // breakpoint. Mobile uses a near/far stagger to keep adjacent
+        // labels on different rings.
         const labelHalfW = 45;
         const labelHalfH = LABEL_HEIGHT / 2;
-        const labelOffset = iconSize / 2 + 16;
+        const baseOffset = iconSize / 2 + 14;
         const stepDeg = (layout.startDeg - layout.endDeg) / (FAB_ITEM_COUNT - 1);
         for (let i = 0; i < items.length; i++) {
           const deg = layout.startDeg - stepDeg * i;
           const rad = (deg * Math.PI) / 180;
+          const stagger = bp.originRight ? 0 : (i % 2 === 0 ? 0 : 22);
+          const labelOffset = baseOffset + stagger;
           const lx = bp.originRight
             ? items[i].x - Math.cos(rad) * labelOffset
-            : items[i].x;
+            : items[i].x + Math.cos(rad) * labelOffset;
           const ly = bp.originRight
             ? items[i].y + Math.sin(rad) * labelOffset
-            : items[i].y - labelOffset;
+            : items[i].y - Math.sin(rad) * labelOffset;
           for (let j = 0; j < items.length; j++) {
             if (i === j) continue;
             const dx = Math.max(Math.abs(lx - items[j].x) - labelHalfW - iconSize / 2, 0);
