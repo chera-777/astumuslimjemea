@@ -86,7 +86,8 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
             const y = -Math.sin(rad) * radius;
             // Labels sit directly above each icon (fixed vertical offset)
             // so they never collide horizontally with neighbouring icons.
-            const labelDy = -(layout_iconHalf + 14);
+            const iconHalf = 24; // ~half of w-12
+            const labelDy = -(iconHalf + 14);
             return (
               <motion.div
                 key={a.label}
@@ -99,7 +100,7 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
               >
                 <motion.span
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 1, x: lx, y: ly }}
+                  animate={{ opacity: 1, x: x, y: y + labelDy }}
                   exit={{ opacity: 0 }}
                   transition={{ delay: 0.15 + i * 0.025 }}
                   className="absolute -translate-x-1/2 -translate-y-1/2 font-body text-[10px] md:text-xs font-medium text-foreground/90 whitespace-nowrap drop-shadow pointer-events-none select-none"
