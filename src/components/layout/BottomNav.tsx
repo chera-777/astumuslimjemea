@@ -83,10 +83,16 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
             const rad = (deg * Math.PI) / 180;
             const x = Math.cos(rad) * radius;
             const y = -Math.sin(rad) * radius;
-            // Labels sit directly above each icon (fixed vertical offset)
-            // so they never collide horizontally with neighbouring icons.
             const iconHalf = 24; // ~half of w-12
-            const labelDy = -(iconHalf + 14);
+            // Mobile half-circle: labels sit above each icon (icons fan
+            // horizontally so vertical stacking doesn't collide).
+            // Desktop upper-left quadrant: icons stack vertically near the
+            // top of the arc, so above-labels would overlap the next icon.
+            // Instead, place labels radially INWARD (toward the FAB anchor)
+            // by a fixed offset — keeping a clear gap from every icon.
+            const labelOffset = iconHalf + 16;
+            const lx = originRight ? x - Math.cos(rad) * labelOffset : x;
+            const ly = originRight ? y + Math.sin(rad) * labelOffset : y - labelOffset;
             return (
               <motion.div
                 key={a.label}
@@ -99,7 +105,7 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
               >
                 <motion.span
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 1, x: x, y: y + labelDy }}
+                  animate={{ opacity: 1, x: lx, y: ly }}
                   exit={{ opacity: 0 }}
                   transition={{ delay: 0.15 + i * 0.025 }}
                   className="absolute -translate-x-1/2 -translate-y-1/2 font-body text-[10px] md:text-xs font-medium text-foreground/90 whitespace-nowrap drop-shadow pointer-events-none select-none"
