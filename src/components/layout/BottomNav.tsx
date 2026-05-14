@@ -75,7 +75,7 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
           "fixed z-50 pointer-events-none",
           originRight
             ? "bottom-12 right-12"
-            : "left-1/2 -translate-x-1/2 bottom-20"
+            : "left-1/2 -translate-x-1/2 bottom-28"
         )}
       >
         <div className="relative">
