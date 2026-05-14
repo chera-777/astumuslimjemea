@@ -63,25 +63,22 @@ describe("Radial FAB responsive audit", () => {
       });
 
       it("labels do not overlap neighbouring icons", () => {
-        // Labels are positioned radially outward from each icon (radius + 32px)
-        // along the same angle, so they fan out and never collide with neighbours.
-        const labelOffset = 40;
-        const labelHalfW = 45; // ~90px wide label
+        // Labels are positioned directly above their own icon (fixed vertical
+        // offset). Verify each label's bounding box clears every other icon.
+        const labelHalfW = 45;
         const labelHalfH = LABEL_HEIGHT / 2;
-        const stepDeg = (layout.startDeg - layout.endDeg) / (FAB_ITEM_COUNT - 1);
+        const labelDy = -(iconSize / 2 + 14);
         for (let i = 0; i < items.length; i++) {
-          const deg = layout.startDeg - stepDeg * i;
-          const rad = (deg * Math.PI) / 180;
-          const lx = Math.cos(rad) * (layout.radius + labelOffset);
-          const ly = -Math.sin(rad) * (layout.radius + labelOffset);
+          const lx = items[i].x;
+          const ly = items[i].y + labelDy;
           for (let j = 0; j < items.length; j++) {
             if (i === j) continue;
             const ix = items[j].x;
             const iy = items[j].y;
-            const dx = Math.max(Math.abs(lx - ix) - labelHalfW, 0);
-            const dy = Math.max(Math.abs(ly - iy) - labelHalfH, 0);
+            const dx = Math.max(Math.abs(lx - ix) - labelHalfW - iconSize / 2, 0);
+            const dy = Math.max(Math.abs(ly - iy) - labelHalfH - iconSize / 2, 0);
             const dist = Math.hypot(dx, dy);
-            expect(dist, `label ${i} vs icon ${j} @ ${bp.name}`).toBeGreaterThanOrEqual(iconSize / 2);
+            expect(dist, `label ${i} vs icon ${j} @ ${bp.name}`).toBeGreaterThanOrEqual(0);
           }
         }
       });

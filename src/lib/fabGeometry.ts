@@ -41,18 +41,18 @@ export function computeFabLayout(opts: {
   if (originRight) {
     startDeg = 90;
     endDeg = 180;
-    const maxR = Math.min(vw - 120, vh - 140, 320);
-    radius = Math.max(180, maxR);
+    const maxR = Math.min(vw - 96, vh - 200, 360);
+    radius = Math.max(300, maxR);
   } else {
     startDeg = 180;
     endDeg = 0;
-    const safeR = Math.min((vw - 90) / 2, vh - 220, isMobile ? 150 : 220);
-    radius = Math.max(130, safeR);
+    const safeR = Math.min((vw - 90) / 2, vh - 220, isMobile ? 145 : 200);
+    radius = Math.max(140, safeR);
   }
 
   const anchor: FabAnchor = originRight
     ? { x: vw - 48, y: vh - 48 }    // bottom-12 right-12 → ~48px from edges
-    : { x: vw / 2, y: vh - 80 };    // bottom-20 center
+    : { x: vw / 2, y: vh - 112 };  // bottom-28 center (clears 64px bottom nav)
 
   return {
     startDeg,

@@ -37,21 +37,20 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
   let startDeg: number, endDeg: number, radius: number;
 
   if (originRight) {
-    // Desktop FAB anchored at bottom-right. Fan strictly into the upper-left
-    // quadrant (90° → 180°) so no icon ever drops below the anchor and clips
-    // the bottom of the viewport.
+    // Desktop FAB anchored at bottom-right. Arc 90°→180° fans strictly into
+    // the upper-left quadrant so no icon overlaps the FAB or drops below it.
     startDeg = 90;
     endDeg = 180;
-    const maxR = Math.min(vw - 120, vh - 140, 320);
-    radius = Math.max(180, maxR);
+    const maxR = Math.min(vw - 96, vh - 200, 360);
+    radius = Math.max(300, maxR);
   } else {
-    // Centered above bottom nav. 180° arc keeps every icon strictly above the FAB.
+    // Centered above bottom nav. Use a full 180°→0° arc so adjacent icons
+    // get the maximum angular gap (20°). The anchor sits well above the
+    // bottom navigation bar so the two endpoint icons clear it.
     startDeg = 180;
     endDeg = 0;
-    // Constrain by viewport width so end-icons don't get clipped. Min radius
-    // is large enough that adjacent icons (44px) keep a comfortable gap.
-    const safeR = Math.min((vw - 90) / 2, vh - 220, isMobile ? 150 : 220);
-    radius = Math.max(130, safeR);
+    const safeR = Math.min((vw - 90) / 2, vh - 220, isMobile ? 145 : 200);
+    radius = Math.max(140, safeR);
   }
 
   const stepDeg = (startDeg - endDeg) / (total - 1);
@@ -75,7 +74,7 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
           "fixed z-50 pointer-events-none",
           originRight
             ? "bottom-12 right-12"
-            : "left-1/2 -translate-x-1/2 bottom-20"
+            : "left-1/2 -translate-x-1/2 bottom-28"
         )}
       >
         <div className="relative">
@@ -84,10 +83,10 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
             const rad = (deg * Math.PI) / 180;
             const x = Math.cos(rad) * radius;
             const y = -Math.sin(rad) * radius;
-            // Label sits radially outward from each icon so it never overlaps neighbours.
-            const labelOffset = 40;
-            const lx = Math.cos(rad) * (radius + labelOffset);
-            const ly = -Math.sin(rad) * (radius + labelOffset);
+            // Labels sit directly above each icon (fixed vertical offset)
+            // so they never collide horizontally with neighbouring icons.
+            const iconHalf = 24; // ~half of w-12
+            const labelDy = -(iconHalf + 14);
             return (
               <motion.div
                 key={a.label}
@@ -100,7 +99,7 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
               >
                 <motion.span
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 1, x: lx, y: ly }}
+                  animate={{ opacity: 1, x: x, y: y + labelDy }}
                   exit={{ opacity: 0 }}
                   transition={{ delay: 0.15 + i * 0.025 }}
                   className="absolute -translate-x-1/2 -translate-y-1/2 font-body text-[10px] md:text-xs font-medium text-foreground/90 whitespace-nowrap drop-shadow pointer-events-none select-none"
