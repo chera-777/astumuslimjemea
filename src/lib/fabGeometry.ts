@@ -52,7 +52,7 @@ export function computeFabLayout(opts: {
 
   const anchor: FabAnchor = originRight
     ? { x: vw - 48, y: vh - 48 }    // bottom-12 right-12 → ~48px from edges
-    : { x: vw / 2, y: vh - 80 };    // bottom-20 center
+    : { x: vw / 2, y: vh - 112 };  // bottom-28 center (clears 64px bottom nav)
 
   return {
     startDeg,
