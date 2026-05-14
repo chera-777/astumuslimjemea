@@ -105,7 +105,7 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
               >
                 <motion.span
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: 1, x: x, y: y + labelDy }}
+                  animate={{ opacity: 1, x: lx, y: ly }}
                   exit={{ opacity: 0 }}
                   transition={{ delay: 0.15 + i * 0.025 }}
                   className="absolute -translate-x-1/2 -translate-y-1/2 font-body text-[10px] md:text-xs font-medium text-foreground/90 whitespace-nowrap drop-shadow pointer-events-none select-none"
