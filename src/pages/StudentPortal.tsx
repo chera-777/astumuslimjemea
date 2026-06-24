@@ -96,6 +96,7 @@ function EventCard({ item }: { item: EventItem }) {
           <div className="min-w-0">
             <p className="font-display text-sm font-bold text-foreground leading-tight truncate">{item.title}</p>
             <p className="font-body text-[10px] text-muted-foreground mt-0.5 truncate">{item.subtitle}</p>
+            <p className="font-body text-[11px] text-foreground/75 mt-1.5 line-clamp-2">{item.description}</p>
           </div>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
             <span className="font-body text-[10px] text-primary flex items-center gap-1">
