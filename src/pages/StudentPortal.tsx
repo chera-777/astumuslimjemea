@@ -23,29 +23,29 @@ import eventChallenge from "@/assets/event-challenge.jpg";
 import { Progress } from "@/components/ui/progress";
 
 type EventItem = {
-  title: string; subtitle: string; time: string; location: string;
+  title: string; subtitle: string; description: string; time: string; location: string;
   image: string; tag: string; tagColor: string;
 };
 
 const classesItems: EventItem[] = [
-  { title: "Tafsir Al-Kahf", subtitle: "Sheikh Ahmed", time: "Today · 6:30 PM", location: "Masjid Al-Noor", image: eventTafsir, tag: "Islamic", tagColor: "bg-primary/20 text-primary border-primary/30" },
-  { title: "Hadith: 40 Nawawi", subtitle: "Ustaz Bilal", time: "Tomorrow · 7:00 PM", location: "University Musalla", image: eventHadith, tag: "Hadith", tagColor: "bg-green-500/20 text-green-500 border-green-500/30" },
-  { title: "Fiqh of Salah", subtitle: "Ustaz Hamza", time: "Friday · 4:00 PM", location: "Room 204", image: eventFiqh, tag: "Fiqh", tagColor: "bg-gold/20 text-gold border-gold/30" },
+  { title: "Tafsir Al-Kahf", subtitle: "Sheikh Ahmed", description: "Weekly tafsir circle covering the lessons & wisdom of Surah Al-Kahf with Q&A.", time: "Today · 6:30 PM", location: "Masjid Al-Noor", image: eventTafsir, tag: "Islamic", tagColor: "bg-primary/20 text-primary border-primary/30" },
+  { title: "Hadith: 40 Nawawi", subtitle: "Ustaz Bilal", description: "Deep-dive into Imam Nawawi's 40 hadith — narration, meaning & daily application.", time: "Tomorrow · 7:00 PM", location: "University Musalla", image: eventHadith, tag: "Hadith", tagColor: "bg-green-500/20 text-green-500 border-green-500/30" },
+  { title: "Fiqh of Salah", subtitle: "Ustaz Hamza", description: "Conditions, pillars and common mistakes of salah with practical demonstrations.", time: "Friday · 4:00 PM", location: "Room 204", image: eventFiqh, tag: "Fiqh", tagColor: "bg-gold/20 text-gold border-gold/30" },
 ];
 
 const tutoringItems: EventItem[] = [
-  { title: "Calculus II", subtitle: "Br. Yusuf · 5 spots", time: "Mon/Wed · 2:00 PM", location: "Room 302", image: eventMath, tag: "Math", tagColor: "bg-blue-500/20 text-blue-500 border-blue-500/30" },
-  { title: "Programming", subtitle: "Sr. Fatima · 8 spots", time: "Sat · 10:00 AM", location: "Lab 201", image: eventCoding, tag: "Code", tagColor: "bg-purple-500/20 text-purple-500 border-purple-500/30" },
+  { title: "Calculus II", subtitle: "Br. Yusuf · 5 spots", description: "Integrals, series and applications. Free peer tutoring for first-year students.", time: "Mon/Wed · 2:00 PM", location: "Room 302", image: eventMath, tag: "Math", tagColor: "bg-blue-500/20 text-blue-500 border-blue-500/30" },
+  { title: "Programming", subtitle: "Sr. Fatima · 8 spots", description: "Python & web fundamentals. Bring your laptop — beginner-friendly project labs.", time: "Sat · 10:00 AM", location: "Lab 201", image: eventCoding, tag: "Code", tagColor: "bg-purple-500/20 text-purple-500 border-purple-500/30" },
 ];
 
 const challengeItems: EventItem[] = [
-  { title: "Quran Memorization Sprint", subtitle: "Memorize Juz Amma in 30 days · 150 XP", time: "Ends May 30", location: "45 joined", image: eventChallenge, tag: "Trophy", tagColor: "bg-gold/20 text-gold border-gold/30" },
-  { title: "Daily Dhikr Challenge", subtitle: "Morning & evening adhkar · 100 XP", time: "Daily", location: "120 joined", image: eventTafsir, tag: "Zikr", tagColor: "bg-pink-500/20 text-pink-500 border-pink-500/30" },
+  { title: "Quran Memorization Sprint", subtitle: "Memorize Juz Amma in 30 days · 150 XP", description: "Daily checkpoints, partner accountability, and live revisions every weekend.", time: "Ends May 30", location: "45 joined", image: eventChallenge, tag: "Trophy", tagColor: "bg-gold/20 text-gold border-gold/30" },
+  { title: "Daily Dhikr Challenge", subtitle: "Morning & evening adhkar · 100 XP", description: "Build a daily dhikr habit with reminders, streaks and community leaderboard.", time: "Daily", location: "120 joined", image: eventTafsir, tag: "Zikr", tagColor: "bg-pink-500/20 text-pink-500 border-pink-500/30" },
 ];
 
 const eventsItems: EventItem[] = [
-  { title: "Qur'an Competition", subtitle: "Annual community event · prizes", time: "May 25 · 10:00 AM", location: "Auditorium A", image: eventChallenge, tag: "Event", tagColor: "bg-gold/20 text-gold border-gold/30" },
-  { title: "Ramadan Iftar Program", subtitle: "Community iftar with dua", time: "May 29 · 6:00 PM", location: "Main Masjid", image: eventFiqh, tag: "Ramadan", tagColor: "bg-primary/20 text-primary border-primary/30" },
+  { title: "Qur'an Competition", subtitle: "Annual community event · prizes", description: "Memorisation & recitation tracks. Open to all students — register at the office.", time: "May 25 · 10:00 AM", location: "Auditorium A", image: eventChallenge, tag: "Event", tagColor: "bg-gold/20 text-gold border-gold/30" },
+  { title: "Ramadan Iftar Program", subtitle: "Community iftar with dua", description: "Shared iftar, group salah and a short reminder before taraweeh. All welcome.", time: "May 29 · 6:00 PM", location: "Main Masjid", image: eventFiqh, tag: "Ramadan", tagColor: "bg-primary/20 text-primary border-primary/30" },
 ];
 
 // summaryCards removed — content relocated to Profile / News
