@@ -31,6 +31,7 @@ import HadithPage from "./pages/HadithPage";
 import AdhkarPage from "./pages/AdhkarPage";
 import TasbihPage from "./pages/TasbihPage";
 import AzanPage from "./pages/AzanPage";
+import AzanFullscreen from "./pages/AzanFullscreen";
 import Academic from "./pages/Academic";
 import Challenges from "./pages/Challenges";
 import NotFound from "./pages/NotFound";
