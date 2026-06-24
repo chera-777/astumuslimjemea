@@ -182,45 +182,21 @@ const StudentPortal = () => {
           </Card>
         </motion.div>
 
-        {/* ---- 2. Quick Access (horizontal scroll) ---- */}
+        {/* ---- 2. Unified Services rail (Quick Access + University Services merged) ---- */}
         <Card className="border-border/60">
           <CardContent className="p-3">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-display text-sm font-bold">Quick Access</h3>
-              <Link to="/resources" className="text-[10px] font-body text-primary flex items-center gap-0.5">
+              <h3 className="font-display text-sm font-bold">Services</h3>
+              <Link to="/services" className="text-[10px] font-body text-primary flex items-center gap-0.5">
                 All Tools <ChevronRight className="h-3 w-3" />
               </Link>
             </div>
             <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1">
-              {quickAccess.map((q) => (
-                <Link key={q.label} to={q.link} className="shrink-0">
+              {servicesRail.map((s) => (
+                <Link key={s.label} to={s.link} className="shrink-0">
                   <div className="flex flex-col items-center gap-1.5 group w-14">
-                    <div className={`w-12 h-12 rounded-2xl ${q.color} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
-                      <q.icon className="h-5 w-5" />
-                    </div>
-                    <p className="font-body text-[9px] text-center text-foreground/80 leading-tight line-clamp-2">{q.label}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* ---- 3. University Services ---- */}
-        <Card className="border-border/60">
-          <CardContent className="p-3">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-display text-sm font-bold">University Services</h3>
-              <Link to="/services" className="text-[10px] font-body text-primary flex items-center gap-0.5">
-                All <ChevronRight className="h-3 w-3" />
-              </Link>
-            </div>
-            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1">
-              {universityServices.map((s) => (
-                <Link key={s.label} to="/services" className="shrink-0">
-                  <div className="flex flex-col items-center gap-1.5 group w-16">
-                    <div className="w-12 h-12 rounded-xl bg-secondary border border-border flex items-center justify-center group-hover:border-primary/40 group-hover:bg-primary/5 transition-all">
-                      <s.icon className={`h-4 w-4 ${s.color}`} />
+                    <div className={`w-12 h-12 rounded-2xl ${s.color} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
+                      <s.icon className="h-5 w-5" />
                     </div>
                     <p className="font-body text-[9px] text-center text-foreground/80 leading-tight line-clamp-2">{s.label}</p>
                   </div>
@@ -230,16 +206,14 @@ const StudentPortal = () => {
           </CardContent>
         </Card>
 
-        {/* (Summary cards moved: Daily Goal & Group Sessions → Profile, Café → Profile, Announcements → News) */}
-
         {/* ---- 5. Tabs: Classes / Tutoring / Challenges / Events ---- */}
         <div id="challenges">
           <Tabs defaultValue="classes" className="w-full">
-            <TabsList className="w-full flex overflow-x-auto scrollbar-hide h-auto bg-secondary/50 justify-start">
-              <TabsTrigger value="classes" className="font-body text-xs py-2 px-3 shrink-0">✨ Classes</TabsTrigger>
-              <TabsTrigger value="tutoring" className="font-body text-xs py-2 px-3 shrink-0">📚 Tutoring</TabsTrigger>
-              <TabsTrigger value="challenges" className="font-body text-xs py-2 px-3 shrink-0">🏆 Challenges</TabsTrigger>
-              <TabsTrigger value="events" className="font-body text-xs py-2 px-3 shrink-0">📅 Events</TabsTrigger>
+            <TabsList className="w-full grid grid-cols-4 h-auto bg-secondary/50 gap-1 p-1">
+              <TabsTrigger value="classes" className="font-body text-xs py-2 px-2 w-full">✨ Classes</TabsTrigger>
+              <TabsTrigger value="tutoring" className="font-body text-xs py-2 px-2 w-full">📚 Tutoring</TabsTrigger>
+              <TabsTrigger value="challenges" className="font-body text-xs py-2 px-2 w-full">🏆 Challenges</TabsTrigger>
+              <TabsTrigger value="events" className="font-body text-xs py-2 px-2 w-full">📅 Events</TabsTrigger>
             </TabsList>
             <TabsContent value="classes" className="mt-3 space-y-2.5">
               {classesItems.map((c, i) => <EventCard key={i} item={c} />)}
