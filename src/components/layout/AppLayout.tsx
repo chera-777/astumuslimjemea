@@ -13,6 +13,7 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   const isMobile = useIsMobile();
+  useAzanAutoPlay();
 
   return (
     <SidebarProvider>
