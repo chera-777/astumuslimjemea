@@ -69,6 +69,7 @@ const App = () => (
             <Route path="/adhkar" element={<ProtectedRoute><AdhkarPage /></ProtectedRoute>} />
             <Route path="/tasbih" element={<ProtectedRoute><TasbihPage /></ProtectedRoute>} />
             <Route path="/azan" element={<ProtectedRoute><AzanPage /></ProtectedRoute>} />
+            <Route path="/azan/now" element={<ProtectedRoute><AzanFullscreen /></ProtectedRoute>} />
             <Route path="/academic" element={<ProtectedRoute><Academic /></ProtectedRoute>} />
             <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
 
