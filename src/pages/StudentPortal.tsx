@@ -50,33 +50,37 @@ const eventsItems: EventItem[] = [
 
 // summaryCards removed — content relocated to Profile / News
 
-const quickAccess = [
-  { label: "Qur'an", icon: BookOpen, link: "/quran/1", color: "bg-primary/15 text-primary" },
-  { label: "Hadith", icon: BookText, link: "/hadith", color: "bg-blue-500/15 text-blue-500" },
-  { label: "Kitabs", icon: Library, link: "/resources", color: "bg-accent/15 text-accent" },
-  { label: "Zikr", icon: Music2, link: "/tasbih", color: "bg-purple-500/15 text-purple-500" },
-  { label: "Azan", icon: AlarmClock, link: "/azan", color: "bg-green-500/15 text-green-500" },
-  { label: "Calendar", icon: CalendarIcon, link: "/prayer-times", color: "bg-gold/15 text-gold" },
-  { label: "Dua", icon: Heart, link: "/dua", color: "bg-pink-500/15 text-pink-500" },
-  { label: "Adhkar", icon: Sparkles, link: "/adhkar", color: "bg-primary/15 text-primary" },
-  { label: "Academic", icon: GradCap, link: "/academic", color: "bg-blue-500/15 text-blue-500" },
-  { label: "Challenges", icon: Trophy, link: "/challenges", color: "bg-gold/15 text-gold" },
-  { label: "Donate", icon: Heart, link: "/donations", color: "bg-accent/15 text-accent" },
-  { label: "More", icon: MoreHorizontal, link: "/resources", color: "bg-muted text-muted-foreground" },
-];
+// Unified services rail — Quick Access (Islamic tools) + University Services merged.
+// Each item carries its own icon background style so the rail stays vivid while
+// visually grouping the two original sections.
+type ServiceItem = { label: string; icon: typeof BookOpen; link: string; color: string };
 
-const universityServices = [
-  { label: "Schedule", icon: CalendarIcon, color: "text-blue-500" },
-  { label: "Exams", icon: AlarmClock, color: "text-accent" },
-  { label: "Assignments", icon: FileText, color: "text-purple-500" },
-  { label: "Library", icon: Library, color: "text-primary" },
-  { label: "Grades", icon: GradCap, color: "text-green-500" },
-  { label: "Café", icon: Utensils, color: "text-gold" },
-  { label: "Dorm", icon: Bed, color: "text-pink-500" },
-  { label: "Transport", icon: Bus, color: "text-blue-500" },
-  { label: "Health", icon: Stethoscope, color: "text-destructive" },
-  { label: "Lost & Found", icon: Search, color: "text-muted-foreground" },
-  { label: "Help", icon: HelpCircle, color: "text-accent" },
+const servicesRail: ServiceItem[] = [
+  // Quick Access (Islamic tools)
+  { label: "Qur'an",     icon: BookOpen,    link: "/quran/1",      color: "bg-primary/15 text-primary" },
+  { label: "Hadith",     icon: BookText,    link: "/hadith",       color: "bg-blue-500/15 text-blue-500" },
+  { label: "Kitabs",     icon: Library,     link: "/resources",    color: "bg-accent/15 text-accent" },
+  { label: "Zikr",       icon: Music2,      link: "/tasbih",       color: "bg-purple-500/15 text-purple-500" },
+  { label: "Azan",       icon: AlarmClock,  link: "/azan",         color: "bg-green-500/15 text-green-500" },
+  { label: "Calendar",   icon: CalendarIcon,link: "/prayer-times", color: "bg-gold/15 text-gold" },
+  { label: "Dua",        icon: Heart,       link: "/dua",          color: "bg-pink-500/15 text-pink-500" },
+  { label: "Adhkar",     icon: Sparkles,    link: "/adhkar",       color: "bg-primary/15 text-primary" },
+  { label: "Academic",   icon: GradCap,     link: "/academic",     color: "bg-blue-500/15 text-blue-500" },
+  { label: "Challenges", icon: Trophy,      link: "/challenges",   color: "bg-gold/15 text-gold" },
+  { label: "Donate",     icon: Heart,       link: "/donations",    color: "bg-accent/15 text-accent" },
+  // University Services
+  { label: "Schedule",    icon: CalendarIcon, link: "/services",  color: "bg-blue-500/15 text-blue-500" },
+  { label: "Exams",       icon: AlarmClock,   link: "/services",  color: "bg-accent/15 text-accent" },
+  { label: "Assignments", icon: FileText,     link: "/services",  color: "bg-purple-500/15 text-purple-500" },
+  { label: "Library",     icon: Library,      link: "/resources", color: "bg-primary/15 text-primary" },
+  { label: "Grades",      icon: GradCap,      link: "/services",  color: "bg-green-500/15 text-green-500" },
+  { label: "Café",        icon: Utensils,     link: "/services",  color: "bg-gold/15 text-gold" },
+  { label: "Dorm",        icon: Bed,          link: "/services",  color: "bg-pink-500/15 text-pink-500" },
+  { label: "Transport",   icon: Bus,          link: "/services",  color: "bg-blue-500/15 text-blue-500" },
+  { label: "Health",      icon: Stethoscope,  link: "/services",  color: "bg-destructive/15 text-destructive" },
+  { label: "Lost & Found",icon: Search,      link: "/services",   color: "bg-muted text-muted-foreground" },
+  { label: "Help",        icon: HelpCircle,   link: "/support",   color: "bg-accent/15 text-accent" },
+  { label: "More",        icon: MoreHorizontal,link: "/resources",color: "bg-muted text-muted-foreground" },
 ];
 
 function EventCard({ item }: { item: EventItem }) {
