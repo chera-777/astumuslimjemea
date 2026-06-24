@@ -5,6 +5,7 @@ import { BottomNav, DesktopFAB } from "@/components/layout/BottomNav";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ProfileCompletionPrompt } from "@/components/ProfileCompletionPrompt";
+import { useAzanAutoPlay } from "@/hooks/useAzanAutoPlay";
 
 interface AppLayoutProps {
   children: ReactNode;
