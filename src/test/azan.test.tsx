@@ -82,11 +82,10 @@ describe("useAzanAutoPlay navigation", () => {
     );
 
     await act(async () => { vi.advanceTimersByTime(20001); });
-    await waitFor(() => {
-      expect(screen.getByTestId("loc").textContent).toContain("/azan/now");
-      expect(screen.getByTestId("loc").textContent).toContain("prayer=Dhuhr");
-      expect(screen.getByTestId("loc").textContent).toContain("auto=1");
-    });
+    const text = screen.getByTestId("loc").textContent || "";
+    expect(text).toContain("/azan/now");
+    expect(text).toContain("prayer=Dhuhr");
+    expect(text).toContain("auto=1");
   });
 });
 
