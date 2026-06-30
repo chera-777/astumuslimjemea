@@ -66,7 +66,9 @@ describe("detectFiringPrayer", () => {
 });
 
 describe("useAzanAutoPlay navigation", () => {
-  beforeEach(() => { vi.useFakeTimers(); });
+  beforeEach(() => {
+    vi.useFakeTimers({ shouldAdvanceTime: true, toFake: ["setInterval", "clearInterval", "Date"] });
+  });
   afterEach(() => { vi.useRealTimers(); });
 
   it("navigates to /azan/now when a prayer time hits", async () => {
