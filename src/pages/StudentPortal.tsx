@@ -191,14 +191,23 @@ const StudentPortal = () => {
                 All Tools <ChevronRight className="h-3 w-3" />
               </Link>
             </div>
-            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1">
+            <div
+              role="list"
+              aria-label="Services"
+              className="flex gap-4 md:gap-5 overflow-x-auto scrollbar-hide pb-2 pt-1 -mx-2 px-2 snap-x snap-mandatory scroll-px-2 [scroll-behavior:smooth] touch-pan-x"
+            >
               {servicesRail.map((s) => (
-                <Link key={s.label} to={s.link} className="shrink-0">
-                  <div className="flex flex-col items-center gap-1.5 group w-14">
-                    <div className={`w-12 h-12 rounded-2xl ${s.color} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
-                      <s.icon className="h-5 w-5" />
+                <Link
+                  key={s.label}
+                  to={s.link}
+                  role="listitem"
+                  className="shrink-0 snap-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
+                >
+                  <div className="flex flex-col items-center gap-2 group w-16 md:w-20">
+                    <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl ${s.color} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
+                      <s.icon className="h-6 w-6 md:h-7 md:w-7" />
                     </div>
-                    <p className="font-body text-[9px] text-center text-foreground/80 leading-tight line-clamp-2">{s.label}</p>
+                    <p className="font-body text-[10px] md:text-[11px] text-center text-foreground/80 leading-tight line-clamp-2 min-h-[2.2em]">{s.label}</p>
                   </div>
                 </Link>
               ))}
