@@ -54,40 +54,59 @@ const servicesRail: ServiceItem[] = [
   { label: "More",        icon: MoreHorizontal,link: "/resources",color: "bg-muted text-muted-foreground" },
 ];
 
-function EventCard({ item }: { item: EventItem }) {
+function EventCard({ item, onClick }: { item: EventItem; onClick: () => void }) {
   return (
-    <Card className="overflow-hidden border-border/60 hover:shadow-glow transition-all group">
-      <div className="flex flex-col sm:flex-row">
-        <div className="relative w-full sm:w-40 h-32 sm:h-auto shrink-0 overflow-hidden">
-          <img src={item.image} alt={item.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-          <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-transparent to-transparent sm:bg-gradient-to-r sm:from-transparent sm:to-card/40" />
-          <Badge className={`absolute top-2 left-2 text-[9px] font-body border ${item.tagColor}`}>{item.tag}</Badge>
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full text-left group relative overflow-hidden rounded-2xl border border-border/60 bg-card hover:border-primary/50 hover:shadow-glow transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+    >
+      <div className="relative h-32 overflow-hidden">
+        <img src={item.image} alt={item.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+        <div className={`absolute inset-0 bg-gradient-to-tr ${item.gradient}`} />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+        <Badge className={`absolute top-2 left-2 text-[9px] font-body border ${item.tagColor}`}>{item.tag}</Badge>
+        {item.xp && (
+          <Badge className="absolute top-2 right-2 bg-gold text-black border-0 text-[9px] gap-0.5 shadow-md">
+            <Sparkles className="h-2.5 w-2.5" /> +{item.xp}
+          </Badge>
+        )}
+        <div className="absolute bottom-2 left-3 right-3">
+          <p className="font-display text-base font-bold text-foreground leading-tight drop-shadow-md">{item.title}</p>
+          <p className="font-body text-[10px] text-foreground/80 truncate">{item.subtitle}</p>
         </div>
-        <CardContent className="p-3 flex-1 flex flex-col justify-between min-w-0">
-          <div className="min-w-0">
-            <p className="font-display text-sm font-bold text-foreground leading-tight truncate">{item.title}</p>
-            <p className="font-body text-[10px] text-muted-foreground mt-0.5 truncate">{item.subtitle}</p>
-            <p className="font-body text-[11px] text-foreground/75 mt-1.5 line-clamp-2">{item.description}</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
-            <span className="font-body text-[10px] text-primary flex items-center gap-1">
-              <Clock className="h-3 w-3" /> {item.time}
-            </span>
-            <span className="font-body text-[10px] text-muted-foreground flex items-center gap-1 truncate">
-              <MapPin className="h-3 w-3" /> {item.location}
-            </span>
-          </div>
-        </CardContent>
       </div>
-    </Card>
+      <div className="p-3 space-y-2">
+        <p className="font-body text-[11px] text-muted-foreground line-clamp-2">{item.description}</p>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span className="font-body text-[10px] text-primary flex items-center gap-1">
+            <Clock className="h-3 w-3" /> {item.time}
+          </span>
+          <span className="font-body text-[10px] text-muted-foreground flex items-center gap-1 truncate">
+            <MapPin className="h-3 w-3" /> {item.location}
+          </span>
+          {item.participants && (
+            <span className="font-body text-[10px] text-accent flex items-center gap-1 ml-auto">
+              <Users className="h-3 w-3" /> {item.participants}
+            </span>
+          )}
+        </div>
+      </div>
+    </button>
   );
 }
 
 const StudentPortal = () => {
   const { profile, user } = useAuth();
-  const displayName = profile?.full_name || user?.email?.split("@")[0] || "Student";
-  const firstName = displayName.split(" ")[0];
+  // Prefer real first + last name from profile; never leak the email local-part.
+  const fullName = (profile?.full_name || "").trim();
+  const [firstName, ...rest] = fullName ? fullName.split(/\s+/) : [];
+  const lastName = rest.length ? rest[rest.length - 1] : "";
+  const greetingName = fullName
+    ? `${firstName}${lastName && lastName !== firstName ? ` ${lastName}` : ""}`
+    : "friend";
   const pt = usePrayerTimes();
+  const [selected, setSelected] = useState<EventItem | null>(null);
 
   return (
     <AppLayout>
