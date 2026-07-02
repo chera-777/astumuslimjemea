@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,45 +9,15 @@ import {
   Clock, MapPin, ChevronRight, BookOpen, Trophy, Calendar as CalendarIcon,
   AlarmClock, FileText, Library, GraduationCap as GradCap, Utensils, Bed,
   Bus, Stethoscope, Search, HelpCircle, Heart, MoreHorizontal,
-  BookText, Music2, Sparkles
+  BookText, Music2, Sparkles, Users
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 import mosqueHero from "@/assets/mosque-hero.jpg";
-import eventTafsir from "@/assets/event-tafsir.jpg";
-import eventHadith from "@/assets/event-hadith.jpg";
-import eventFiqh from "@/assets/event-fiqh.jpg";
-import eventMath from "@/assets/event-math.jpg";
-import eventCoding from "@/assets/event-coding.jpg";
-import eventChallenge from "@/assets/event-challenge.jpg";
 import { Progress } from "@/components/ui/progress";
-
-type EventItem = {
-  title: string; subtitle: string; description: string; time: string; location: string;
-  image: string; tag: string; tagColor: string;
-};
-
-const classesItems: EventItem[] = [
-  { title: "Tafsir Al-Kahf", subtitle: "Sheikh Ahmed", description: "Weekly tafsir circle covering the lessons & wisdom of Surah Al-Kahf with Q&A.", time: "Today · 6:30 PM", location: "Masjid Al-Noor", image: eventTafsir, tag: "Islamic", tagColor: "bg-primary/20 text-primary border-primary/30" },
-  { title: "Hadith: 40 Nawawi", subtitle: "Ustaz Bilal", description: "Deep-dive into Imam Nawawi's 40 hadith — narration, meaning & daily application.", time: "Tomorrow · 7:00 PM", location: "University Musalla", image: eventHadith, tag: "Hadith", tagColor: "bg-green-500/20 text-green-500 border-green-500/30" },
-  { title: "Fiqh of Salah", subtitle: "Ustaz Hamza", description: "Conditions, pillars and common mistakes of salah with practical demonstrations.", time: "Friday · 4:00 PM", location: "Room 204", image: eventFiqh, tag: "Fiqh", tagColor: "bg-gold/20 text-gold border-gold/30" },
-];
-
-const tutoringItems: EventItem[] = [
-  { title: "Calculus II", subtitle: "Br. Yusuf · 5 spots", description: "Integrals, series and applications. Free peer tutoring for first-year students.", time: "Mon/Wed · 2:00 PM", location: "Room 302", image: eventMath, tag: "Math", tagColor: "bg-blue-500/20 text-blue-500 border-blue-500/30" },
-  { title: "Programming", subtitle: "Sr. Fatima · 8 spots", description: "Python & web fundamentals. Bring your laptop — beginner-friendly project labs.", time: "Sat · 10:00 AM", location: "Lab 201", image: eventCoding, tag: "Code", tagColor: "bg-purple-500/20 text-purple-500 border-purple-500/30" },
-];
-
-const challengeItems: EventItem[] = [
-  { title: "Quran Memorization Sprint", subtitle: "Memorize Juz Amma in 30 days · 150 XP", description: "Daily checkpoints, partner accountability, and live revisions every weekend.", time: "Ends May 30", location: "45 joined", image: eventChallenge, tag: "Trophy", tagColor: "bg-gold/20 text-gold border-gold/30" },
-  { title: "Daily Dhikr Challenge", subtitle: "Morning & evening adhkar · 100 XP", description: "Build a daily dhikr habit with reminders, streaks and community leaderboard.", time: "Daily", location: "120 joined", image: eventTafsir, tag: "Zikr", tagColor: "bg-pink-500/20 text-pink-500 border-pink-500/30" },
-];
-
-const eventsItems: EventItem[] = [
-  { title: "Qur'an Competition", subtitle: "Annual community event · prizes", description: "Memorisation & recitation tracks. Open to all students — register at the office.", time: "May 25 · 10:00 AM", location: "Auditorium A", image: eventChallenge, tag: "Event", tagColor: "bg-gold/20 text-gold border-gold/30" },
-  { title: "Ramadan Iftar Program", subtitle: "Community iftar with dua", description: "Shared iftar, group salah and a short reminder before taraweeh. All welcome.", time: "May 29 · 6:00 PM", location: "Main Masjid", image: eventFiqh, tag: "Ramadan", tagColor: "bg-primary/20 text-primary border-primary/30" },
-];
+import { classesItems, tutoringItems, challengeItems, eventsItems, type EventItem } from "@/lib/portalItems";
+import { EventDetailsDialog } from "@/components/EventDetailsDialog";
 
 // summaryCards removed — content relocated to Profile / News
 
@@ -83,40 +54,59 @@ const servicesRail: ServiceItem[] = [
   { label: "More",        icon: MoreHorizontal,link: "/resources",color: "bg-muted text-muted-foreground" },
 ];
 
-function EventCard({ item }: { item: EventItem }) {
+function EventCard({ item, onClick }: { item: EventItem; onClick: () => void }) {
   return (
-    <Card className="overflow-hidden border-border/60 hover:shadow-glow transition-all group">
-      <div className="flex flex-col sm:flex-row">
-        <div className="relative w-full sm:w-40 h-32 sm:h-auto shrink-0 overflow-hidden">
-          <img src={item.image} alt={item.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-          <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-transparent to-transparent sm:bg-gradient-to-r sm:from-transparent sm:to-card/40" />
-          <Badge className={`absolute top-2 left-2 text-[9px] font-body border ${item.tagColor}`}>{item.tag}</Badge>
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full text-left group relative overflow-hidden rounded-2xl border border-border/60 bg-card hover:border-primary/50 hover:shadow-glow transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+    >
+      <div className="relative h-32 overflow-hidden">
+        <img src={item.image} alt={item.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+        <div className={`absolute inset-0 bg-gradient-to-tr ${item.gradient}`} />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+        <Badge className={`absolute top-2 left-2 text-[9px] font-body border ${item.tagColor}`}>{item.tag}</Badge>
+        {item.xp && (
+          <Badge className="absolute top-2 right-2 bg-gold text-black border-0 text-[9px] gap-0.5 shadow-md">
+            <Sparkles className="h-2.5 w-2.5" /> +{item.xp}
+          </Badge>
+        )}
+        <div className="absolute bottom-2 left-3 right-3">
+          <p className="font-display text-base font-bold text-foreground leading-tight drop-shadow-md">{item.title}</p>
+          <p className="font-body text-[10px] text-foreground/80 truncate">{item.subtitle}</p>
         </div>
-        <CardContent className="p-3 flex-1 flex flex-col justify-between min-w-0">
-          <div className="min-w-0">
-            <p className="font-display text-sm font-bold text-foreground leading-tight truncate">{item.title}</p>
-            <p className="font-body text-[10px] text-muted-foreground mt-0.5 truncate">{item.subtitle}</p>
-            <p className="font-body text-[11px] text-foreground/75 mt-1.5 line-clamp-2">{item.description}</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
-            <span className="font-body text-[10px] text-primary flex items-center gap-1">
-              <Clock className="h-3 w-3" /> {item.time}
-            </span>
-            <span className="font-body text-[10px] text-muted-foreground flex items-center gap-1 truncate">
-              <MapPin className="h-3 w-3" /> {item.location}
-            </span>
-          </div>
-        </CardContent>
       </div>
-    </Card>
+      <div className="p-3 space-y-2">
+        <p className="font-body text-[11px] text-muted-foreground line-clamp-2">{item.description}</p>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span className="font-body text-[10px] text-primary flex items-center gap-1">
+            <Clock className="h-3 w-3" /> {item.time}
+          </span>
+          <span className="font-body text-[10px] text-muted-foreground flex items-center gap-1 truncate">
+            <MapPin className="h-3 w-3" /> {item.location}
+          </span>
+          {item.participants && (
+            <span className="font-body text-[10px] text-accent flex items-center gap-1 ml-auto">
+              <Users className="h-3 w-3" /> {item.participants}
+            </span>
+          )}
+        </div>
+      </div>
+    </button>
   );
 }
 
 const StudentPortal = () => {
   const { profile, user } = useAuth();
-  const displayName = profile?.full_name || user?.email?.split("@")[0] || "Student";
-  const firstName = displayName.split(" ")[0];
+  // Prefer real first + last name from profile; never leak the email local-part.
+  const fullName = (profile?.full_name || "").trim();
+  const [firstName, ...rest] = fullName ? fullName.split(/\s+/) : [];
+  const lastName = rest.length ? rest[rest.length - 1] : "";
+  const greetingName = fullName
+    ? `${firstName}${lastName && lastName !== firstName ? ` ${lastName}` : ""}`
+    : "friend";
   const pt = usePrayerTimes();
+  const [selected, setSelected] = useState<EventItem | null>(null);
 
   return (
     <AppLayout>
@@ -142,7 +132,7 @@ const StudentPortal = () => {
               {/* Welcome message */}
               <div className="mt-4">
                 <h1 className="font-display text-xl md:text-3xl font-bold drop-shadow">
-                  Welcome back, {firstName} 👋
+                  Welcome back, {greetingName} 👋
                 </h1>
                 <p className="font-body text-xs md:text-sm text-white/85 mt-1">
                   Assalamu Alaikum — May Allah bless your day.
@@ -224,20 +214,21 @@ const StudentPortal = () => {
               <TabsTrigger value="challenges" className="font-body text-xs py-2 px-2 w-full">🏆 Challenges</TabsTrigger>
               <TabsTrigger value="events" className="font-body text-xs py-2 px-2 w-full">📅 Events</TabsTrigger>
             </TabsList>
-            <TabsContent value="classes" className="mt-3 space-y-2.5">
-              {classesItems.map((c, i) => <EventCard key={i} item={c} />)}
+            <TabsContent value="classes" className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {classesItems.map((c, i) => <EventCard key={i} item={c} onClick={() => setSelected(c)} />)}
             </TabsContent>
-            <TabsContent value="tutoring" className="mt-3 space-y-2.5">
-              {tutoringItems.map((c, i) => <EventCard key={i} item={c} />)}
+            <TabsContent value="tutoring" className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {tutoringItems.map((c, i) => <EventCard key={i} item={c} onClick={() => setSelected(c)} />)}
             </TabsContent>
-            <TabsContent value="challenges" className="mt-3 space-y-2.5">
-              {challengeItems.map((c, i) => <EventCard key={i} item={c} />)}
+            <TabsContent value="challenges" className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {challengeItems.map((c, i) => <EventCard key={i} item={c} onClick={() => setSelected(c)} />)}
             </TabsContent>
-            <TabsContent value="events" className="mt-3 space-y-2.5">
-              {eventsItems.map((c, i) => <EventCard key={i} item={c} />)}
+            <TabsContent value="events" className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {eventsItems.map((c, i) => <EventCard key={i} item={c} onClick={() => setSelected(c)} />)}
             </TabsContent>
           </Tabs>
         </div>
+        <EventDetailsDialog item={selected} onOpenChange={(o) => !o && setSelected(null)} />
 
         {/* ---- 6. Donation Goal (single, not redundant) ---- */}
         <Card className="border-border/60 bg-gradient-to-br from-primary/10 to-card">

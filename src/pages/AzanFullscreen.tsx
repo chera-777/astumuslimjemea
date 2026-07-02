@@ -14,7 +14,9 @@ const AzanFullscreen = () => {
   const navigate = useNavigate();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
-  const [reciterId, setReciterId] = useState(getSavedReciterId());
+  // Query param can override saved reciter (e.g. from a notification deep-link)
+  const paramReciter = params.get("reciter") || undefined;
+  const [reciterId, setReciterId] = useState(paramReciter || getSavedReciterId());
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const reciter = useMemo(() => getReciter(reciterId), [reciterId]);
@@ -23,6 +25,7 @@ const AzanFullscreen = () => {
   const auto = params.get("auto") === "1";
 
   useEffect(() => { saveReciterId(reciterId); }, [reciterId]);
+  useEffect(() => { if (paramReciter) setReciterId(paramReciter); }, [paramReciter]);
 
   useEffect(() => {
     const a = audioRef.current;
