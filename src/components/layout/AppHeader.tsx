@@ -12,7 +12,7 @@ export function AppHeader() {
   const initial = profile?.full_name?.[0]?.toUpperCase() || "U";
 
   return (
-    <header className="sticky top-0 z-40 h-14 flex items-center justify-between border-b border-border bg-card/95 backdrop-blur-lg px-3 md:px-5 gap-3 [transform:translateZ(0)] will-change-transform">
+    <header className="sticky top-0 z-40 h-14 flex items-center justify-between border-b border-border bg-card/95 backdrop-blur-lg px-3 md:px-5 gap-3">
       <div className="flex items-center gap-2 md:gap-3 shrink-0">
         {!isMobile && <SidebarTrigger className="mr-1" />}
         <Link to="/" className="flex items-center gap-2">
