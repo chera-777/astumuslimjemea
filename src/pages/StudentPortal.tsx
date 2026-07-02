@@ -132,7 +132,7 @@ const StudentPortal = () => {
               {/* Welcome message */}
               <div className="mt-4">
                 <h1 className="font-display text-xl md:text-3xl font-bold drop-shadow">
-                  Welcome back, {firstName} 👋
+                  Welcome back, {greetingName} 👋
                 </h1>
                 <p className="font-body text-xs md:text-sm text-white/85 mt-1">
                   Assalamu Alaikum — May Allah bless your day.
