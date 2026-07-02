@@ -124,7 +124,7 @@ const Index = () => {
           <button
             onClick={handleLogoClick}
             className="mx-auto mb-6 focus:outline-none"
-            aria-label="ASTU Muslim Jemea logo (tap 5 times for admin registration)"
+            aria-label="ASTU Muslim Jemea logo"
           >
             <div className="w-16 h-16 rounded-2xl gradient-teal flex items-center justify-center shadow-glow">
               <Moon className="h-8 w-8 text-primary-foreground" aria-hidden="true" />
