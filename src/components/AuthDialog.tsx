@@ -153,14 +153,10 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "register", showA
           is_cafe_student: isCafe,
         });
 
-        // Assign role
-        const roleToAssign = registrationRole === "guest" ? "student" : registrationRole;
-        await supabase.from("user_roles").insert({
-          user_id: data.user.id,
-          role: roleToAssign as any,
-          university_id: uniData.id,
-          sector: registrationRole === "amir" ? selectedSector : null,
-        });
+        // Role assignment is handled server-side by the handle_new_user trigger,
+        // which always assigns the baseline 'student' role. Elevated roles
+        // (amir/committee/admin) must be granted by an existing admin via a
+        // dedicated admin workflow — never self-assigned during registration.
 
         toast.success("🎉 Registration successful! Check your email to verify.");
         onOpenChange(false);
