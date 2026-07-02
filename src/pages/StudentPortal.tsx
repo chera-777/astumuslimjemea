@@ -214,20 +214,21 @@ const StudentPortal = () => {
               <TabsTrigger value="challenges" className="font-body text-xs py-2 px-2 w-full">🏆 Challenges</TabsTrigger>
               <TabsTrigger value="events" className="font-body text-xs py-2 px-2 w-full">📅 Events</TabsTrigger>
             </TabsList>
-            <TabsContent value="classes" className="mt-3 space-y-2.5">
-              {classesItems.map((c, i) => <EventCard key={i} item={c} />)}
+            <TabsContent value="classes" className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {classesItems.map((c, i) => <EventCard key={i} item={c} onClick={() => setSelected(c)} />)}
             </TabsContent>
-            <TabsContent value="tutoring" className="mt-3 space-y-2.5">
-              {tutoringItems.map((c, i) => <EventCard key={i} item={c} />)}
+            <TabsContent value="tutoring" className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {tutoringItems.map((c, i) => <EventCard key={i} item={c} onClick={() => setSelected(c)} />)}
             </TabsContent>
-            <TabsContent value="challenges" className="mt-3 space-y-2.5">
-              {challengeItems.map((c, i) => <EventCard key={i} item={c} />)}
+            <TabsContent value="challenges" className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {challengeItems.map((c, i) => <EventCard key={i} item={c} onClick={() => setSelected(c)} />)}
             </TabsContent>
-            <TabsContent value="events" className="mt-3 space-y-2.5">
-              {eventsItems.map((c, i) => <EventCard key={i} item={c} />)}
+            <TabsContent value="events" className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {eventsItems.map((c, i) => <EventCard key={i} item={c} onClick={() => setSelected(c)} />)}
             </TabsContent>
           </Tabs>
         </div>
+        <EventDetailsDialog item={selected} onOpenChange={(o) => !o && setSelected(null)} />
 
         {/* ---- 6. Donation Goal (single, not redundant) ---- */}
         <Card className="border-border/60 bg-gradient-to-br from-primary/10 to-card">
