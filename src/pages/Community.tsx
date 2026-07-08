@@ -3,10 +3,12 @@ import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Send, Phone, Video, Users, Search, ArrowLeft } from "lucide-react";
+import { MessageCircle, Phone, Video, Users, Search, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { RealtimeChat } from "@/components/RealtimeChat";
+
 
 const contacts = [
   { name: "Br. Yusuf K.", lastMsg: "JazakAllahu Khairan!", time: "2m ago", unread: 2 },
@@ -32,8 +34,8 @@ const messages = [
 type Tab = "chats" | "groups" | "active";
 
 const Community = () => {
-  const [message, setMessage] = useState("");
   const [activeTab, setActiveTab] = useState<Tab>("chats");
+
 
   const tabs: { key: Tab; label: string; icon: React.ReactNode; count?: number }[] = [
     { key: "chats", label: "Chats", icon: <MessageCircle className="h-4 w-4" />, count: 3 },
@@ -54,9 +56,10 @@ const Community = () => {
               <span className="font-body text-xs font-bold text-primary-foreground">Y</span>
             </div>
             <div>
-              <h1 className="font-body text-sm font-semibold">Br. Yusuf K.</h1>
-              <p className="font-body text-[10px] text-muted-foreground">Online</p>
+              <h1 className="font-body text-sm font-semibold">Community · General</h1>
+              <p className="font-body text-[10px] text-muted-foreground">Live · same university</p>
             </div>
+
           </div>
           <div className="flex gap-1">
             <Button size="icon" variant="ghost" className="h-8 w-8" aria-label="Voice call"><Phone className="h-4 w-4" /></Button>

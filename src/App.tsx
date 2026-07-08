@@ -36,6 +36,8 @@ import Academic from "./pages/Academic";
 import Challenges from "./pages/Challenges";
 import NotFound from "./pages/NotFound";
 import { AzanNotificationBridge } from "@/components/AzanNotificationBridge";
+import { RealtimeNotificationBridge } from "@/components/RealtimeNotificationBridge";
+
 
 const queryClient = new QueryClient();
 
@@ -47,6 +49,8 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <AzanNotificationBridge />
+          <RealtimeNotificationBridge />
+
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/reset-password" element={<ResetPassword />} />
