@@ -66,31 +66,8 @@ const Community = () => {
             <Button size="icon" variant="ghost" className="h-8 w-8" aria-label="Video call"><Video className="h-4 w-4" /></Button>
           </div>
         </div>
-        {/* Messages */}
-        <div className="flex-1 overflow-auto p-4 space-y-3 scrollbar-hide">
-          {messages.map((m, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-              className={`flex ${m.mine ? "justify-end" : "justify-start"}`}
-            >
-              <div className={`max-w-[75%] p-3 rounded-2xl ${m.mine ? "gradient-teal text-primary-foreground rounded-br-sm" : "bg-secondary rounded-bl-sm"}`}>
-                <p className="font-body text-sm">{m.text}</p>
-                <p className={`font-body text-[10px] mt-1 ${m.mine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>{m.time}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        {/* Input — no bottom nav behind this */}
-        <div className="flex gap-2 p-3 border-t border-border bg-card shrink-0">
-          <Input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type a message..."
-            className="font-body rounded-xl"
-          />
-          <Button size="icon" aria-label="Send message" className="gradient-teal text-primary-foreground border-0 rounded-xl shrink-0">
-            <Send className="h-4 w-4" />
-          </Button>
-        </div>
+        <RealtimeChat room="general" />
+
       </div>
     );
   }
