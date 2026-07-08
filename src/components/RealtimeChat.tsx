@@ -12,8 +12,10 @@ interface Message {
   user_id: string;
   content: string;
   created_at: string;
+  room?: string;
   sender_name?: string | null;
 }
+
 
 export function RealtimeChat({ room = "general" }: { room?: string }) {
   const { user, profile } = useAuth();
