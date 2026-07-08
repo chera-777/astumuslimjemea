@@ -279,6 +279,36 @@ export type Database = {
           },
         ]
       }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          room: string
+          university_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          room?: string
+          university_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          room?: string
+          university_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       news: {
         Row: {
           author_id: string | null
@@ -356,6 +386,42 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      prayer_times_cache: {
+        Row: {
+          city: string
+          country: string
+          created_at: string
+          date: string
+          hijri_date: string | null
+          id: string
+          method: number
+          timings: Json
+          updated_at: string
+        }
+        Insert: {
+          city: string
+          country: string
+          created_at?: string
+          date: string
+          hijri_date?: string | null
+          id?: string
+          method?: number
+          timings: Json
+          updated_at?: string
+        }
+        Update: {
+          city?: string
+          country?: string
+          created_at?: string
+          date?: string
+          hijri_date?: string | null
+          id?: string
+          method?: number
+          timings?: Json
+          updated_at?: string
         }
         Relationships: []
       }

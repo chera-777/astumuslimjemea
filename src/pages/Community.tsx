@@ -3,10 +3,12 @@ import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Send, Phone, Video, Users, Search, ArrowLeft } from "lucide-react";
+import { MessageCircle, Phone, Video, Users, Search, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { RealtimeChat } from "@/components/RealtimeChat";
+
 
 const contacts = [
   { name: "Br. Yusuf K.", lastMsg: "JazakAllahu Khairan!", time: "2m ago", unread: 2 },
@@ -32,8 +34,8 @@ const messages = [
 type Tab = "chats" | "groups" | "active";
 
 const Community = () => {
-  const [message, setMessage] = useState("");
   const [activeTab, setActiveTab] = useState<Tab>("chats");
+
 
   const tabs: { key: Tab; label: string; icon: React.ReactNode; count?: number }[] = [
     { key: "chats", label: "Chats", icon: <MessageCircle className="h-4 w-4" />, count: 3 },
@@ -54,40 +56,18 @@ const Community = () => {
               <span className="font-body text-xs font-bold text-primary-foreground">Y</span>
             </div>
             <div>
-              <h1 className="font-body text-sm font-semibold">Br. Yusuf K.</h1>
-              <p className="font-body text-[10px] text-muted-foreground">Online</p>
+              <h1 className="font-body text-sm font-semibold">Community · General</h1>
+              <p className="font-body text-[10px] text-muted-foreground">Live · same university</p>
             </div>
+
           </div>
           <div className="flex gap-1">
             <Button size="icon" variant="ghost" className="h-8 w-8" aria-label="Voice call"><Phone className="h-4 w-4" /></Button>
             <Button size="icon" variant="ghost" className="h-8 w-8" aria-label="Video call"><Video className="h-4 w-4" /></Button>
           </div>
         </div>
-        {/* Messages */}
-        <div className="flex-1 overflow-auto p-4 space-y-3 scrollbar-hide">
-          {messages.map((m, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-              className={`flex ${m.mine ? "justify-end" : "justify-start"}`}
-            >
-              <div className={`max-w-[75%] p-3 rounded-2xl ${m.mine ? "gradient-teal text-primary-foreground rounded-br-sm" : "bg-secondary rounded-bl-sm"}`}>
-                <p className="font-body text-sm">{m.text}</p>
-                <p className={`font-body text-[10px] mt-1 ${m.mine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>{m.time}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        {/* Input — no bottom nav behind this */}
-        <div className="flex gap-2 p-3 border-t border-border bg-card shrink-0">
-          <Input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type a message..."
-            className="font-body rounded-xl"
-          />
-          <Button size="icon" aria-label="Send message" className="gradient-teal text-primary-foreground border-0 rounded-xl shrink-0">
-            <Send className="h-4 w-4" />
-          </Button>
-        </div>
+        <RealtimeChat room="general" />
+
       </div>
     );
   }
