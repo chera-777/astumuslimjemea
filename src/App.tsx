@@ -1,6 +1,10 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import QuranReader from "./pages/QuranReader";
+const QuranReader = lazy(() => import("./pages/QuranReader"));
+const Ramadan = lazy(() => import("./pages/Ramadan"));
+const PrayerTimes = lazy(() => import("./pages/PrayerTimes"));
+const Admin = lazy(() => import("./pages/Admin"));
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
