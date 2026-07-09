@@ -1,6 +1,10 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import QuranReader from "./pages/QuranReader";
+const QuranReader = lazy(() => import("./pages/QuranReader"));
+const Ramadan = lazy(() => import("./pages/Ramadan"));
+const PrayerTimes = lazy(() => import("./pages/PrayerTimes"));
+const Admin = lazy(() => import("./pages/Admin"));
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -22,8 +26,6 @@ import Groups from "./pages/Groups";
 import News from "./pages/News";
 import Profile from "./pages/Profile";
 import Services from "./pages/Services";
-import Ramadan from "./pages/Ramadan";
-import PrayerTimes from "./pages/PrayerTimes";
 import Support from "./pages/Support";
 import Khadims from "./pages/Khadims";
 import DuaPage from "./pages/DuaPage";
@@ -51,6 +53,7 @@ const App = () => (
           <AzanNotificationBridge />
           <RealtimeNotificationBridge />
 
+          <Suspense fallback={<div className="h-screen flex items-center justify-center bg-background"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" /></div>}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/reset-password" element={<ResetPassword />} />
@@ -78,6 +81,7 @@ const App = () => (
             <Route path="/azan/now" element={<ProtectedRoute><AzanFullscreen /></ProtectedRoute>} />
             <Route path="/academic" element={<ProtectedRoute><Academic /></ProtectedRoute>} />
             <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><Admin /></ProtectedRoute>} />
 
             {/* Role-restricted portals */}
             <Route path="/portal/student" element={<ProtectedRoute allowedRoles={["student", "admin"]}><StudentPortal /></ProtectedRoute>} />
@@ -88,6 +92,7 @@ const App = () => (
 
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

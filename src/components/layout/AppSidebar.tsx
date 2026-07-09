@@ -1,7 +1,7 @@
 import {
   Home, BookOpen, Newspaper, Calendar, Moon, HandHeart, Gift, Heart,
   Sparkles, Clock, Users, Vote, Globe, GraduationCap, Building2,
-  MoreHorizontal, Trophy, MessageCircle
+  MoreHorizontal, Trophy, MessageCircle, Shield
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -76,6 +76,9 @@ export function AppSidebar() {
   } else if (roles.includes("guest")) {
     items = guestItems as typeof studentItems;
     portalLabel = "Guest Portal";
+  }
+  if (roles.includes("admin")) {
+    items = [...items, { title: "Admin", url: "/admin", icon: Shield } as any];
   }
 
   const initial = profile?.full_name?.[0]?.toUpperCase() || "U";
