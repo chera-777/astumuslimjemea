@@ -77,6 +77,9 @@ export function AppSidebar() {
     items = guestItems as typeof studentItems;
     portalLabel = "Guest Portal";
   }
+  if (roles.includes("admin")) {
+    items = [...items, { title: "Admin", url: "/admin", icon: Shield } as any];
+  }
 
   const initial = profile?.full_name?.[0]?.toUpperCase() || "U";
   const dept = profile?.department || "Student";
