@@ -1,41 +1,48 @@
-## Phase 3 — Realtime UX
+## Phase 5 — Admin dashboard, Push wiring, Analytics, PWA polish
 
-**1. Realtime chat**
-- Enable Realtime on a new `messages` table (id, group_id, user_id, content, created_at).
-- RLS: only group members (via profiles.university_id + group membership) can select/insert. For MVP, scope by `university_id` on the profiles table and require auth.
-- Frontend: extend `src/pages/Community.tsx` (or Groups) with a chat panel that subscribes via `supabase.channel(...)` inside `useEffect`, cleans up with `removeChannel`.
-- Show sender name + timestamp; auto-scroll on new message.
+Delivered in 4 sub-phases. Each is independently shippable.
 
-**2. Live event RSVPs**
-- Add Realtime publication on existing `event_rsvps` table.
-- In Events UI (StudentPortal event cards / EventDetailsDialog), subscribe to `postgres_changes` on `event_rsvps` filtered by event_id.
-- Update RSVP count live and reflect current user's RSVP status.
+### 5A. Admin dashboard & moderation
+- New route `/admin` (admin-only via `ProtectedRoute allowedRoles={["admin"]}`).
+- Tabs: **Users** (list profiles + roles, promote/demote, verify), **Content** (flagged messages/announcements/news), **Reports** (user-submitted flags), **Audit log** (append-only trail).
+- New tables:
+  - `content_reports` (target_type, target_id, reason, reporter_id, status).
+  - `audit_log` (actor_id, action, target_type, target_id, meta jsonb).
+  - `message_flags` reuses `content_reports`.
+- Admin-only RLS + `service_role` grants. Role changes write to `audit_log` via trigger.
+- Report button added to `RealtimeChat` messages and news/announcements cards.
 
-**3. Notification toaster**
-- Add Realtime publication on `notifications` table.
-- New global component `RealtimeNotificationBridge` mounted in `App.tsx` (like `AzanNotificationBridge`) that subscribes to INSERTs where `user_id = auth.uid()` and calls `toast()` from sonner.
+### 5B. Push notifications wiring
+- Install `react-onesignal`; init in `App.tsx` with `ONESIGNAL_APP_ID` (publishable — exposed via `.env`).
+- On sign-in, call `OneSignal.login(user.id)` so admin `send-push` can target by external user id.
+- New `push_subscriptions` table (optional mirror of user_id → last_seen) for admin targeting.
+- Triggers on `announcements`, `notifications`, and event RSVP thresholds call `send-push` via `pg_net`? — instead, do it client-agnostic: an edge function `on-announcement-created` invoked by a DB trigger via `net.http_post` OR by client after insert. MVP: call from admin UI "Send push" button on new announcement.
 
-## Phase 4 — Edge Functions
+### 5C. Analytics & reporting
+- New views/queries powering Amir/Committee dashboards:
+  - Prayer streaks per university (aggregate of `azan` interactions — if not tracked, skip).
+  - Event attendance rate (`event_rsvps` grouped by event).
+  - Donation totals + trend (`donations` weekly buckets).
+  - Active users (distinct auth per week, via `profiles.updated_at`).
+- Recharts line/bar/pie in `AmirsPortal` and `CommitteePortal` under a new "Analytics" tab.
+- Server-side aggregation via SQL views with RLS scoping to university.
 
-**A. `send-email`** (Resend via connector gateway)
-- POST { to, subject, html }
-- Zod validation, CORS, verify JWT in code, call `https://connector-gateway.lovable.dev/resend/emails` with `Authorization: Bearer ${LOVABLE_API_KEY}` + `X-Connection-Api-Key: ${RESEND_API_KEY}`.
-- From address uses `onboarding@resend.dev` until user verifies a domain.
+### 5D. Polish & PWA
+- Manifest-only PWA: `public/manifest.webmanifest`, icons (192/512/maskable), `<link rel="manifest">`, `theme-color`, `apple-touch-icon` in `index.html`.
+- Capacitor already configured — verify `capacitor.config.ts` still points to preview URL, document `npx cap sync` flow in README.
+- Accessibility pass: focus rings on all interactive, aria-labels on icon buttons, `prefers-reduced-motion` respect.
+- Perf: lazy-load heavy routes (`Quran`, `Ramadan`, `PrayerTimes`) via `React.lazy` + `Suspense`.
 
-**B. `send-push`** (OneSignal REST)
-- POST { user_ids?, segments?, title, message, url? }
-- Uses `ONESIGNAL_APP_ID` + `ONESIGNAL_REST_API_KEY` secrets.
-- Admin-only: verifies caller has admin role before sending.
+### Technical notes
+- Migration adds `content_reports`, `audit_log`, `push_subscriptions` with GRANTs + admin-only RLS.
+- Edge fn `on-report-created` (optional) toasts admins via `notifications` insert.
+- OneSignal App ID goes to `.env` as `VITE_ONESIGNAL_APP_ID` (publishable).
+- No new user-provided secrets required — OneSignal + Resend already set.
 
-**C. `prayer-times-cache`**
-- POST { city, country, method? } → checks a new `prayer_times_cache` table (city, country, date, timings jsonb), returns cached row if today's exists, otherwise fetches from Aladhan API, upserts, returns.
-- Reduces external calls; `usePrayerTimes` hook can optionally call this via `supabase.functions.invoke`.
+### Suggested execution order
+1. 5A migration → admin UI.
+2. 5D PWA (fast win, no backend).
+3. 5B push wiring.
+4. 5C analytics.
 
-## Technical notes
-
-- Migration adds: `messages` table + grants + RLS + realtime publication; `prayer_times_cache` table + grants + RLS (public read); `ALTER PUBLICATION supabase_realtime ADD TABLE event_rsvps, notifications, messages`.
-- All Realtime subscriptions live inside `useEffect` with cleanup — no leaks.
-- Edge functions use `npm:@supabase/supabase-js@2/cors` for CORS headers.
-- Resend already connected; no new secrets required for Phase 4.
-
-Approve to proceed with the migration + code + edge functions.
+Approve and I'll start with **5A + 5D** in the next message.
