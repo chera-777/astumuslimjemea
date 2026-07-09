@@ -26,8 +26,6 @@ import Groups from "./pages/Groups";
 import News from "./pages/News";
 import Profile from "./pages/Profile";
 import Services from "./pages/Services";
-import Ramadan from "./pages/Ramadan";
-import PrayerTimes from "./pages/PrayerTimes";
 import Support from "./pages/Support";
 import Khadims from "./pages/Khadims";
 import DuaPage from "./pages/DuaPage";
