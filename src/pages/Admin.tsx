@@ -105,7 +105,7 @@ export default function Admin() {
 
   return (
     <AppLayout>
-      <SEO title="Admin Dashboard — ASTU Muslim Jemea" description="Manage users, roles, reports and audit log." />
+      <SEO title="Admin Dashboard — ASTU Muslim Jemea" description="Manage users, roles, reports and audit log." path="/admin" />
       <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-4">
         <header className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-primary/15 border border-primary/30 flex items-center justify-center">
