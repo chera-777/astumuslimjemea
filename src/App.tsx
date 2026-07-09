@@ -53,6 +53,7 @@ const App = () => (
           <AzanNotificationBridge />
           <RealtimeNotificationBridge />
 
+          <Suspense fallback={<div className="h-screen flex items-center justify-center bg-background"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" /></div>}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/reset-password" element={<ResetPassword />} />
@@ -80,6 +81,7 @@ const App = () => (
             <Route path="/azan/now" element={<ProtectedRoute><AzanFullscreen /></ProtectedRoute>} />
             <Route path="/academic" element={<ProtectedRoute><Academic /></ProtectedRoute>} />
             <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><Admin /></ProtectedRoute>} />
 
             {/* Role-restricted portals */}
             <Route path="/portal/student" element={<ProtectedRoute allowedRoles={["student", "admin"]}><StudentPortal /></ProtectedRoute>} />
@@ -90,6 +92,7 @@ const App = () => (
 
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
