@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -108,12 +109,16 @@ const AmirsPortal = () => {
 
         {/* Management Tabs */}
         <Tabs defaultValue="sectors" className="w-full">
-          <TabsList className="w-full grid grid-cols-4 h-auto">
+          <TabsList className="w-full grid grid-cols-5 h-auto">
             <TabsTrigger value="sectors" className="font-body text-xs py-2">🏛️ Sectors</TabsTrigger>
             <TabsTrigger value="tasks" className="font-body text-xs py-2">📋 Tasks</TabsTrigger>
             <TabsTrigger value="announcements" className="font-body text-xs py-2">📢 Announce</TabsTrigger>
             <TabsTrigger value="members" className="font-body text-xs py-2">👥 Members</TabsTrigger>
+            <TabsTrigger value="analytics" className="font-body text-xs py-2">📊 Analytics</TabsTrigger>
           </TabsList>
+          <TabsContent value="analytics" className="mt-4">
+            <AnalyticsDashboard scope="university" />
+          </TabsContent>
 
           <TabsContent value="sectors" className="mt-4">
             <Tabs defaultValue="brothers" className="w-full">
