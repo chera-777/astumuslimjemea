@@ -6,6 +6,7 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ProfileCompletionPrompt } from "@/components/ProfileCompletionPrompt";
 import { useAzanAutoPlay } from "@/hooks/useAzanAutoPlay";
+import { useOneSignal } from "@/hooks/useOneSignal";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   const isMobile = useIsMobile();
   useAzanAutoPlay();
+  useOneSignal();
 
   return (
     <SidebarProvider>
