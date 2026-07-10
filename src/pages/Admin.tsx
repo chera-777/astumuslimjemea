@@ -200,6 +200,10 @@ export default function Admin() {
             ))}
           </TabsContent>
 
+          <TabsContent value="push">
+            <PushComposer />
+          </TabsContent>
+
           <TabsContent value="content">
             <Card className="p-6 text-center text-sm text-muted-foreground">
               Content moderation surfaces flagged messages and posts here. Use the Reports tab to act on user-submitted flags.
