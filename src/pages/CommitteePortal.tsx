@@ -75,12 +75,16 @@ const CommitteePortal = () => {
 
         {/* Management Tabs */}
         <Tabs defaultValue="elections" className="w-full">
-          <TabsList className="w-full grid grid-cols-4 h-auto">
+          <TabsList className="w-full grid grid-cols-5 h-auto">
             <TabsTrigger value="elections" className="font-body text-xs py-2">🗳️ Elections</TabsTrigger>
             <TabsTrigger value="announcements" className="font-body text-xs py-2">📢 Announce</TabsTrigger>
             <TabsTrigger value="grievances" className="font-body text-xs py-2">⚠️ Grievances</TabsTrigger>
             <TabsTrigger value="oversight" className="font-body text-xs py-2">👁️ Oversight</TabsTrigger>
+            <TabsTrigger value="analytics" className="font-body text-xs py-2">📊 Analytics</TabsTrigger>
           </TabsList>
+          <TabsContent value="analytics" className="mt-4">
+            <AnalyticsDashboard scope="university" />
+          </TabsContent>
 
           <TabsContent value="elections" className="mt-4 space-y-2">
             <div className="flex justify-between items-center mb-2">
