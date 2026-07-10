@@ -42,15 +42,25 @@ export function useOneSignal() {
           (OneSignal as any)?.User?.PushSubscription?.id ||
           (OneSignal as any)?.User?.PushSubscription?.subscriptionId;
         if (subId) {
-          await supabase.from("push_subscriptions").upsert(
-            {
+          const { data: existing } = await supabase
+            .from("push_subscriptions")
+            .select("id")
+            .eq("user_id", user.id)
+            .eq("onesignal_subscription_id", subId)
+            .maybeSingle();
+          if (existing) {
+            await supabase
+              .from("push_subscriptions")
+              .update({ last_seen_at: new Date().toISOString() })
+              .eq("id", existing.id);
+          } else {
+            await supabase.from("push_subscriptions").insert({
               user_id: user.id,
               onesignal_subscription_id: subId,
               device_info: { ua: navigator.userAgent, platform: navigator.platform },
               last_seen_at: new Date().toISOString(),
-            },
-            { onConflict: "onesignal_subscription_id" }
-          );
+            });
+          }
         }
       } catch (e) {
         console.warn("OneSignal login failed", e);
