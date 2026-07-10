@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Shield, Users, Flag, ScrollText, CheckCircle2, XCircle, Search, Bell } from "lucide-react";
 import { PushComposer } from "@/components/PushComposer";
+import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
 
 type Profile = {
   id: string;
@@ -119,13 +120,15 @@ export default function Admin() {
         </header>
 
         <Tabs defaultValue="users" className="w-full">
-          <TabsList className="grid grid-cols-5 w-full max-w-3xl">
+          <TabsList className="grid grid-cols-6 w-full max-w-3xl">
             <TabsTrigger value="users"><Users className="h-4 w-4 mr-1.5" />Users</TabsTrigger>
             <TabsTrigger value="reports"><Flag className="h-4 w-4 mr-1.5" />Reports {reports.filter(r=>r.status==='open').length>0 && <Badge className="ml-1.5">{reports.filter(r=>r.status==='open').length}</Badge>}</TabsTrigger>
             <TabsTrigger value="audit"><ScrollText className="h-4 w-4 mr-1.5" />Audit</TabsTrigger>
             <TabsTrigger value="push"><Bell className="h-4 w-4 mr-1.5" />Push</TabsTrigger>
+            <TabsTrigger value="analytics">📊 Analytics</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
           </TabsList>
+          <TabsContent value="analytics"><AnalyticsDashboard scope="global" /></TabsContent>
 
           <TabsContent value="users" className="space-y-3">
             <div className="relative">
