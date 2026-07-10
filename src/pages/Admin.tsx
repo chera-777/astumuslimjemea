@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Shield, Users, Flag, ScrollText, CheckCircle2, XCircle, Search } from "lucide-react";
+import { Shield, Users, Flag, ScrollText, CheckCircle2, XCircle, Search, Bell } from "lucide-react";
+import { PushComposer } from "@/components/PushComposer";
 
 type Profile = {
   id: string;
