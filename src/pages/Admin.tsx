@@ -104,6 +104,29 @@ export default function Admin() {
     load();
   };
 
+  const warnAuthor = async (report: Report) => {
+    // Look up the author of the reported content
+    let authorId: string | null = null;
+    if (report.target_type === "message") {
+      const { data } = await supabase.from("messages").select("user_id").eq("id", report.target_id).maybeSingle();
+      authorId = (data as any)?.user_id ?? null;
+    } else if (report.target_type === "profile") {
+      authorId = report.target_id;
+    }
+    if (!authorId) return toast.error("Could not resolve author for this target");
+    const { error } = await supabase.from("notifications").insert({
+      user_id: authorId,
+      title: "Content warning",
+      body: `An admin reviewed a report about your ${report.target_type} and issued a warning. Please review community guidelines.`,
+      kind: "moderation",
+    } as any);
+    if (error) return toast.error(error.message);
+    await supabase.from("content_reports").update({ status: "resolved" }).eq("id", report.id);
+    toast.success("Warning sent");
+    load();
+  };
+
+
   const filtered = profiles.filter(p =>
     !q || p.full_name?.toLowerCase().includes(q.toLowerCase()) || p.department?.toLowerCase().includes(q.toLowerCase())
   );
