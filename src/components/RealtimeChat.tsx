@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, Flag } from "lucide-react";
+import { Send, Flag, Ban, MoreVertical } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { ReportDialog } from "@/components/ReportDialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 
 interface Message {
@@ -24,7 +25,24 @@ export function RealtimeChat({ room = "general" }: { room?: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
+  const [blockedIds, setBlockedIds] = useState<Set<string>>(new Set());
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    supabase.from("user_blocks").select("blocked_id").eq("blocker_id", user.id).then(({ data }) => {
+      setBlockedIds(new Set((data || []).map((r: any) => r.blocked_id)));
+    });
+  }, [user?.id]);
+
+  const blockUser = async (blockedId: string, name: string) => {
+    if (!user?.id) return;
+    const { error } = await supabase.from("user_blocks").insert({ blocker_id: user.id, blocked_id: blockedId });
+    if (error) return toast.error(error.message);
+    setBlockedIds((prev) => new Set(prev).add(blockedId));
+    toast.success(`Blocked ${name}. Their messages are hidden.`);
+  };
+
 
   useEffect(() => {
     if (!profile?.university_id) return;
