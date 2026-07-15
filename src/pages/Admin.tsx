@@ -190,8 +190,28 @@ export default function Admin() {
           </TabsContent>
 
           <TabsContent value="reports" className="space-y-2">
-            {reports.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">No reports.</p>}
-            {reports.map(r => (
+            <div className="flex flex-wrap gap-1.5">
+              {REPORT_TYPES.map(t => (
+                <Button
+                  key={t}
+                  size="sm"
+                  variant={reportFilter === t ? "default" : "outline"}
+                  className="h-7 text-[11px] capitalize"
+                  onClick={() => setReportFilter(t)}
+                >
+                  {t}
+                  {t !== "all" && (
+                    <span className="ml-1 text-[10px] opacity-70">
+                      {reports.filter(r => r.target_type === t).length}
+                    </span>
+                  )}
+                </Button>
+              ))}
+            </div>
+            {reports.filter(r => reportFilter === "all" || r.target_type === reportFilter).length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-8">No reports.</p>
+            )}
+            {reports.filter(r => reportFilter === "all" || r.target_type === reportFilter).map(r => (
               <Card key={r.id} className="p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -201,18 +221,20 @@ export default function Admin() {
                       <span className="text-[10px] text-muted-foreground">{new Date(r.created_at).toLocaleString()}</span>
                     </div>
                     <p className="text-sm">{r.reason}</p>
-                    <p className="text-[10px] text-muted-foreground mt-1">target: <code>{r.target_id.slice(0,8)}</code></p>
+                    <p className="text-[10px] text-muted-foreground mt-1">target: <code>{r.target_id.slice(0,8)}</code> · reporter: <code>{r.reporter_id.slice(0,8)}</code></p>
                   </div>
                   {r.status === "open" && (
                     <div className="flex gap-1 shrink-0">
-                      <Button size="sm" variant="outline" className="h-7" onClick={() => resolveReport(r.id, "resolved")}><CheckCircle2 className="h-3.5 w-3.5" /></Button>
-                      <Button size="sm" variant="ghost" className="h-7" onClick={() => resolveReport(r.id, "dismissed")}><XCircle className="h-3.5 w-3.5" /></Button>
+                      <Button size="sm" variant="outline" className="h-7 text-[11px]" onClick={() => warnAuthor(r)} title="Warn author & resolve">Warn</Button>
+                      <Button size="sm" variant="outline" className="h-7" onClick={() => resolveReport(r.id, "resolved")} title="Resolve"><CheckCircle2 className="h-3.5 w-3.5" /></Button>
+                      <Button size="sm" variant="ghost" className="h-7" onClick={() => resolveReport(r.id, "dismissed")} title="Dismiss"><XCircle className="h-3.5 w-3.5" /></Button>
                     </div>
                   )}
                 </div>
               </Card>
             ))}
           </TabsContent>
+
 
           <TabsContent value="audit" className="space-y-1.5">
             {audit.length === 0 && <p className="text-sm text-muted-foreground text-center py-8">No audit entries.</p>}
