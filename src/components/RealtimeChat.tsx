@@ -30,18 +30,19 @@ export function RealtimeChat({ room = "general" }: { room?: string }) {
 
   useEffect(() => {
     if (!user?.id) return;
-    supabase.from("user_blocks").select("blocked_id").eq("blocker_id", user.id).then(({ data }) => {
+    (supabase as any).from("user_blocks").select("blocked_id").eq("blocker_id", user.id).then(({ data }: any) => {
       setBlockedIds(new Set((data || []).map((r: any) => r.blocked_id)));
     });
   }, [user?.id]);
 
   const blockUser = async (blockedId: string, name: string) => {
     if (!user?.id) return;
-    const { error } = await supabase.from("user_blocks").insert({ blocker_id: user.id, blocked_id: blockedId });
+    const { error } = await (supabase as any).from("user_blocks").insert({ blocker_id: user.id, blocked_id: blockedId });
     if (error) return toast.error(error.message);
     setBlockedIds((prev) => new Set(prev).add(blockedId));
     toast.success(`Blocked ${name}. Their messages are hidden.`);
   };
+
 
 
   useEffect(() => {
