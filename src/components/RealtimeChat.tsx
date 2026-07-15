@@ -123,8 +123,22 @@ export function RealtimeChat({ room = "general" }: { room?: string }) {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: Math.min(i * 0.02, 0.3) }}
-              className={`flex ${mine ? "justify-end" : "justify-start"}`}
+              className={`flex items-end gap-1 group ${mine ? "justify-end" : "justify-start"}`}
             >
+              {!mine && (
+                <ReportDialog
+                  targetType="message"
+                  targetId={m.id}
+                  trigger={
+                    <button
+                      aria-label="Report message"
+                      className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity p-1 rounded-full hover:bg-muted"
+                    >
+                      <Flag className="h-3 w-3 text-muted-foreground" />
+                    </button>
+                  }
+                />
+              )}
               <div
                 className={`max-w-[75%] p-3 rounded-2xl ${
                   mine
@@ -150,6 +164,7 @@ export function RealtimeChat({ room = "general" }: { room?: string }) {
                 </p>
               </div>
             </motion.div>
+
           );
         })}
         <div ref={bottomRef} />
