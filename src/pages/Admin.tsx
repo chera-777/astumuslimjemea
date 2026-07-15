@@ -43,14 +43,17 @@ type AuditEntry = {
 type RoleRow = { user_id: string; role: string };
 
 const ROLES = ["admin", "amir", "committee", "student", "guest"] as const;
+const REPORT_TYPES = ["all", "message", "announcement", "news", "event", "profile"] as const;
 
 export default function Admin() {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [rolesByUser, setRolesByUser] = useState<Record<string, string[]>>({});
   const [reports, setReports] = useState<Report[]>([]);
   const [audit, setAudit] = useState<AuditEntry[]>([]);
+  const [reportFilter, setReportFilter] = useState<(typeof REPORT_TYPES)[number]>("all");
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(true);
+
 
   const load = async () => {
     setLoading(true);
