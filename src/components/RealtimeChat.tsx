@@ -134,7 +134,7 @@ export function RealtimeChat({ room = "general" }: { room?: string }) {
             No messages yet. Say Assalamu Alaikum 👋
           </p>
         )}
-        {messages.map((m, i) => {
+        {messages.filter((m) => m.user_id === user?.id || !blockedIds.has(m.user_id)).map((m, i) => {
           const mine = m.user_id === user?.id;
           return (
             <motion.div
@@ -145,18 +145,33 @@ export function RealtimeChat({ room = "general" }: { room?: string }) {
               className={`flex items-end gap-1 group ${mine ? "justify-end" : "justify-start"}`}
             >
               {!mine && (
-                <ReportDialog
-                  targetType="message"
-                  targetId={m.id}
-                  trigger={
+                <Popover>
+                  <PopoverTrigger asChild>
                     <button
-                      aria-label="Report message"
+                      aria-label="Message actions"
                       className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity p-1 rounded-full hover:bg-muted"
                     >
-                      <Flag className="h-3 w-3 text-muted-foreground" />
+                      <MoreVertical className="h-3 w-3 text-muted-foreground" />
                     </button>
-                  }
-                />
+                  </PopoverTrigger>
+                  <PopoverContent side="left" align="center" className="w-40 p-1">
+                    <ReportDialog
+                      targetType="message"
+                      targetId={m.id}
+                      trigger={
+                        <button className="w-full text-left px-2 py-1.5 text-xs rounded hover:bg-muted flex items-center gap-2">
+                          <Flag className="h-3.5 w-3.5" /> Report
+                        </button>
+                      }
+                    />
+                    <button
+                      onClick={() => blockUser(m.user_id, m.sender_name || "user")}
+                      className="w-full text-left px-2 py-1.5 text-xs rounded hover:bg-muted flex items-center gap-2 text-destructive"
+                    >
+                      <Ban className="h-3.5 w-3.5" /> Block user
+                    </button>
+                  </PopoverContent>
+                </Popover>
               )}
               <div
                 className={`max-w-[75%] p-3 rounded-2xl ${
@@ -183,9 +198,9 @@ export function RealtimeChat({ room = "general" }: { room?: string }) {
                 </p>
               </div>
             </motion.div>
-
           );
         })}
+
         <div ref={bottomRef} />
       </div>
 
