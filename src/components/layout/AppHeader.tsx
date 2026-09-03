@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
+import { XpChip } from "@/components/XpChip";
+
 
 export function AppHeader() {
   const isMobile = useIsMobile();
