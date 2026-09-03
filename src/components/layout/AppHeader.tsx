@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
+import { XpChip } from "@/components/XpChip";
+
 
 export function AppHeader() {
   const isMobile = useIsMobile();
@@ -35,12 +37,14 @@ export function AppHeader() {
       )}
 
       <div className="flex items-center gap-1 shrink-0">
+        <XpChip />
         {!isMobile && (
           <button className="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-secondary/60 text-xs font-body font-medium text-foreground hover:bg-secondary">
             ASTU <ChevronDown className="h-3 w-3" />
           </button>
         )}
         <Button variant="ghost" size="icon" className="relative h-9 w-9" aria-label="Notifications">
+
           <Bell className="h-4 w-4" />
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-accent" />
         </Button>
