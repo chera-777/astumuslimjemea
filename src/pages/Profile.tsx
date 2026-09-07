@@ -17,6 +17,8 @@ import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useXp } from "@/hooks/useXp";
+
 
 const accentColors = [
   { name: "Teal", hsl: "168 65% 35%", class: "bg-primary" },
