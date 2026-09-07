@@ -33,7 +33,7 @@ const messages = [
   { from: "Br. Yusuf K.", text: "JazakAllahu Khairan!", mine: false, time: "2:34 PM" },
 ];
 
-type Tab = "chats" | "groups" | "active";
+type Tab = "chats" | "groups" | "ranks" | "active";
 
 const Community = () => {
   const [activeTab, setActiveTab] = useState<Tab>("chats");
@@ -42,7 +42,9 @@ const Community = () => {
   const tabs: { key: Tab; label: string; icon: React.ReactNode; count?: number }[] = [
     { key: "chats", label: "Chats", icon: <MessageCircle className="h-4 w-4" />, count: 3 },
     { key: "groups", label: "Groups", icon: <Users className="h-4 w-4" />, count: 8 },
+    { key: "ranks", label: "Ranks", icon: <Trophy className="h-4 w-4" /> },
   ];
+
 
   // Active chat — full screen, NO AppLayout, NO bottom nav
   if (activeTab === "active") {
