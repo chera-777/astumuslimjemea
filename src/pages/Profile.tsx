@@ -17,6 +17,8 @@ import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useXp } from "@/hooks/useXp";
+
 
 const accentColors = [
   { name: "Teal", hsl: "168 65% 35%", class: "bg-primary" },
@@ -36,18 +38,30 @@ const achievements = [
   { icon: "🏆", title: "Community Leader", desc: "Complete all challenges", unlocked: false },
 ];
 
-const activityLog = [
-  { action: "Completed Surah Al-Baqarah", time: "2h ago", xp: 50 },
-  { action: "Attended Tafsir class", time: "Yesterday", xp: 30 },
-  { action: "Donated to Iftar Fund", time: "2 days ago", xp: 20 },
-  { action: "Helped in tutoring", time: "3 days ago", xp: 40 },
-];
+const XP_LABELS: Record<string, string> = {
+  event_rsvp: "Joined an event",
+  donation: "Made a donation",
+  azan_daily: "Listened to the Azan",
+  tasbih_100: "Completed 100 tasbih",
+  quran_surah: "Finished a Surah",
+};
+
+const timeAgo = (iso: string) => {
+  const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.round(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.round(hrs / 24)}d ago`;
+};
 
 const Profile = () => {
   const { signOut, profile: authProfile, user, roles } = useAuth();
+  const { xp, level, recent, progress, nextLevelAt } = useXp();
   const navigate = useNavigate();
   const [theme, setTheme] = useState<"dark" | "light" | "system">("dark");
   const [selectedAccent, setSelectedAccent] = useState(0);
+
   const [donations, setDonations] = useState<{ campaign: string | null; amount: number; created_at: string }[]>([]);
   const [universityName, setUniversityName] = useState<string>("—");
 
@@ -265,25 +279,52 @@ const Profile = () => {
           </TabsContent>
 
           <TabsContent value="activity" className="mt-4 space-y-2">
-            {activityLog.map((a, i) => (
-              <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
-                <Card className="border border-border bg-card">
-                  <CardContent className="p-3 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <Zap className="h-4 w-4 text-primary" />
+            <Card className="border border-primary/30 bg-primary/5">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-display text-sm font-bold">Level {level}</p>
+                  <Badge className="font-body text-[10px] bg-primary/15 text-primary border-0">
+                    {xp} XP
+                  </Badge>
+                </div>
+                <Progress value={progress} className="h-2" />
+                <p className="font-body text-[10px] text-muted-foreground mt-2">
+                  {Math.max(0, nextLevelAt - xp)} XP to level {level + 1}
+                </p>
+              </CardContent>
+            </Card>
+
+            {recent.length === 0 ? (
+              <Card className="border border-border bg-card">
+                <CardContent className="p-6 text-center">
+                  <Zap className="h-8 w-8 mx-auto text-muted-foreground/40 mb-2" aria-hidden="true" />
+                  <p className="font-body text-sm text-muted-foreground">
+                    No activity yet. Join an event or read Qur'an to start earning points.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              recent.map((a, i) => (
+                <motion.div key={a.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
+                  <Card className="border border-border bg-card">
+                    <CardContent className="p-3 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <Zap className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-body text-sm">{XP_LABELS[a.source] || a.source}</p>
+                          <p className="font-body text-[10px] text-muted-foreground">{timeAgo(a.created_at)}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-body text-sm">{a.action}</p>
-                        <p className="font-body text-[10px] text-muted-foreground">{a.time}</p>
-                      </div>
-                    </div>
-                    <Badge className="font-body text-[10px] bg-primary/10 text-primary border-0">+{a.xp} XP</Badge>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                      <Badge className="font-body text-[10px] bg-primary/10 text-primary border-0">+{a.delta} XP</Badge>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))
+            )}
           </TabsContent>
+
 
           <TabsContent value="donations" className="space-y-3 mt-4">
             <Card className="border border-border bg-card">

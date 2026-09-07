@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, Users, Sparkles, Trophy } from "lucide-react";
+import { Clock, MapPin, Users, Sparkles, Trophy, Check, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import type { EventItem } from "@/lib/portalItems";
+import { useXp } from "@/hooks/useXp";
 
 interface Props {
   item: EventItem | null;
@@ -10,6 +13,22 @@ interface Props {
 }
 
 export function EventDetailsDialog({ item, onOpenChange }: Props) {
+  const { award } = useXp();
+  const [joining, setJoining] = useState(false);
+  const [joined, setJoined] = useState(false);
+
+  const handleJoin = async () => {
+    if (!item) return;
+    setJoining(true);
+    const granted = await award("event_rsvp", { meta: { title: item.title } });
+    setJoining(false);
+    setJoined(true);
+    toast.success(
+      granted ? `You're in — ${item.title}. +5 XP earned!` : `You're in — ${item.title}.`
+    );
+  };
+
+
   return (
     <Dialog open={!!item} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md p-0 overflow-hidden border-primary/30">
@@ -50,9 +69,21 @@ export function EventDetailsDialog({ item, onOpenChange }: Props) {
                 )}
               </div>
 
-              <Button className="w-full h-11 rounded-full font-semibold">
-                <Trophy className="h-4 w-4 mr-2" /> Join / RSVP
+              <Button
+                className="w-full h-11 rounded-full font-semibold"
+                onClick={handleJoin}
+                disabled={joining || joined}
+              >
+                {joining ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : joined ? (
+                  <Check className="h-4 w-4 mr-2" />
+                ) : (
+                  <Trophy className="h-4 w-4 mr-2" />
+                )}
+                {joined ? "You're going" : "Join / RSVP"}
               </Button>
+
             </div>
           </>
         )}
