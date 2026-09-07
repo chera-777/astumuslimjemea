@@ -160,7 +160,14 @@ const Community = () => {
             ))}
           </motion.div>
         )}
+
+        {activeTab === "ranks" && (
+          <motion.div key="ranks" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <Leaderboard />
+          </motion.div>
+        )}
       </AnimatePresence>
+
     </AppLayout>
   );
 };
