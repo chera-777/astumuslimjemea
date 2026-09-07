@@ -3,11 +3,13 @@ import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Phone, Video, Users, Search, ArrowLeft } from "lucide-react";
+import { MessageCircle, Phone, Video, Users, Search, ArrowLeft, Trophy } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { RealtimeChat } from "@/components/RealtimeChat";
+import { Leaderboard } from "@/components/Leaderboard";
+
 
 
 const contacts = [
@@ -31,7 +33,7 @@ const messages = [
   { from: "Br. Yusuf K.", text: "JazakAllahu Khairan!", mine: false, time: "2:34 PM" },
 ];
 
-type Tab = "chats" | "groups" | "active";
+type Tab = "chats" | "groups" | "ranks" | "active";
 
 const Community = () => {
   const [activeTab, setActiveTab] = useState<Tab>("chats");
@@ -40,7 +42,9 @@ const Community = () => {
   const tabs: { key: Tab; label: string; icon: React.ReactNode; count?: number }[] = [
     { key: "chats", label: "Chats", icon: <MessageCircle className="h-4 w-4" />, count: 3 },
     { key: "groups", label: "Groups", icon: <Users className="h-4 w-4" />, count: 8 },
+    { key: "ranks", label: "Ranks", icon: <Trophy className="h-4 w-4" /> },
   ];
+
 
   // Active chat — full screen, NO AppLayout, NO bottom nav
   if (activeTab === "active") {
@@ -156,7 +160,14 @@ const Community = () => {
             ))}
           </motion.div>
         )}
+
+        {activeTab === "ranks" && (
+          <motion.div key="ranks" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <Leaderboard />
+          </motion.div>
+        )}
       </AnimatePresence>
+
     </AppLayout>
   );
 };
