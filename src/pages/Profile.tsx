@@ -36,18 +36,30 @@ const achievements = [
   { icon: "🏆", title: "Community Leader", desc: "Complete all challenges", unlocked: false },
 ];
 
-const activityLog = [
-  { action: "Completed Surah Al-Baqarah", time: "2h ago", xp: 50 },
-  { action: "Attended Tafsir class", time: "Yesterday", xp: 30 },
-  { action: "Donated to Iftar Fund", time: "2 days ago", xp: 20 },
-  { action: "Helped in tutoring", time: "3 days ago", xp: 40 },
-];
+const XP_LABELS: Record<string, string> = {
+  event_rsvp: "Joined an event",
+  donation: "Made a donation",
+  azan_daily: "Listened to the Azan",
+  tasbih_100: "Completed 100 tasbih",
+  quran_surah: "Finished a Surah",
+};
+
+const timeAgo = (iso: string) => {
+  const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.round(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.round(hrs / 24)}d ago`;
+};
 
 const Profile = () => {
   const { signOut, profile: authProfile, user, roles } = useAuth();
+  const { xp, level, recent, progress, nextLevelAt } = useXp();
   const navigate = useNavigate();
   const [theme, setTheme] = useState<"dark" | "light" | "system">("dark");
   const [selectedAccent, setSelectedAccent] = useState(0);
+
   const [donations, setDonations] = useState<{ campaign: string | null; amount: number; created_at: string }[]>([]);
   const [universityName, setUniversityName] = useState<string>("—");
 
