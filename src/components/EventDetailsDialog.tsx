@@ -69,9 +69,21 @@ export function EventDetailsDialog({ item, onOpenChange }: Props) {
                 )}
               </div>
 
-              <Button className="w-full h-11 rounded-full font-semibold">
-                <Trophy className="h-4 w-4 mr-2" /> Join / RSVP
+              <Button
+                className="w-full h-11 rounded-full font-semibold"
+                onClick={handleJoin}
+                disabled={joining || joined}
+              >
+                {joining ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : joined ? (
+                  <Check className="h-4 w-4 mr-2" />
+                ) : (
+                  <Trophy className="h-4 w-4 mr-2" />
+                )}
+                {joined ? "You're going" : "Join / RSVP"}
               </Button>
+
             </div>
           </>
         )}
