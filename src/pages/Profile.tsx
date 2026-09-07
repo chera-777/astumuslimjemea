@@ -279,25 +279,52 @@ const Profile = () => {
           </TabsContent>
 
           <TabsContent value="activity" className="mt-4 space-y-2">
-            {activityLog.map((a, i) => (
-              <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
-                <Card className="border border-border bg-card">
-                  <CardContent className="p-3 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <Zap className="h-4 w-4 text-primary" />
+            <Card className="border border-primary/30 bg-primary/5">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-display text-sm font-bold">Level {level}</p>
+                  <Badge className="font-body text-[10px] bg-primary/15 text-primary border-0">
+                    {xp} XP
+                  </Badge>
+                </div>
+                <Progress value={progress} className="h-2" />
+                <p className="font-body text-[10px] text-muted-foreground mt-2">
+                  {Math.max(0, nextLevelAt - xp)} XP to level {level + 1}
+                </p>
+              </CardContent>
+            </Card>
+
+            {recent.length === 0 ? (
+              <Card className="border border-border bg-card">
+                <CardContent className="p-6 text-center">
+                  <Zap className="h-8 w-8 mx-auto text-muted-foreground/40 mb-2" aria-hidden="true" />
+                  <p className="font-body text-sm text-muted-foreground">
+                    No activity yet. Join an event or read Qur'an to start earning points.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              recent.map((a, i) => (
+                <motion.div key={a.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
+                  <Card className="border border-border bg-card">
+                    <CardContent className="p-3 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <Zap className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-body text-sm">{XP_LABELS[a.source] || a.source}</p>
+                          <p className="font-body text-[10px] text-muted-foreground">{timeAgo(a.created_at)}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-body text-sm">{a.action}</p>
-                        <p className="font-body text-[10px] text-muted-foreground">{a.time}</p>
-                      </div>
-                    </div>
-                    <Badge className="font-body text-[10px] bg-primary/10 text-primary border-0">+{a.xp} XP</Badge>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                      <Badge className="font-body text-[10px] bg-primary/10 text-primary border-0">+{a.delta} XP</Badge>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))
+            )}
           </TabsContent>
+
 
           <TabsContent value="donations" className="space-y-3 mt-4">
             <Card className="border border-border bg-card">
