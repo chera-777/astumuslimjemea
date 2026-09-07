@@ -3,11 +3,13 @@ import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Phone, Video, Users, Search, ArrowLeft } from "lucide-react";
+import { MessageCircle, Phone, Video, Users, Search, ArrowLeft, Trophy } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { RealtimeChat } from "@/components/RealtimeChat";
+import { Leaderboard } from "@/components/Leaderboard";
+
 
 
 const contacts = [
