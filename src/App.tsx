@@ -44,6 +44,7 @@ import { RealtimeNotificationBridge } from "@/components/RealtimeNotificationBri
 const queryClient = new QueryClient();
 
 const App = () => (
+  <ErrorBoundary>
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <TooltipProvider>
