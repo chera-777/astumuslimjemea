@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Heart, HandHeart, TrendingUp, Users, Sparkles, Gift } from "lucide-react";
+import { EmptyState } from "@/components/EmptyState";
 
 const campaigns = [
   { id: "general", name: "General Sadaqah", icon: Heart, gradient: "gradient-teal", desc: "Support overall community programs", goal: 50000 },
@@ -224,10 +225,16 @@ const Donations = () => {
         </div>
 
         {/* Recent donations */}
-        {myDonations.length > 0 && (
-          <Card className="gamification-card">
-            <CardContent className="p-4">
-              <h3 className="font-display text-sm font-bold mb-3">Your Recent Donations</h3>
+        <Card className="gamification-card">
+          <CardContent className="p-4">
+            <h3 className="font-display text-sm font-bold mb-3">Your Recent Donations</h3>
+            {myDonations.length === 0 ? (
+              <EmptyState
+                icon={HandHeart}
+                title="No donations yet"
+                description="Your giving history will appear here once you support a campaign."
+              />
+            ) : (
               <div className="space-y-2">
                 {myDonations.map((d, i) => (
                   <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-secondary">
@@ -241,9 +248,10 @@ const Donations = () => {
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        )}
+            )}
+          </CardContent>
+        </Card>
+
       </div>
     </AppLayout>
   );
