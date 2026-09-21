@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -69,6 +70,7 @@ const AmirsPortal = () => {
 
   return (
     <AppLayout>
+      <SEO title="Amirs Portal | ASTU Muslim Jemea" description="Sector leadership tools: announcements, member oversight, analytics and reports." path="/portal/amirs" />
       <div className="p-4 md:p-6 space-y-5 max-w-5xl mx-auto">
         {/* Welcome Header */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>

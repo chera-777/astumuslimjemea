@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Globe, BookOpen, Calendar, Heart, ArrowRight, Star, Users } from "lucide-react";
@@ -29,6 +30,7 @@ const GuestPortal = () => {
 
   return (
     <AppLayout>
+      <SEO title="Guest Portal | ASTU Muslim Jemea" description="Explore ASTU Muslim Jemea: prayer times, Islamic resources, events and donations." path="/portal/guest" />
       <div className="p-4 md:p-6 space-y-5 max-w-4xl mx-auto">
         {/* Welcome */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">

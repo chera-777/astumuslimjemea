@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -110,6 +111,7 @@ const StudentPortal = () => {
 
   return (
     <AppLayout>
+      <SEO title="Student Portal | ASTU Muslim Jemea" description="Your student hub: prayer times, classes, tutoring, challenges and upcoming community events." path="/portal/student" />
       <div className="w-full max-w-6xl mx-auto overflow-x-hidden p-3 md:p-5 space-y-4">
         {/* ---- 1. Welcome Hero — restored original style with name, location, hijri date, next prayer ---- */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>

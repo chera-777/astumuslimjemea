@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SEO } from "@/components/SEO";
 import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -39,6 +40,7 @@ const CommitteePortal = () => {
 
   return (
     <AppLayout>
+      <SEO title="Committee Portal | ASTU Muslim Jemea" description="Committee workspace for elections, announcements, moderation and community analytics." path="/portal/committee" />
       <div className="p-4 md:p-6 space-y-5 max-w-5xl mx-auto">
         {/* Welcome */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
