@@ -161,7 +161,21 @@ export default function Admin() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input placeholder="Search users…" value={q} onChange={e => setQ(e.target.value)} className="pl-9" />
             </div>
-            {loading ? <p className="text-sm text-muted-foreground">Loading…</p> : (
+            {loading ? (
+              <div className="space-y-2" aria-busy="true" aria-label="Loading users">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Card key={i} className="p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-40" />
+                        <Skeleton className="h-3 w-24" />
+                      </div>
+                      <Skeleton className="h-7 w-48" />
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : (
               <div className="space-y-2">
                 {filtered.map(p => (
                   <Card key={p.id} className="p-3">
