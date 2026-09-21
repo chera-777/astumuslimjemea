@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Heart, HandHeart, TrendingUp, Users, Sparkles, Gift } from "lucide-react";
+import { EmptyState } from "@/components/EmptyState";
 
 const campaigns = [
   { id: "general", name: "General Sadaqah", icon: Heart, gradient: "gradient-teal", desc: "Support overall community programs", goal: 50000 },
