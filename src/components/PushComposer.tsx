@@ -42,7 +42,6 @@ export function PushComposer() {
       return;
     }
     toast.success("Push notification sent");
-    console.log("send-push result", data);
     setTitle(""); setMessage(""); setUrl(""); setExternalIds("");
   };
 
