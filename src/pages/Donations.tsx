@@ -224,10 +224,16 @@ const Donations = () => {
         </div>
 
         {/* Recent donations */}
-        {myDonations.length > 0 && (
-          <Card className="gamification-card">
-            <CardContent className="p-4">
-              <h3 className="font-display text-sm font-bold mb-3">Your Recent Donations</h3>
+        <Card className="gamification-card">
+          <CardContent className="p-4">
+            <h3 className="font-display text-sm font-bold mb-3">Your Recent Donations</h3>
+            {myDonations.length === 0 ? (
+              <EmptyState
+                icon={HandHeart}
+                title="No donations yet"
+                description="Your giving history will appear here once you support a campaign."
+              />
+            ) : (
               <div className="space-y-2">
                 {myDonations.map((d, i) => (
                   <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-secondary">
@@ -241,9 +247,10 @@ const Donations = () => {
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        )}
+            )}
+          </CardContent>
+        </Card>
+
       </div>
     </AppLayout>
   );
