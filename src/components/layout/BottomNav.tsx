@@ -91,8 +91,28 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
             // Instead, place labels radially INWARD (toward the FAB anchor)
             // by a fixed offset — keeping a clear gap from every icon.
             const labelOffset = iconHalf + 16;
-            const lx = originRight ? x - Math.cos(rad) * labelOffset : x;
-            const ly = originRight ? y + Math.sin(rad) * labelOffset : y - labelOffset;
+            // Mobile arc: icons on the sides sit close together vertically,
+            // so their labels go horizontally inward (toward the centre).
+            // Icons near the top sit close together horizontally, so their
+            // labels go radially outward above the arc. No label crosses an icon.
+            let lx: number, ly: number;
+            let anchor: "center" | "start" | "end" = "center";
+            if (originRight) {
+              lx = x - Math.cos(rad) * labelOffset;
+              ly = y + Math.sin(rad) * labelOffset;
+            } else if (deg > 55 && deg < 125) {
+              const r = radius + 44;
+              lx = Math.cos(rad) * r;
+              ly = -Math.sin(rad) * r;
+            } else if (deg >= 125) {
+              lx = x + iconHalf + 4;
+              ly = y + 4;
+              anchor = "start";
+            } else {
+              lx = x - iconHalf - 4;
+              ly = y + 4;
+              anchor = "end";
+            }
             return (
               <motion.div
                 key={a.label}
@@ -103,16 +123,24 @@ function RadialMenu({ onClose, originRight = false }: { onClose: () => void; ori
                 className="absolute pointer-events-auto"
                 style={{ left: 0, top: 0 }}
               >
-                <motion.span
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1, x: lx, y: ly }}
                   exit={{ opacity: 0 }}
                   transition={{ delay: 0.15 + i * 0.025 }}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 font-body text-[10px] md:text-xs font-medium text-foreground/90 whitespace-nowrap drop-shadow pointer-events-none select-none"
+                  className="absolute pointer-events-none select-none"
                   aria-hidden="true"
                 >
-                  {a.label}
-                </motion.span>
+                  <span
+                    className={cn(
+                      "block -translate-y-1/2 whitespace-nowrap rounded-full bg-card/90 border border-border/60 px-1.5 py-0.5 font-body text-[10px] md:text-xs font-semibold leading-none text-foreground shadow-sm",
+                      anchor === "center" && "-translate-x-1/2",
+                      anchor === "end" && "-translate-x-full"
+                    )}
+                  >
+                    {a.label}
+                  </span>
+                </motion.div>
                 <motion.div animate={{ x, y }} transition={{ type: "spring", stiffness: 260, damping: 22, delay: i * 0.025 }}>
                   <Link
                     to={a.path}
