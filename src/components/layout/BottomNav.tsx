@@ -12,16 +12,16 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 // 10 quick-access actions arranged in a circular/radial fan above the FAB
 const quickActions = [
-  { label: "News",         icon: Newspaper,    path: "/news",         color: "from-purple-500 to-fuchsia-500" },
-  { label: "Adhan",        icon: Bell,         path: "/azan",         color: "from-yellow-400 to-amber-500" },
-  { label: "Khadim",       icon: Shield,       path: "/khadims",      color: "from-amber-500 to-orange-600" },
-  { label: "Donations",    icon: Heart,        path: "/donations",    color: "from-red-500 to-rose-600" },
-  { label: "Prayers",      icon: HandHeart,    path: "/prayer-times", color: "from-orange-400 to-red-500" },
-  { label: "Challenges",   icon: Trophy,       path: "/challenges",   color: "from-cyan-400 to-blue-500" },
-  { label: "University",   icon: Building2,    path: "/services",     color: "from-amber-700 to-yellow-700" },
-  { label: "Academic",     icon: GraduationCap,path: "/academic",     color: "from-indigo-500 to-blue-600" },
-  { label: "Group prayers",icon: Users,        path: "/groups",       color: "from-blue-500 to-sky-500" },
-  { label: "Governance",   icon: Vote,         path: "/governance",   color: "from-violet-500 to-purple-600" },
+  { label: "News",         icon: Newspaper,    path: "/news",         color: "from-violet-500 to-indigo-500" },
+  { label: "Adhan",        icon: Bell,         path: "/azan",         color: "from-teal-500 to-cyan-600" },
+  { label: "Khadim",       icon: Shield,       path: "/khadims",      color: "from-emerald-500 to-teal-600" },
+  { label: "Donations",    icon: Heart,        path: "/donations",    color: "from-indigo-400 to-violet-500" },
+  { label: "Prayers",      icon: HandHeart,    path: "/prayer-times", color: "from-sky-500 to-blue-600" },
+  { label: "Challenges",   icon: Trophy,       path: "/challenges",   color: "from-cyan-500 to-teal-500" },
+  { label: "University",   icon: Building2,    path: "/services",     color: "from-blue-500 to-indigo-600" },
+  { label: "Academic",     icon: GraduationCap,path: "/academic",     color: "from-purple-500 to-indigo-500" },
+  { label: "Group prayers",icon: Users,        path: "/groups",       color: "from-teal-400 to-emerald-600" },
+  { label: "Governance",   icon: Vote,         path: "/governance",   color: "from-indigo-500 to-blue-500" },
 ];
 
 function RadialMenu({ onClose, originRight = false }: { onClose: () => void; originRight?: boolean }) {
