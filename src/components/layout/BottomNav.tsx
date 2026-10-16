@@ -217,7 +217,7 @@ export function BottomNav() {
               onClick={() => setShowActions(!showActions)}
               className={cn(
                 "relative -mt-7 flex items-center justify-center w-14 h-14 rounded-full shadow-glow transition-all",
-                showActions ? "bg-pink-500 rotate-45" : "gradient-pink"
+                showActions ? "bg-accent rotate-45" : "gradient-pink"
               )}
               aria-label="Quick menu"
             >
@@ -259,7 +259,7 @@ export function DesktopFAB() {
         onClick={() => setShowActions(!showActions)}
         className={cn(
           "fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-glow flex items-center justify-center transition-all",
-          showActions ? "bg-pink-500 rotate-45" : "gradient-pink"
+          showActions ? "bg-accent rotate-45" : "gradient-pink"
         )}
         aria-label="Quick menu"
       >
