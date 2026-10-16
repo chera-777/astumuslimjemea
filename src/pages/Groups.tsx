@@ -1,5 +1,6 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SEO } from "@/components/SEO";
+import { EmptyState } from "@/components/EmptyState";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Crown, Shield, GraduationCap, User } from "lucide-react";
@@ -48,6 +49,11 @@ const Groups = () => {
         </motion.div>
 
         <div className="space-y-6">
+          {groups.length === 0 && (
+            <Card><CardContent className="p-0">
+              <EmptyState icon={Users} title="No group yet" description="Groups are formed at the start of each academic year. You'll see yours here once assigned." actionLabel="Back to home" actionTo="/dashboard" />
+            </CardContent></Card>
+          )}
           {groups.map((g, gi) => (
             <motion.div key={g.name} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: gi * 0.1 }}>
               <Card>
