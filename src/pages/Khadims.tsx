@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SEO } from "@/components/SEO";
+import { EmptyState } from "@/components/EmptyState";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -165,6 +166,9 @@ const Khadims = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
+                {mockSchedule.length === 0 && (
+                  <EmptyState icon={Calendar} title="No shifts scheduled" description="Register as a Khadim and your service shifts will appear here." />
+                )}
                 {mockSchedule.map((s, i) => (
                   <motion.div
                     key={i}
