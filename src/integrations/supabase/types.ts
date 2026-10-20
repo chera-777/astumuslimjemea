@@ -262,6 +262,38 @@ export type Database = {
           },
         ]
       }
+      group_members: {
+        Row: {
+          created_at: string
+          group_id: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          group_id: string
+          id?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          group_id?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "student_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       khadim_registrations: {
         Row: {
           availability_notes: string | null
@@ -589,6 +621,53 @@ export type Database = {
         }
         Relationships: []
       }
+      student_groups: {
+        Row: {
+          academic_year: string | null
+          activities: string[]
+          created_at: string
+          description: string | null
+          focus_tags: string[]
+          gender: string
+          id: string
+          name: string
+          university_id: string
+          updated_at: string
+        }
+        Insert: {
+          academic_year?: string | null
+          activities?: string[]
+          created_at?: string
+          description?: string | null
+          focus_tags?: string[]
+          gender: string
+          id?: string
+          name: string
+          university_id: string
+          updated_at?: string
+        }
+        Update: {
+          academic_year?: string | null
+          activities?: string[]
+          created_at?: string
+          description?: string | null
+          focus_tags?: string[]
+          gender?: string
+          id?: string
+          name?: string
+          university_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_groups_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       universities: {
         Row: {
           city: string
@@ -717,6 +796,19 @@ export type Database = {
       }
     }
     Functions: {
+      can_view_group: {
+        Args: { _group_id: string; _user_id: string }
+        Returns: boolean
+      }
+      get_group_roster: {
+        Args: { _group_id: string }
+        Returns: {
+          batch_year: string
+          full_name: string
+          role: string
+          user_id: string
+        }[]
+      }
       get_user_university: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
