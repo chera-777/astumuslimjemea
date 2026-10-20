@@ -796,10 +796,6 @@ export type Database = {
       }
     }
     Functions: {
-      can_view_group: {
-        Args: { _group_id: string; _user_id: string }
-        Returns: boolean
-      }
       get_group_roster: {
         Args: { _group_id: string }
         Returns: {
