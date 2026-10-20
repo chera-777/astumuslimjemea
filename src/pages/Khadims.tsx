@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { SEO } from "@/components/SEO";
 import { EmptyState } from "@/components/EmptyState";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -21,17 +23,37 @@ const khadimRoles = [
   { id: "ittikaf_support", label: "Ittikaf Support", icon: "🕌", desc: "Delivering food to students in ittikaf at the masjid" },
 ];
 
-const mockSchedule = [
-  { date: "Mar 12", day: "Ramadan 10", meal: "Iftar", role: "Food Serving", students: ["Ahmed M.", "Yusuf K.", "Ibrahim A."] },
-  { date: "Mar 13", day: "Ramadan 11", meal: "Suhoor", role: "Drinks", students: ["Fatima H.", "Aisha B.", "Maryam T."] },
-  { date: "Mar 14", day: "Ramadan 12", meal: "Iftar", role: "Cleaning", students: ["Omar S.", "Hamza D.", "Bilal R."] },
-  { date: "Mar 15", day: "Ramadan 13", meal: "Both", role: "Ittikaf Support", students: ["Khadija M.", "Zainab A."] },
-  { date: "Mar 16", day: "Ramadan 14", meal: "Iftar", role: "Meal Card Ticking", students: ["Ahmed M.", "Fatima H.", "Omar S."] },
-];
+type Shift = { id: string; assigned_date: string; assigned_role: string; meal_type: string };
 
 const Khadims = () => {
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [period, setPeriod] = useState<string>("ramadan");
+  const [notes, setNotes] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [registrations, setRegistrations] = useState<{ id: string; period: string; is_approved: boolean | null }[]>([]);
+  const [shifts, setShifts] = useState<Shift[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const { user, profile } = useAuth();
+
+  const load = async () => {
+    if (!user) return;
+    const { data: regs } = await supabase.from("khadim_registrations").select("id, period, is_approved").eq("user_id", user.id);
+    setRegistrations(regs ?? []);
+    const ids = (regs ?? []).map(r => r.id);
+    if (ids.length) {
+      const { data } = await supabase.from("khadim_schedule").select("id, assigned_date, assigned_role, meal_type").in("khadim_id", ids).order("assigned_date");
+      setShifts(data ?? []);
+    } else setShifts([]);
+    setLoaded(true);
+  };
+  useEffect(() => { load(); }, [user?.id]);
+
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = shifts.filter(s => s.assigned_date >= today);
+  const mySchedule = upcoming.map(s => ({
+    ...s,
+    label: new Date(s.assigned_date + "T00:00:00").toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }),
+  }));
 
   const toggleRole = (roleId: string) => {
     setSelectedRoles(prev =>
@@ -39,12 +61,29 @@ const Khadims = () => {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedRoles.length === 0) {
       toast.error("Please select at least one role");
       return;
     }
-    toast.success("🎉 JazakAllahu Khairan! Your Khadim registration has been submitted.");
+    if (!user || !profile?.university_id) {
+      toast.error("Please complete your profile first");
+      return;
+    }
+    if (registrations.some(r => r.period === period)) {
+      toast.info("You're already registered for this period");
+      return;
+    }
+    setSubmitting(true);
+    const { error } = await supabase.from("khadim_registrations").insert({
+      user_id: user.id, university_id: profile.university_id, period,
+      preferred_roles: selectedRoles, availability_notes: notes.trim() || null,
+    });
+    setSubmitting(false);
+    if (error) { toast.error("Couldn't submit registration"); return; }
+    toast.success("JazakAllahu Khairan! Your Khadim registration has been submitted.");
+    setSelectedRoles([]); setNotes("");
+    load();
   };
 
   return (
@@ -66,9 +105,9 @@ const Khadims = () => {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { label: "Active Khadims", value: "42", icon: Users, gradient: "gradient-teal" },
-            { label: "Days Covered", value: "28/30", icon: Calendar, gradient: "gradient-pink" },
-            { label: "Meals Served", value: "1,240", icon: Utensils, gradient: "gradient-blue" },
+            { label: "Registrations", value: String(registrations.length), icon: Users, gradient: "gradient-teal" },
+            { label: "Upcoming Shifts", value: String(upcoming.length), icon: Calendar, gradient: "gradient-pink" },
+            { label: "Shifts Served", value: String(shifts.length - upcoming.length), icon: Utensils, gradient: "gradient-blue" },
           ].map((stat, i) => (
             <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
               <Card className="gamification-card">
@@ -148,30 +187,35 @@ const Khadims = () => {
             <Card>
               <CardContent className="p-4 space-y-3">
                 <Label className="font-body text-sm">Additional Notes (Optional)</Label>
-                <Textarea placeholder="Any scheduling preferences or notes..." className="font-body" />
+                <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={500} placeholder="Any scheduling preferences or notes..." className="font-body" />
               </CardContent>
             </Card>
 
-            <Button onClick={handleSubmit} className="w-full gradient-green text-primary-foreground font-body" size="lg">
+            <Button onClick={handleSubmit} disabled={submitting} className="w-full gradient-green text-primary-foreground font-body" size="lg">
               <HandHeart className="mr-2 h-5 w-5" />
-              Register as Khadim
+              {submitting ? "Submitting…" : "Register as Khadim"}
             </Button>
+            {registrations.length > 0 && (
+              <p className="font-body text-xs text-center text-muted-foreground">
+                Registered: {registrations.map(r => `${r.period} (${r.is_approved ? "approved" : "pending approval"})`).join(", ")}
+              </p>
+            )}
           </TabsContent>
 
           <TabsContent value="schedule" className="space-y-4 mt-4">
             <Card>
               <CardHeader>
                 <CardTitle className="font-display text-base flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-primary" /> Khadim Schedule
+                  <Calendar className="h-5 w-5 text-primary" /> My Booked Shifts
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {mockSchedule.length === 0 && (
-                  <EmptyState icon={Calendar} title="No shifts scheduled" description="Register as a Khadim and your service shifts will appear here." />
+                {loaded && mySchedule.length === 0 && (
+                  <EmptyState icon={Calendar} title="No upcoming shifts" description={registrations.length ? "Your registration is in. Shifts will appear here once the committee books you." : "Register as a Khadim and your service shifts will appear here."} />
                 )}
-                {mockSchedule.map((s, i) => (
+                {mySchedule.map((s, i) => (
                   <motion.div
-                    key={i}
+                    key={s.id}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.08 }}
@@ -179,14 +223,12 @@ const Khadims = () => {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Badge className="font-body text-[10px] bg-primary/10 text-primary border-0">{s.day}</Badge>
-                        <span className="font-body text-sm font-semibold">{s.date}</span>
+                        <span className="font-body text-sm font-semibold">{s.label}</span>
                       </div>
-                      <Badge variant="outline" className="font-body text-[10px]">{s.meal}</Badge>
+                      <Badge variant="outline" className="font-body text-[10px] capitalize">{s.meal_type}</Badge>
                     </div>
                     <p className="font-body text-xs text-muted-foreground">
-                      <span className="font-semibold text-foreground">{s.role}:</span>{" "}
-                      {s.students.join(", ")}
+                      <span className="font-semibold text-foreground">Your role:</span> {s.assigned_role}
                     </p>
                   </motion.div>
                 ))}
