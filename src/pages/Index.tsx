@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthDialog } from "@/components/AuthDialog";
-import { Moon, Star, Sparkles } from "lucide-react";
+import { Star } from "lucide-react";
+import { NatureScreen, NatureHeader } from "@/components/auth/NatureShell";
+import logo from "@/assets/logo-leaf.png";
 import { SEO } from "@/components/SEO";
 import { useEffect } from "react";
 
@@ -98,7 +100,7 @@ const Index = () => {
         defaultMode={authMode}
         showAdminOption={showAdminReg}
       />
-    </div>
+    </NatureScreen>
     </>
   );
 };
