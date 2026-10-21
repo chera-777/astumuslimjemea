@@ -183,6 +183,50 @@
     background: linear-gradient(90deg, hsl(var(--teal)), hsl(var(--blue)));
     transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  /* Nature-inspired auth / onboarding system */
+  .nature-surface {
+    --nature-bg: 120 30% 97%;
+    --nature-ink: 145 45% 18%;
+    --nature-leaf: 130 55% 38%;
+    --nature-leaf-light: 100 50% 50%;
+    --nature-muted: 140 10% 45%;
+    --nature-line: 130 25% 86%;
+    background: radial-gradient(120% 80% at 50% 0%, hsl(110 45% 94%) 0%, hsl(var(--nature-bg)) 55%, hsl(0 0% 100%) 100%);
+    color: hsl(var(--nature-ink));
+    color-scheme: light;
+  }
+  .nature-title { color: hsl(var(--nature-leaf)); }
+  .nature-muted { color: hsl(var(--nature-muted)); }
+  .nature-link { color: hsl(var(--nature-leaf)); font-weight: 600; }
+  .nature-input {
+    @apply h-12 w-full rounded-xl pl-11 pr-11 text-sm outline-none transition;
+    background: hsl(0 0% 100% / 0.75);
+    border: 1px solid hsl(var(--nature-line));
+    color: hsl(var(--nature-ink));
+    backdrop-filter: blur(6px);
+  }
+  .nature-input::placeholder { color: hsl(var(--nature-muted)); }
+  .nature-input:focus { border-color: hsl(var(--nature-leaf)); box-shadow: 0 0 0 3px hsl(var(--nature-leaf) / 0.15); }
+  .nature-btn {
+    @apply h-12 w-full rounded-xl text-base font-semibold transition disabled:opacity-60;
+    background: linear-gradient(180deg, hsl(var(--nature-leaf-light)), hsl(var(--nature-leaf)));
+    color: hsl(0 0% 100%);
+    box-shadow: 0 8px 20px -8px hsl(var(--nature-leaf) / 0.55);
+  }
+  .nature-btn:hover { filter: brightness(1.05); }
+  .nature-btn-ghost {
+    @apply h-12 w-full rounded-xl text-base font-semibold transition;
+    background: hsl(0 0% 100% / 0.7);
+    border: 1px solid hsl(var(--nature-line));
+    color: hsl(var(--nature-leaf));
+  }
+  .nature-social {
+    @apply h-14 w-14 rounded-2xl flex items-center justify-center transition disabled:opacity-60;
+    background: hsl(0 0% 100% / 0.85);
+    border: 1px solid hsl(var(--nature-line));
+    box-shadow: 0 6px 16px -10px hsl(var(--nature-ink) / 0.35);
+  }
+  .nature-social:hover { transform: translateY(-1px); }
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
