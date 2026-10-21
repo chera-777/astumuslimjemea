@@ -194,6 +194,10 @@
     background: radial-gradient(120% 80% at 50% 0%, hsl(110 45% 94%) 0%, hsl(var(--nature-bg)) 55%, hsl(0 0% 100%) 100%);
     color: hsl(var(--nature-ink));
     color-scheme: light;
+    --background: 0 0% 100%; --foreground: 145 45% 18%; --card: 0 0% 100%; --card-foreground: 145 45% 18%;
+    --popover: 0 0% 100%; --popover-foreground: 145 45% 18%; --primary: 130 55% 38%; --primary-foreground: 0 0% 100%;
+    --secondary: 120 30% 94%; --secondary-foreground: 145 45% 18%; --muted: 120 20% 94%; --muted-foreground: 140 10% 45%;
+    --border: 130 25% 86%; --input: 130 25% 86%; --ring: 130 55% 38%;
   }
   .nature-title { color: hsl(var(--nature-leaf)); }
   .nature-muted { color: hsl(var(--nature-muted)); }

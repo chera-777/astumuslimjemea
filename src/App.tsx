@@ -1,3 +1,4 @@
+import { LoadingScreen } from "@/components/auth/NatureShell";
 import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -55,7 +56,7 @@ const App = () => (
           <AzanNotificationBridge />
           <RealtimeNotificationBridge />
 
-          <Suspense fallback={<div className="h-screen flex items-center justify-center bg-background"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" /></div>}>
+          <Suspense fallback={<LoadingScreen />}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/reset-password" element={<ResetPassword />} />
