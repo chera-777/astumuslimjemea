@@ -9,8 +9,8 @@ export function NatureLeaves() {
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       <img src={leaves} alt="" className="absolute -top-6 -right-10 w-52 sm:w-64 opacity-90" />
       <img src={leaves} alt="" className="absolute -top-6 -left-10 w-44 sm:w-56 opacity-80 -scale-x-100" />
-      <img src={leaves} alt="" className="absolute -bottom-8 -left-10 w-44 sm:w-56 opacity-80 rotate-180 -scale-x-100" />
-      <img src={leaves} alt="" className="absolute -bottom-8 -right-10 w-48 sm:w-60 opacity-85 rotate-180" />
+      <img src={leaves} alt="" className="absolute -bottom-6 -left-8 w-36 sm:w-48 opacity-60 rotate-180" />
+      <img src={leaves} alt="" className="absolute -bottom-6 -right-8 w-36 sm:w-48 opacity-60 -scale-y-100" />
     </div>
   );
 }

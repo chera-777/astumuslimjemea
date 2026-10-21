@@ -440,7 +440,7 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "register", showA
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="nature-surface sm:max-w-md p-0 overflow-hidden border-0 rounded-3xl">
         <NatureLeaves />
-        <div className="relative z-10 px-6 py-8 max-h-[85vh] overflow-y-auto scrollbar-hide">
+        <div className="relative z-10 px-6 pt-8 pb-16 max-h-[85vh] overflow-y-auto scrollbar-hide">
           <DialogTitle className="sr-only">
             {mode === "register" ? "Register" : mode === "signin" ? "Sign In" : "Reset Password"}
           </DialogTitle>
