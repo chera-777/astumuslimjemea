@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-
 @layer base {
   :root {
     --background: 180 15% 97%;
@@ -61,6 +59,15 @@
 
     --font-display: 'Amiri', serif;
     --font-body: 'Plus Jakarta Sans', sans-serif;
+    --leaf-background: 125 25% 97%;
+    --leaf-foreground: 145 32% 18%;
+    --leaf-card: 0 0% 100%;
+    --leaf-primary: 140 40% 34%;
+    --leaf-secondary: 135 24% 93%;
+    --leaf-muted-foreground: 150 13% 39%;
+    --leaf-border: 140 20% 83%;
+    --leaf-accent: 260 30% 46%;
+    --shadow-leaf: 0 8px 24px -12px hsl(145 35% 20% / 0.24);
   }
 
   .dark {
@@ -91,6 +98,15 @@
     --sidebar-accent-foreground: 180 20% 92%;
     --sidebar-border: 200 12% 15%;
     --sidebar-ring: 172 42% 46%;
+    --leaf-background: 150 19% 8%;
+    --leaf-foreground: 130 20% 92%;
+    --leaf-card: 150 16% 12%;
+    --leaf-primary: 140 34% 64%;
+    --leaf-secondary: 155 18% 17%;
+    --leaf-muted-foreground: 145 12% 69%;
+    --leaf-border: 145 14% 25%;
+    --leaf-accent: 260 35% 74%;
+    --shadow-leaf: 0 8px 24px -12px hsl(150 20% 3% / 0.5);
   }
 }
 
@@ -101,12 +117,109 @@
   html {
     color-scheme: dark;
   }
+  html:not(.dark) { color-scheme: light; }
   body {
-    @apply bg-background text-foreground dark;
+    @apply bg-background text-foreground;
     font-family: var(--font-body);
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
+  }
+}
+
+/* Shared leafy application presentation; auth keeps its light reference theme. */
+@layer components {
+  .nature-app, body:has(.nature-app) {
+    --background: var(--leaf-background);
+    --foreground: var(--leaf-foreground);
+    --card: var(--leaf-card);
+    --card-foreground: var(--leaf-foreground);
+    --popover: var(--leaf-card);
+    --popover-foreground: var(--leaf-foreground);
+    --primary: var(--leaf-primary);
+    --primary-foreground: 150 25% 8%;
+    --secondary: var(--leaf-secondary);
+    --secondary-foreground: var(--leaf-foreground);
+    --muted: var(--leaf-secondary);
+    --muted-foreground: var(--leaf-muted-foreground);
+    --border: var(--leaf-border);
+    --input: var(--leaf-border);
+    --ring: var(--leaf-primary);
+    --accent: var(--leaf-accent);
+    --accent-foreground: 150 25% 8%;
+    --teal: 170 35% 50%;
+    --teal-light: 170 30% 61%;
+    --teal-dark: 160 28% 27%;
+    --green: var(--leaf-primary);
+    --green-light: 140 32% 66%;
+    --blue: 210 44% 62%;
+    --blue-light: 200 36% 70%;
+    --purple: var(--leaf-accent);
+    --purple-light: 250 30% 76%;
+    --pink: var(--leaf-accent);
+    --pink-light: 250 30% 76%;
+    --gold: 170 35% 50%;
+    --gold-light: 170 30% 61%;
+    --radius: 0.5rem;
+    --sidebar-background: var(--leaf-card);
+    --sidebar-foreground: var(--leaf-foreground);
+    --sidebar-primary: var(--leaf-primary);
+    --sidebar-primary-foreground: 150 25% 8%;
+    --sidebar-accent: var(--leaf-secondary);
+    --sidebar-accent-foreground: var(--leaf-foreground);
+    --sidebar-border: var(--leaf-border);
+  }
+  html:not(.dark) .nature-app, html:not(.dark) body:has(.nature-app) {
+    --primary-foreground: 0 0% 100%;
+    --accent-foreground: 0 0% 100%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --teal: 170 36% 33%;
+    --blue: 210 42% 40%;
+    --purple: 260 30% 46%;
+  }
+  .leaf-content > div:not(.leaf-page-art):not([data-leaf-sticky]) {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: 2rem 1rem;
+  }
+  .leaf-content > div:not(.leaf-page-art):not([data-leaf-sticky]) > * + * { margin-top: 1.5rem; }
+  .leaf-content [data-leaf-sticky] { padding: 0; max-width: none; margin: 0; }
+  .leaf-page-heading { padding-block: 0.5rem 1rem; }
+  .leaf-content [role="tablist"] {
+    min-height: 3rem;
+    border: 1px solid hsl(var(--border) / 0.65);
+    background: hsl(var(--card) / 0.75);
+    border-radius: 0.5rem;
+    gap: 0.25rem;
+    padding: 0.25rem;
+  }
+  .leaf-content [role="tab"] {
+    min-height: 2.5rem;
+    min-width: 0;
+    padding-inline: 0.5rem;
+    border-radius: 0.375rem;
+  }
+  .leaf-content [role="tab"][data-state="active"] {
+    background: hsl(var(--primary) / 0.14);
+    color: hsl(var(--primary));
+    box-shadow: none;
+  }
+  .leaf-content .bg-card {
+    background-color: hsl(var(--card) / 0.88);
+    box-shadow: var(--shadow-leaf);
+  }
+  .leaf-content input, .leaf-content textarea {
+    background-color: hsl(var(--card) / 0.85);
+    border-color: hsl(var(--border));
+    border-radius: 0.5rem;
+  }
+  .leaf-content .gamification-card { border-radius: 0.5rem; }
+  .leaf-content .gamification-card::before { background: hsl(var(--primary) / 0.5); height: 2px; }
+  .leaf-profile-details { border-bottom: 1px solid hsl(var(--border) / 0.65); }
+  .leaf-profile-details:last-child { border-bottom: 0; }
+  @media (min-width: 768px) {
+    .leaf-content > div:not(.leaf-page-art):not([data-leaf-sticky]) { padding: 2.5rem 2rem; }
   }
 }
 
@@ -246,8 +359,8 @@ html, body, #root {
   max-width: 100vw;
 }
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 0;
+  height: 0;
 }
 ::-webkit-scrollbar-thumb {
   background-color: hsl(var(--muted-foreground) / 0.25);
@@ -257,7 +370,7 @@ html, body, #root {
   background: transparent;
 }
 * {
-  scrollbar-width: thin;
+  scrollbar-width: none;
   scrollbar-color: hsl(var(--muted-foreground) / 0.25) transparent;
 }
 

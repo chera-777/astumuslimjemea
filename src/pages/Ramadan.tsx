@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SEO } from "@/components/SEO";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,13 +27,7 @@ const Ramadan = () => {
     <AppLayout>
       <SEO title="Ramadan Programme — ASTU Muslim Jemea" description="Ramadan schedule, iftar timings, meal cards, and special programmes for the holy month." path="/ramadan" />
       <div className="p-4 md:p-6 space-y-6">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="flex items-center gap-3 mb-1">
-            <Moon className="h-6 w-6 text-accent" />
-            <h1 className="font-display text-2xl font-bold text-foreground">Ramadan Hub</h1>
-          </div>
-          <p className="text-muted-foreground font-body text-sm">Tools, meal cards, calendars & prayer times</p>
-        </motion.div>
+        <NaturePageHeader title="Ramadan Hub" subtitle="Meals, prayer, and community service" />
 
         {/* Meal Card */}
         <Card className="border-accent/30 overflow-hidden">

@@ -18,15 +18,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useXp } from "@/hooks/useXp";
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 
 
 const accentColors = [
-  { name: "Teal", hsl: "168 65% 35%", class: "bg-primary" },
-  { name: "Pink", hsl: "340 75% 55%", class: "bg-accent" },
-  { name: "Blue", hsl: "215 80% 55%", class: "bg-[hsl(215,80%,55%)]" },
-  { name: "Gold", hsl: "42 85% 55%", class: "bg-[hsl(42,85%,55%)]" },
-  { name: "Green", hsl: "145 60% 40%", class: "bg-[hsl(145,60%,40%)]" },
-  { name: "Purple", hsl: "270 60% 55%", class: "bg-[hsl(270,60%,55%)]" },
+  { name: "Teal", class: "bg-teal" },
+  { name: "Blue", class: "bg-blue" },
+  { name: "Green", class: "bg-primary" },
+  { name: "Purple", class: "bg-accent" },
 ];
 
 const achievements = [
@@ -119,22 +118,20 @@ const Profile = () => {
   return (
     <AppLayout>
       <SEO title="My Profile — ASTU Muslim Jemea" description="Manage your profile, achievements, badges, and account preferences." path="/profile" />
-      <div className="p-4 md:p-6 space-y-5 max-w-4xl mx-auto">
+      <div className="space-y-6">
+        <NaturePageHeader title="My Profile" subtitle={universityName === "—" ? undefined : universityName} />
         {/* Profile Card */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="overflow-hidden border border-border">
-            <div className="h-20 gradient-hero islamic-pattern" />
-            <CardContent className="relative pt-0 pb-5 px-5">
-              <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 -mt-10">
-                <Avatar className="w-20 h-20 border-4 border-card shadow-lg">
-                  <AvatarFallback className="gradient-teal text-primary-foreground font-display text-2xl">{initials}</AvatarFallback>
+        <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="border-b border-border pb-6">
+              <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+                <Avatar className="w-20 h-20 ring-4 ring-primary/10 shrink-0">
+                  <AvatarFallback className="bg-primary/15 text-primary font-display text-2xl">{initials}</AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <h1 className="font-display text-xl font-bold">{displayName}</h1>
-                  <p className="font-body text-xs text-muted-foreground">
+                <div className="flex-1 min-w-0">
+                  <h2 className="font-display text-2xl font-bold break-words">{displayName}</h2>
+                  <p className="font-body text-sm text-muted-foreground break-all mt-1">
                     {authProfile?.student_id || user?.email || "—"} {authProfile?.department && `• ${authProfile.department}`}
                   </p>
-                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                  <div className="flex items-center justify-center sm:justify-start gap-2 mt-3 flex-wrap">
                     <Badge className="font-body text-[10px] bg-primary/10 text-primary border-0">
                       <Award className="h-3 w-3 mr-1" /> {role}
                     </Badge>
@@ -143,35 +140,32 @@ const Profile = () => {
                     )}
                   </div>
                 </div>
-                <Button variant="outline" size="sm" className="font-body rounded-xl text-xs">
+                <Button variant="outline" size="sm" className="font-body text-xs shrink-0">
                   <Edit className="h-3.5 w-3.5 mr-1" /> Edit
                 </Button>
               </div>
-              <div className="mt-4 p-3 rounded-xl bg-secondary">
+              <div className="mt-6 max-w-xl mx-auto sm:mx-0">
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-body text-xs font-medium">Profile Completion</span>
                   <span className="font-body text-xs text-primary font-bold">{completionPct}%</span>
                 </div>
                 <Progress value={completionPct} className="h-2" />
-                <p className="font-body text-[10px] text-muted-foreground mt-1">Complete your profile details to reach 100%</p>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        </motion.section>
 
         <Tabs defaultValue="info" className="w-full">
           <TabsList className="w-full grid grid-cols-5 h-auto">
-            <TabsTrigger value="info" className="font-body text-[10px] sm:text-xs py-2">👤 Info</TabsTrigger>
-            <TabsTrigger value="achievements" className="font-body text-[10px] sm:text-xs py-2">🏆 Badges</TabsTrigger>
-            <TabsTrigger value="activity" className="font-body text-[10px] sm:text-xs py-2">⚡ Activity</TabsTrigger>
-            <TabsTrigger value="donations" className="font-body text-[10px] sm:text-xs py-2">💝 Giving</TabsTrigger>
-            <TabsTrigger value="settings" className="font-body text-[10px] sm:text-xs py-2">⚙️ Settings</TabsTrigger>
+            <TabsTrigger value="info" className="font-body text-xs py-2">Info</TabsTrigger>
+            <TabsTrigger value="achievements" className="font-body text-xs py-2">Badges</TabsTrigger>
+            <TabsTrigger value="activity" className="font-body text-xs py-2">Activity</TabsTrigger>
+            <TabsTrigger value="donations" className="font-body text-xs py-2">Giving</TabsTrigger>
+            <TabsTrigger value="settings" className="font-body text-xs py-2">Settings</TabsTrigger>
           </TabsList>
 
           <TabsContent value="info" className="space-y-3 mt-4">
             {/* Daily Goal · Group Sessions · Café — relocated from Home */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <Card className="bg-gradient-to-br from-primary/25 via-primary/10 to-card border-border/60">
+              <Card className="border-border/60 bg-card">
                 <CardContent className="p-3.5">
                   <div className="flex items-center gap-2 mb-1.5">
                     <BookOpen className="h-4 w-4 text-primary" />
@@ -182,23 +176,23 @@ const Profile = () => {
                   <p className="font-body text-[10px] text-muted-foreground mt-1">10 / 14 today · Qur'an & Zikr</p>
                 </CardContent>
               </Card>
-              <Card className="bg-gradient-to-br from-blue-500/25 via-blue-500/10 to-card border-border/60">
+              <Card className="border-border/60 bg-card">
                 <CardContent className="p-3.5">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <User className="h-4 w-4 text-blue-500" />
+                    <User className="h-4 w-4 text-blue" />
                     <p className="font-display text-xs font-bold">Group Session</p>
                   </div>
-                  <p className="font-display text-base font-bold text-blue-500">Halaqa Tonight</p>
+                  <p className="font-display text-base font-bold text-blue">Halaqa Tonight</p>
                   <p className="font-body text-[10px] text-muted-foreground mt-1">Group 7B · 8:00 PM · 14 members</p>
                 </CardContent>
               </Card>
-              <Card className="bg-gradient-to-br from-green-500/25 via-green-500/10 to-card border-border/60">
+              <Card className="border-border/60 bg-card">
                 <CardContent className="p-3.5">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <Gift className="h-4 w-4 text-green-500" />
+                    <Gift className="h-4 w-4 text-primary" />
                     <p className="font-display text-xs font-bold">Café Student</p>
                   </div>
-                  <p className="font-display text-base font-bold text-green-500">
+                  <p className="font-display text-base font-bold text-primary">
                     {authProfile?.is_cafe_student ? "Active" : "Not enrolled"}
                   </p>
                   <p className="font-body text-[10px] text-muted-foreground mt-1">
@@ -218,13 +212,13 @@ const Profile = () => {
                     { icon: User, label: "Gender", value: authProfile?.gender || "Not set" },
                     { icon: Calendar, label: "Joined", value: joinedDate },
                   ].map((item) => (
-                    <div key={item.label} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary">
+                    <div key={item.label} className="leaf-profile-details flex items-center gap-3 py-3">
                       <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                         <item.icon className="h-4 w-4 text-primary" />
                       </div>
                       <div className="min-w-0">
                         <p className="font-body text-[10px] text-muted-foreground">{item.label}</p>
-                        <p className="font-body text-sm truncate">{item.value}</p>
+                        <p className="font-body text-sm break-words">{item.value}</p>
                       </div>
                     </div>
                   ))}
@@ -239,18 +233,18 @@ const Profile = () => {
                     { icon: User, label: "Batch Year", value: authProfile?.batch_year || "Not set" },
                     { icon: Shield, label: "Role", value: role },
                   ].map((item) => (
-                    <div key={item.label} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary">
+                    <div key={item.label} className="leaf-profile-details flex items-center gap-3 py-3">
                       <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
                         <item.icon className="h-4 w-4 text-accent" />
                       </div>
                       <div className="min-w-0">
                         <p className="font-body text-[10px] text-muted-foreground">{item.label}</p>
-                        <p className="font-body text-sm truncate">{item.value}</p>
+                        <p className="font-body text-sm break-words">{item.value}</p>
                       </div>
                     </div>
                   ))}
                   {authProfile?.is_cafe_student && (
-                    <Badge className="font-body bg-gold/10 text-gold border-gold/30">☕ Café Student</Badge>
+                    <Badge className="font-body bg-teal/10 text-teal border-teal/30">☕ Café Student</Badge>
                   )}
                 </CardContent>
               </Card>
@@ -265,7 +259,7 @@ const Profile = () => {
                     <CardContent className="p-4 flex flex-col items-center text-center gap-2">
                       <span className="text-3xl">{a.icon}</span>
                       <p className="font-body text-sm font-semibold">{a.title}</p>
-                      <p className="font-body text-[10px] text-muted-foreground">{a.desc}</p>
+                      <p className="font-body text-xs text-muted-foreground">{a.desc}</p>
                       {a.unlocked ? (
                         <Badge className="font-body text-[10px] bg-primary/10 text-primary border-0">✓ Unlocked</Badge>
                       ) : (
@@ -404,10 +398,14 @@ const Profile = () => {
                     <p className="font-body text-xs text-muted-foreground mb-2">Accent Color</p>
                     <div className="flex gap-2">
                       {accentColors.map((c, i) => (
-                        <button
+                        <Button
                           key={c.name}
+                          variant="ghost"
+                          size="icon"
                           onClick={() => setSelectedAccent(i)}
-                          className={`w-8 h-8 rounded-full ${c.class} ${selectedAccent === i ? 'ring-2 ring-offset-2 ring-offset-background ring-foreground' : ''} transition-all`}
+                          aria-label={`${c.name} accent`}
+                          aria-pressed={selectedAccent === i}
+                          className={`h-11 w-11 rounded-full ${c.class} hover:opacity-80 ${selectedAccent === i ? 'ring-2 ring-offset-2 ring-offset-background ring-foreground' : ''} transition-all`}
                           title={c.name}
                         />
                       ))}

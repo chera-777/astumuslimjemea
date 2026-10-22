@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
 import { XpChip } from "@/components/XpChip";
+import logo from "@/assets/logo-leaf.png";
 
 
 export function AppHeader() {
@@ -18,9 +19,7 @@ export function AppHeader() {
       <div className="flex items-center gap-2 md:gap-3 shrink-0">
         {!isMobile && <SidebarTrigger className="mr-1" />}
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center">
-            <span className="text-primary font-bold text-sm">☪</span>
-          </div>
+          <img src={logo} alt="ASTU Muslim Jemea" className="h-9 w-9 object-contain" />
           <div className="hidden sm:block leading-tight">
             <p className="font-display text-sm font-bold text-foreground">ASTU</p>
             <p className="text-[9px] text-muted-foreground font-body">Muslim Jemea</p>
@@ -39,9 +38,9 @@ export function AppHeader() {
       <div className="flex items-center gap-1 shrink-0">
         <XpChip />
         {!isMobile && (
-          <button className="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-secondary/60 text-xs font-body font-medium text-foreground hover:bg-secondary">
+          <Button variant="secondary" size="sm" className="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-body font-medium">
             ASTU <ChevronDown className="h-3 w-3" />
-          </button>
+          </Button>
         )}
         <Button variant="ghost" size="icon" className="relative h-9 w-9" aria-label="Notifications">
 

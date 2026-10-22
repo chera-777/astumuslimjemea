@@ -11,6 +11,7 @@ import {
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,
   SidebarFooter, SidebarHeader,
 } from "@/components/ui/sidebar";
+import logo from "@/assets/logo-leaf.png";
 
 const studentItems = [
   { title: "Home", url: "/portal/student", icon: Home },
@@ -88,9 +89,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="px-3 py-4 border-b border-sidebar-border">
         <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-xl bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0">
-            <span className="text-primary text-base font-bold">☪</span>
-          </div>
+          <img src={logo} alt="ASTU Muslim Jemea" className="h-9 w-9 object-contain shrink-0" />
           {!collapsed && (
             <div className="leading-tight">
               <p className="font-display text-sm font-bold text-sidebar-foreground">ASTU</p>
@@ -112,7 +111,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title} className="data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-primary-foreground overflow-hidden">
+                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title} className="data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-primary h-10 overflow-hidden">
                     <NavLink to={item.url} end={item.url.startsWith("/portal/")} activeClassName="bg-sidebar-accent text-sidebar-foreground font-semibold" className="min-w-0">
                       <item.icon className="mr-2 h-4 w-4 shrink-0" />
                       {!collapsed && (

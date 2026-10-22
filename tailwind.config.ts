@@ -18,6 +18,10 @@ export default {
         body: ['Plus Jakarta Sans', 'sans-serif'],
       },
       colors: {
+        nature: {
+          leaf: "hsl(var(--nature-leaf))",
+          line: "hsl(var(--nature-line))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -91,6 +95,9 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        leaf: "var(--shadow-leaf)",
       },
       keyframes: {
         "accordion-down": {

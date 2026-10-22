@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SEO } from "@/components/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -64,36 +65,24 @@ const Governance = () => {
     <AppLayout>
       <SEO title="Governance & Elections — ASTU Muslim Jemea" description="Leadership, sector Amirs, and seasonal election workflow for the ASTU Muslim community." path="/governance" />
       <div className="w-full max-w-3xl mx-auto p-3 md:p-5 space-y-4">
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="overflow-hidden border-border/50 bg-gradient-to-br from-violet-500/20 via-primary/10 to-card relative">
-            <div className="absolute -right-6 -top-6 opacity-10"><Vote className="h-44 w-44" /></div>
-            <CardContent className="p-5 relative">
-              <Badge className={phase === "closed" ? "bg-violet-500/20 text-violet-500 border-violet-500/30 text-[10px]" : "gradient-pink text-primary-foreground text-[10px]"}>
-                {phase === "closed" ? "Closed" : "Election Season"}
-              </Badge>
-              <h1 className="font-display text-2xl font-bold mt-2">Governance & Elections</h1>
-              <p className="font-body text-xs text-muted-foreground mt-1">
-                {phase === "closed"
-                  ? "Elections open every April. Preview the workflow below."
-                  : <>Current phase: <strong className="text-foreground capitalize">{phase}</strong></>}
-              </p>
+        <NaturePageHeader title="Governance & Elections" subtitle="Student leadership and annual elections">
+              <Badge variant="outline" className="text-primary border-primary/30">{phase === "closed" ? "Closed" : "Election Season"}</Badge>
               <div className="grid grid-cols-3 gap-2 mt-4">
                 {(["nomination","shortlisting","voting"] as Phase[]).map((p) => (
-                  <button
+                  <Button
+                    variant="outline"
                     key={p}
                     onClick={() => setPhase(p)}
-                    className={`rounded-xl p-2 border text-center transition ${phase === p ? "bg-primary/15 border-primary" : "bg-card/60 border-border/50"}`}
+                    className={`block h-auto rounded-lg p-3 border text-center transition ${phase === p ? "bg-primary/15 border-primary" : "bg-card/60 border-border/50"}`}
                   >
                     {p === "nomination" && <FileText className="h-4 w-4 mx-auto text-primary mb-1" />}
                     {p === "shortlisting" && <Sparkles className="h-4 w-4 mx-auto text-gold mb-1" />}
                     {p === "voting" && <Vote className="h-4 w-4 mx-auto text-accent mb-1" />}
                     <p className="font-display text-xs font-bold capitalize">{p}</p>
-                  </button>
+                  </Button>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        </NaturePageHeader>
 
         <Tabs value={phase} onValueChange={(v) => setPhase(v as Phase)}>
           <TabsList className="w-full grid grid-cols-4 h-auto">

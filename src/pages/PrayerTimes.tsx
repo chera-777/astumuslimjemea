@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Bell, BellOff, ChevronLeft, ChevronRight, MapPin, Settings } from "lucide-react";
 import { motion } from "framer-motion";
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 
 const prayerData = [
   { name: "Imsak", time: "5:02 AM", icon: "🌑", notify: false },
@@ -59,11 +60,12 @@ const PrayerTimes = () => {
     <AppLayout>
       <SEO title="Prayer Times & Hijri Calendar — ASTU Muslim Jemea" description="Daily prayer times, Qibla direction, and the Hijri calendar for the ASTU Muslim community." path="/prayer-times" />
       <div className="p-4 md:p-6 space-y-4 max-w-4xl mx-auto">
+        <NaturePageHeader title="Prayer Times" subtitle="Daily prayers and Hijri calendar" />
         {/* Location Header */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <MapPin className="h-5 w-5 text-primary" />
-            <h1 className="font-display text-xl font-bold">Adama</h1>
+            <h2 className="font-display text-xl font-bold">Adama</h2>
           </div>
           <div className="flex gap-2">
             <Button variant="ghost" size="icon" className="h-8 w-8"><Settings className="h-4 w-4" /></Button>
@@ -72,32 +74,30 @@ const PrayerTimes = () => {
 
         {/* Mosque Banner with Prayer Time */}
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-          <Card className="overflow-hidden border-0 relative" style={{
-            background: "linear-gradient(135deg, hsl(168 65% 20%), hsl(168 55% 35%), hsl(168 50% 45%))"
-          }}>
+          <Card className="overflow-hidden border-border bg-card relative">
             <CardContent className="p-6 text-center relative z-10">
               <div className="absolute inset-0 islamic-pattern opacity-20" />
-              <p className="text-sm text-white/70 font-body relative z-10">
+              <p className="text-sm text-foreground font-body relative z-10">
                 {today.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
               </p>
-              <p className="text-xs text-white/50 font-body relative z-10">11 Shawwal 1447</p>
+              <p className="text-xs text-muted-foreground font-body relative z-10">11 Shawwal 1447</p>
 
               {/* Week day selector */}
               <div className="flex items-center justify-center gap-1 mt-4 relative z-10">
-                <ChevronLeft className="h-4 w-4 text-white/50" />
+                <ChevronLeft className="h-4 w-4 text-muted-foreground" />
                 {Array.from({ length: 7 }, (_, i) => {
                   const d = dateNum - dayOfWeek + i;
                   const isToday = i === dayOfWeek;
                   return (
                     <div key={i} className="flex flex-col items-center">
-                      <span className="text-[10px] text-white/50 font-body">{weekDays[i]}</span>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center mt-0.5 ${isToday ? 'bg-primary text-white' : 'text-white/70'}`}>
+                      <span className="text-[10px] text-muted-foreground font-body">{weekDays[i]}</span>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center mt-0.5 ${isToday ? 'bg-primary text-primary-foreground' : 'text-foreground'}`}>
                         <span className="text-sm font-body font-medium">{d > 0 ? d : ''}</span>
                       </div>
                     </div>
                   );
                 })}
-                <ChevronRight className="h-4 w-4 text-white/50" />
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>

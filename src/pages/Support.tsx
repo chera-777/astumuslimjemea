@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SEO } from "@/components/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,13 +19,7 @@ const Support = () => {
     <AppLayout>
       <SEO title="Support — ASTU Muslim Jemea" description="Get help, contact the team, and find answers to common questions." path="/support" />
       <div className="p-4 md:p-6 space-y-6">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="flex items-center gap-3 mb-1">
-            <Heart className="h-6 w-6 text-destructive" />
-            <h1 className="font-display text-2xl font-bold text-foreground">Support & Charity</h1>
-          </div>
-          <p className="text-muted-foreground font-body text-sm">Donations, sadaqah programs & community support</p>
-        </motion.div>
+        <NaturePageHeader title="Support & Charity" subtitle="Sadaqah and community support" />
 
         {/* Quick Donate */}
         <Card className="border-accent/30">

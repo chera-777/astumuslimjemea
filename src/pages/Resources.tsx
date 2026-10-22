@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { useState } from "react";
 import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -72,10 +73,7 @@ const Resources = () => {
     <AppLayout>
       <SEO title="Islamic Resources — Quran, Hadith & Lectures" description="Explore the Quran, Hadith collections, tafsir, and video lectures from trusted scholars." path="/resources" jsonLd={{ "@context": "https://schema.org", "@type": "CollectionPage", name: "Islamic Resources Library", url: "https://astu-jemea-connect.lovable.app/resources" }} />
       <div className="p-4 md:p-6 space-y-4 max-w-4xl mx-auto overflow-x-hidden pb-24">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <h1 className="font-display text-2xl font-bold">Islamic Library</h1>
-          <p className="text-muted-foreground font-body text-sm">Qur'an · Hadith · Kitabs · Videos</p>
-        </motion.div>
+        <NaturePageHeader title="Islamic Library" subtitle="Qur’an · Hadith · Kitabs · Videos" />
 
         {/* Quick links to dedicated pages */}
         <div className="grid grid-cols-4 gap-2">
@@ -110,7 +108,7 @@ const Resources = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
               <Input aria-label="Search surahs" placeholder="Search surahs..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 font-body rounded-xl" />
             </div>
-            <div className="grid grid-cols-2 gap-2 max-h-[60vh] overflow-auto" style={{ scrollbarWidth: "thin" }}>
+            <div className="grid grid-cols-2 gap-2 max-h-[60vh] overflow-auto scrollbar-hide">
               {filteredSurahs.map((s, i) => {
                 const idx = allSurahs.indexOf(s) + 1;
                 const meta = surahMeta[idx];
@@ -212,12 +210,12 @@ const Resources = () => {
                     <CardContent className="p-0">
                       <div className="relative aspect-video bg-gradient-to-br from-secondary to-secondary/50 flex items-center justify-center">
                         <span className="text-5xl">{v.thumb}</span>
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
+                        <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/20 transition-all flex items-center justify-center">
                           <div className="w-12 h-12 rounded-full bg-primary/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
                             <Play className="h-6 w-6 text-primary-foreground ml-0.5" />
                           </div>
                         </div>
-                        <span className="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded font-body font-medium">{v.duration}</span>
+                        <span className="absolute bottom-2 right-2 bg-card/95 text-foreground text-[10px] px-1.5 py-0.5 rounded font-body font-medium">{v.duration}</span>
                         {v.category === "Shorts" && (
                           <Badge className="absolute top-2 left-2 bg-destructive text-destructive-foreground text-[8px] px-1.5">SHORT</Badge>
                         )}
