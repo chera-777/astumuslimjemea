@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { useState } from "react";
 import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -35,10 +36,7 @@ const TasbihPage = () => {
     <AppLayout>
       <SEO title="Digital Tasbih — ASTU Muslim Jemea" description="Use the digital tasbih counter for daily dhikr and remembrance." path="/tasbih" />
       <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-6 pb-24">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <h1 className="font-display text-2xl font-bold">📿 Tasbih Counter</h1>
-          <p className="text-muted-foreground font-body text-sm">Tap to count your dhikr</p>
-        </motion.div>
+        <NaturePageHeader title="Tasbih Counter" subtitle="Daily remembrance" />
 
         {/* Preset pills */}
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide justify-center flex-wrap">

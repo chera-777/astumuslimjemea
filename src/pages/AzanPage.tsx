@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { useState } from "react";
 import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -28,13 +29,7 @@ const AzanPage = () => {
     <AppLayout>
       <SEO title="Azan Player — ASTU Muslim Jemea" description="Listen to the call to prayer from renowned muezzins." path="/azan" />
       <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-4 pb-24">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-3">
-            <span className="text-2xl">🔔</span>
-          </div>
-          <h1 className="font-display text-2xl font-bold">Azan Settings</h1>
-          <p className="text-muted-foreground font-body text-sm">Choose your preferred reciter</p>
-        </motion.div>
+        <NaturePageHeader title="Azan Settings" subtitle="Choose your preferred reciter" />
 
         {/* Next prayer card */}
         <Card className="border-0 bg-gradient-to-br from-primary/15 to-primary/5">

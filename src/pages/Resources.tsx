@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { useState } from "react";
 import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -72,10 +73,7 @@ const Resources = () => {
     <AppLayout>
       <SEO title="Islamic Resources — Quran, Hadith & Lectures" description="Explore the Quran, Hadith collections, tafsir, and video lectures from trusted scholars." path="/resources" jsonLd={{ "@context": "https://schema.org", "@type": "CollectionPage", name: "Islamic Resources Library", url: "https://astu-jemea-connect.lovable.app/resources" }} />
       <div className="p-4 md:p-6 space-y-4 max-w-4xl mx-auto overflow-x-hidden pb-24">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <h1 className="font-display text-2xl font-bold">Islamic Library</h1>
-          <p className="text-muted-foreground font-body text-sm">Qur'an · Hadith · Kitabs · Videos</p>
-        </motion.div>
+        <NaturePageHeader title="Islamic Library" subtitle="Qur’an · Hadith · Kitabs · Videos" />
 
         {/* Quick links to dedicated pages */}
         <div className="grid grid-cols-4 gap-2">

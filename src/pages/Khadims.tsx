@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -90,17 +91,7 @@ const Khadims = () => {
     <AppLayout>
       <SEO title="Khadims — Volunteer Scheduling" description="Volunteer scheduling and management for Khadims serving during Ramadan and beyond." path="/khadims" />
       <div className="p-4 md:p-6 space-y-6">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-xl gradient-green flex items-center justify-center">
-              <HandHeart className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <div>
-              <h1 className="font-display text-2xl font-bold text-foreground">Khadims Service</h1>
-              <p className="text-muted-foreground font-body text-sm">Volunteer to serve your brothers & sisters</p>
-            </div>
-          </div>
-        </motion.div>
+        <NaturePageHeader title="Khadims Service" subtitle="Serve your community" />
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
@@ -239,7 +230,7 @@ const Khadims = () => {
           <TabsContent value="ittikaf" className="space-y-4 mt-4">
             <Card className="gamification-card">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 rounded-2xl gradient-purple flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-lg gradient-purple flex items-center justify-center mx-auto mb-4">
                   <MoonIcon className="h-8 w-8 text-primary-foreground" />
                 </div>
                 <h3 className="font-display text-xl font-bold mb-2">Ittikaf Support</h3>

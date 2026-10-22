@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { useState } from "react";
 import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -9,15 +10,15 @@ import { Search, BookOpen, ChevronRight, Star } from "lucide-react";
 import { motion } from "framer-motion";
 
 const collections = [
-  { name: "Sahih al-Bukhari", author: "Imam al-Bukhari", hadiths: 7563, books: 97, icon: "📕", color: "from-red-500/20 to-red-600/10", desc: "The most authentic collection of hadith, compiled over 16 years" },
-  { name: "Sahih Muslim", author: "Imam Muslim", hadiths: 7500, books: 56, icon: "📗", color: "from-green-500/20 to-green-600/10", desc: "Second most authentic, organized by topic with strict authentication" },
-  { name: "Sunan Abu Dawud", author: "Imam Abu Dawud", hadiths: 5274, books: 43, icon: "📘", color: "from-blue-500/20 to-blue-600/10", desc: "Focuses on jurisprudence-related traditions" },
-  { name: "Jami at-Tirmidhi", author: "Imam at-Tirmidhi", hadiths: 3956, books: 49, icon: "📙", color: "from-yellow-500/20 to-yellow-600/10", desc: "Includes commentary on hadith authenticity rulings" },
-  { name: "Sunan an-Nasa'i", author: "Imam an-Nasa'i", hadiths: 5758, books: 51, icon: "📓", color: "from-purple-500/20 to-purple-600/10", desc: "Known for strict narrator criteria" },
-  { name: "Sunan Ibn Majah", author: "Imam Ibn Majah", hadiths: 4341, books: 37, icon: "📔", color: "from-orange-500/20 to-orange-600/10", desc: "Completes the six major hadith collections" },
-  { name: "Muwatta Malik", author: "Imam Malik", hadiths: 1851, books: 61, icon: "📒", color: "from-teal-500/20 to-teal-600/10", desc: "Earliest written collection, foundation of Maliki fiqh" },
-  { name: "40 Hadith Nawawi", author: "Imam an-Nawawi", hadiths: 42, books: 1, icon: "⭐", color: "from-amber-500/20 to-amber-600/10", desc: "Essential hadiths every Muslim should know" },
-  { name: "Riyadh as-Salihin", author: "Imam an-Nawawi", hadiths: 1896, books: 19, icon: "🌟", color: "from-emerald-500/20 to-emerald-600/10", desc: "Garden of the Righteous — practical daily guidance" },
+  { name: "Sahih al-Bukhari", author: "Imam al-Bukhari", hadiths: 7563, books: 97, icon: "📕", color: "from-purple/20 to-purple/10", desc: "The most authentic collection of hadith, compiled over 16 years" },
+  { name: "Sahih Muslim", author: "Imam Muslim", hadiths: 7500, books: 56, icon: "📗", color: "from-green/20 to-green/10", desc: "Second most authentic, organized by topic with strict authentication" },
+  { name: "Sunan Abu Dawud", author: "Imam Abu Dawud", hadiths: 5274, books: 43, icon: "📘", color: "from-blue/20 to-blue/10", desc: "Focuses on jurisprudence-related traditions" },
+  { name: "Jami at-Tirmidhi", author: "Imam at-Tirmidhi", hadiths: 3956, books: 49, icon: "📙", color: "from-teal/20 to-teal/10", desc: "Includes commentary on hadith authenticity rulings" },
+  { name: "Sunan an-Nasa'i", author: "Imam an-Nasa'i", hadiths: 5758, books: 51, icon: "📓", color: "from-purple/20 to-purple/10", desc: "Known for strict narrator criteria" },
+  { name: "Sunan Ibn Majah", author: "Imam Ibn Majah", hadiths: 4341, books: 37, icon: "📔", color: "from-teal/20 to-teal/10", desc: "Completes the six major hadith collections" },
+  { name: "Muwatta Malik", author: "Imam Malik", hadiths: 1851, books: 61, icon: "📒", color: "from-teal/20 to-teal/10", desc: "Earliest written collection, foundation of Maliki fiqh" },
+  { name: "40 Hadith Nawawi", author: "Imam an-Nawawi", hadiths: 42, books: 1, icon: "⭐", color: "from-teal/20 to-teal/10", desc: "Essential hadiths every Muslim should know" },
+  { name: "Riyadh as-Salihin", author: "Imam an-Nawawi", hadiths: 1896, books: 19, icon: "🌟", color: "from-green/20 to-green/10", desc: "Garden of the Righteous — practical daily guidance" },
 ];
 
 const sampleHadiths = [
@@ -81,13 +82,7 @@ const HadithPage = () => {
   return (
     <AppLayout>
       <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-4 pb-24">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-3">
-            <span className="text-2xl">📚</span>
-          </div>
-          <h1 className="font-display text-2xl font-bold">Hadith Collections</h1>
-          <p className="text-muted-foreground font-body text-sm">The six major books and more</p>
-        </motion.div>
+        <NaturePageHeader title="Hadith Collections" subtitle="The six major books and more" />
 
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -99,7 +94,7 @@ const HadithPage = () => {
             <motion.div key={c.name} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
               <Card className="border border-border bg-card hover:border-primary/20 transition-all cursor-pointer group" onClick={() => setSelectedCollection(c.name)}>
                 <CardContent className="p-4 flex items-center gap-4">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${c.color} flex items-center justify-center shrink-0`}>
+                  <div className={`w-14 h-14 rounded-lg bg-gradient-to-br ${c.color} flex items-center justify-center shrink-0`}>
                     <span className="text-2xl">{c.icon}</span>
                   </div>
                   <div className="flex-1 min-w-0">

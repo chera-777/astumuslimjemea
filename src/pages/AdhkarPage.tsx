@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { useState } from "react";
 import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -49,13 +50,7 @@ const AdhkarPage = () => {
     <AppLayout>
       <SEO title="Adhkar — Daily Remembrances" description="Daily adhkar and remembrances for morning, evening, and after prayer." path="/adhkar" />
       <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-4 pb-24">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-3">
-            <span className="text-2xl">🕌</span>
-          </div>
-          <h1 className="font-display text-2xl font-bold">Daily Adhkar</h1>
-          <p className="text-muted-foreground font-body text-sm">Morning, Evening & After Salah</p>
-        </motion.div>
+        <NaturePageHeader title="Daily Adhkar" subtitle="Morning, evening, and after Salah" />
 
         {/* Section tabs */}
         <div className="flex gap-2 justify-center">
@@ -77,7 +72,7 @@ const AdhkarPage = () => {
             const done = current >= item.count;
             return (
               <motion.div key={key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                <Card className={`border transition-all ${done ? "border-green-500/50 bg-green-500/5" : "border-border bg-card"}`}>
+                <Card className={`border transition-all ${done ? "border-green/50 bg-green/5" : "border-border bg-card"}`}>
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <Badge variant={done ? "default" : "outline"} className="text-[9px] font-body">

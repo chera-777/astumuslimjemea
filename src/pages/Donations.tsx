@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { useState, useEffect } from "react";
 import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
@@ -103,15 +104,7 @@ const Donations = () => {
       <SEO title="Donations — Support Our Community" description="Contribute to active donation campaigns supporting the ASTU Muslim community." path="/donations" />
       <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-6">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <div className="w-14 h-14 rounded-2xl gradient-gold flex items-center justify-center mx-auto mb-3">
-            <HandHeart className="h-7 w-7 text-primary-foreground" />
-          </div>
-          <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground">Sadaqah & Donations</h1>
-          <p className="text-muted-foreground font-body text-sm mt-1">
-            "The believer's shade on the Day of Resurrection will be his charity." — Prophet ﷺ
-          </p>
-        </motion.div>
+        <NaturePageHeader title="Sadaqah & Donations" subtitle="Support your university community" />
 
         {/* Campaign Cards */}
         <div className="grid grid-cols-2 gap-3">
@@ -122,7 +115,7 @@ const Donations = () => {
               <motion.div key={c.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}>
                 <button
                   onClick={() => setCampaign(c.id)}
-                  className={`w-full text-left p-4 rounded-2xl border-2 transition-all ${
+                  className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                     campaign === c.id ? "border-primary bg-primary/5 shadow-glow" : "border-border bg-card hover:border-primary/30"
                   }`}
                 >

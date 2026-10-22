@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { AuthDialog } from "@/components/AuthDialog";
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 
 const features = [
   { icon: "📖", title: "Quran", link: "/resources" },
@@ -33,16 +34,10 @@ const GuestPortal = () => {
       <SEO title="Guest Portal | ASTU Muslim Jemea" description="Explore ASTU Muslim Jemea: prayer times, Islamic resources, events and donations." path="/portal/guest" />
       <div className="p-4 md:p-6 space-y-5 max-w-4xl mx-auto">
         {/* Welcome */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <div className="w-14 h-14 rounded-2xl gradient-teal flex items-center justify-center mx-auto mb-3">
-            <Globe className="h-7 w-7 text-primary-foreground" />
-          </div>
-          <h1 className="font-display text-2xl font-bold">Welcome, Guest!</h1>
-          <p className="text-muted-foreground font-body text-sm mt-1">Explore Islamic resources & community</p>
-        </motion.div>
+        <NaturePageHeader title="Welcome, Guest!" subtitle="Explore Islamic resources and community" />
 
         {/* Feature Grid */}
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {features.map((f, i) => (
             <motion.div key={f.title} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.04 }}>
               <Link to={f.link}>
@@ -74,19 +69,18 @@ const GuestPortal = () => {
 
         {/* CTA */}
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-          <Card className="border border-border bg-card">
-            <CardContent className="p-6 text-center">
+          <section className="border-t border-border pt-6 text-center">
               <Star className="h-8 w-8 text-gold mx-auto mb-3" />
               <h3 className="font-display text-xl font-bold mb-2">Want Full Access?</h3>
               <p className="text-muted-foreground font-body text-sm mb-4">Register to unlock all portals and features</p>
               <Button
                 onClick={() => setAuthOpen(true)}
-                className="gradient-pink text-primary-foreground border-0 rounded-xl font-body"
+                variant="nature"
+                className="font-body h-12"
               >
                 Register Now <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </CardContent>
-          </Card>
+          </section>
         </motion.div>
       </div>
 

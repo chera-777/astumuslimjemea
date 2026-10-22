@@ -82,7 +82,7 @@ const Community = () => {
       <SEO title="Community Chats & Groups — ASTU Muslim Jemea" description="Connect with fellow students through direct chats and group conversations." path="/community" />
       <h1 className="sr-only">Community Chats &amp; Groups</h1>
       {/* Chat Tab Header */}
-      <div className="sticky top-14 z-30 bg-card/95 backdrop-blur-lg border-b border-border">
+      <div data-leaf-sticky className="sticky top-14 z-30 bg-card/95 backdrop-blur-lg border-b border-border">
         <div className="flex items-center justify-center gap-1 px-2 py-2">
           {tabs.map((tab) => (
             <button
@@ -100,7 +100,7 @@ const Community = () => {
               {tab.count && tab.count > 0 && (
                 <span className={cn(
                   "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold",
-                  activeTab === tab.key ? "bg-white/20 text-white" : "bg-accent text-accent-foreground"
+                  activeTab === tab.key ? "bg-primary-foreground/20 text-primary-foreground" : "bg-accent text-accent-foreground"
                 )}>{tab.count}</span>
               )}
             </button>

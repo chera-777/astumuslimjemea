@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { useEffect, useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SEO } from "@/components/SEO";
@@ -124,13 +125,7 @@ const Groups = () => {
     <AppLayout>
       <SEO title="Student Groups — ASTU Muslim Jemea" description="Browse and join the 14-student community groups led by appointed Amirs." path="/groups" />
       <div className="p-4 md:p-6 space-y-6">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="flex items-center gap-3 mb-1">
-            <Users className="h-6 w-6 text-primary" />
-            <h1 className="font-display text-2xl font-bold text-foreground">Group System</h1>
-          </div>
-          <p className="text-muted-foreground font-body text-sm">Annual gender-segregated groups of 14 students (1st–5th year)</p>
-        </motion.div>
+        <NaturePageHeader title="Group System" subtitle="Annual groups of 14 students" />
 
         <Card className="gamification-card">
           <CardContent className="p-4 space-y-3">
@@ -168,7 +163,7 @@ const Groups = () => {
         </Card>
 
         {loading ? (
-          <div className="space-y-4">{[0, 1].map((i) => <Skeleton key={i} className="h-48 w-full rounded-2xl" />)}</div>
+          <div className="space-y-4">{[0, 1].map((i) => <Skeleton key={i} className="h-48 w-full rounded-lg" />)}</div>
         ) : groups.length === 0 ? (
           <Card><CardContent className="p-0">
             <EmptyState icon={Users} title="No groups yet" description="Groups are formed at the start of each academic year. You'll see yours here once assigned." actionLabel="Back to home" actionTo="/dashboard" />

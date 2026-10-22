@@ -1,3 +1,4 @@
+import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { useState } from "react";
 import { SEO } from "@/components/SEO";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -31,13 +32,7 @@ const DuaPage = () => {
     <AppLayout>
       <SEO title="Dua Collection — ASTU Muslim Jemea" description="A curated collection of authentic duas for morning, evening, protection, travel, and more." path="/dua" jsonLd={{ "@context": "https://schema.org", "@type": "CollectionPage", name: "Dua Collection", url: "https://astu-jemea-connect.lovable.app/dua" }} />
       <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-4 pb-24">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-3">
-            <span className="text-2xl">🤲</span>
-          </div>
-          <h1 className="font-display text-2xl font-bold">Du'a Collection</h1>
-          <p className="text-muted-foreground font-body text-sm">Supplications for every occasion</p>
-        </motion.div>
+        <NaturePageHeader title="Du’a Collection" subtitle="Supplications for every occasion" />
 
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

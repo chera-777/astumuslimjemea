@@ -17,6 +17,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         gold: "bg-accent text-accent-foreground hover:bg-accent/90 shadow-gold font-semibold",
         hero: "gradient-emerald text-primary-foreground hover:opacity-90 shadow-emerald font-semibold text-base",
+        nature: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-leaf font-semibold",
       },
       size: {
         default: "h-10 px-4 py-2",
