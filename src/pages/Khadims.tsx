@@ -131,10 +131,12 @@ const Khadims = () => {
                     { id: "ramadan", label: "🌙 Ramadan", desc: "Iftar & Suhoor" },
                     { id: "regular", label: "📅 Regular", desc: "Outside Ramadan" },
                   ].map((p) => (
-                    <button
+                    <Button
+                      variant="outline"
+                      aria-pressed={period === p.id}
                       key={p.id}
                       onClick={() => setPeriod(p.id)}
-                      className={`flex-1 p-3 rounded-xl border-2 text-center transition-all ${
+                      className={`block flex-1 h-auto p-4 rounded-lg border text-center transition-all ${
                         period === p.id
                           ? "border-primary bg-primary/5"
                           : "border-border hover:border-primary/30"
@@ -142,7 +144,7 @@ const Khadims = () => {
                     >
                       <p className="font-body text-sm font-semibold">{p.label}</p>
                       <p className="font-body text-[10px] text-muted-foreground">{p.desc}</p>
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </CardContent>
@@ -168,7 +170,7 @@ const Khadims = () => {
                     <span className="text-xl">{role.icon}</span>
                     <div className="flex-1">
                       <p className="font-body text-sm font-semibold">{role.label}</p>
-                      <p className="font-body text-[10px] text-muted-foreground">{role.desc}</p>
+                      <p className="font-body text-xs text-muted-foreground leading-relaxed mt-1">{role.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -182,7 +184,7 @@ const Khadims = () => {
               </CardContent>
             </Card>
 
-            <Button onClick={handleSubmit} disabled={submitting} className="w-full gradient-green text-primary-foreground font-body" size="lg">
+            <Button variant="nature" onClick={handleSubmit} disabled={submitting} className="w-full h-12 font-body" size="lg">
               <HandHeart className="mr-2 h-5 w-5" />
               {submitting ? "Submitting…" : "Register as Khadim"}
             </Button>

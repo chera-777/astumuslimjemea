@@ -75,9 +75,9 @@ const Groups = () => {
     return (
       <Card className={mine ? "border-primary/50 shadow-glow" : ""}>
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between gap-2">
-            <CardTitle className="font-display text-xl">{g.name}</CardTitle>
-            <div className="flex gap-1.5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <CardTitle className="font-display text-xl leading-snug break-words min-w-0">{g.name}</CardTitle>
+            <div className="flex flex-wrap gap-1.5">
               {mine && <Badge className="font-body">Your group</Badge>}
               <Badge variant="secondary" className="font-body capitalize">{/^f/i.test(g.gender) ? "Sisters" : "Brothers"}</Badge>
             </div>
@@ -98,7 +98,7 @@ const Groups = () => {
                   <div key={m.user_id} className="flex items-center gap-3 p-2 rounded-lg bg-secondary">
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center"><Icon className="h-4 w-4 text-primary" /></div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-body text-sm font-medium truncate">{m.full_name}{m.user_id === user?.id && " (you)"}</p>
+                      <p className="font-body text-sm font-medium break-words">{m.full_name}{m.user_id === user?.id && " (you)"}</p>
                       <p className="font-body text-[10px] text-muted-foreground">{m.batch_year ? `${m.batch_year} • ` : ""}{m.role}</p>
                     </div>
                   </div>
@@ -127,16 +127,15 @@ const Groups = () => {
       <div className="p-4 md:p-6 space-y-6">
         <NaturePageHeader title="Group System" subtitle="Annual groups of 14 students" />
 
-        <Card className="gamification-card">
-          <CardContent className="p-4 space-y-3">
+        <section className="border-y border-border py-6 space-y-4">
             <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-accent" />
-              <h2 className="font-display text-lg font-bold">Find groups for you</h2>
+              <h2 className="font-display text-2xl font-bold">Find groups for you</h2>
             </div>
-            <p className="font-body text-xs text-muted-foreground">Describe what you enjoy — Quran memorisation, coding, tutoring, sports… and we'll suggest the best-matching groups.</p>
             <Textarea value={interests} onChange={(e) => setInterests(e.target.value)} maxLength={1000}
-              placeholder="e.g. I'm a 2nd-year software student who wants to improve my tajweed and help juniors with maths" className="font-body" />
-            <Button onClick={findGroups} disabled={finding} className="rounded-full">
+              aria-label="Your interests"
+              placeholder="e.g. I'm a 2nd-year software student who wants to improve my tajweed and help juniors with maths" className="font-body min-h-28" />
+            <Button variant="nature" onClick={findGroups} disabled={finding} className="h-12">
               {finding ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
               {finding ? "Finding matches…" : "Suggest groups"}
             </Button>
@@ -159,8 +158,7 @@ const Groups = () => {
                 })}
               </div>
             ))}
-          </CardContent>
-        </Card>
+        </section>
 
         {loading ? (
           <div className="space-y-4">{[0, 1].map((i) => <Skeleton key={i} className="h-48 w-full rounded-lg" />)}</div>

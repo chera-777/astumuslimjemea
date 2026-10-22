@@ -129,7 +129,7 @@
 
 /* Shared leafy application presentation; auth keeps its light reference theme. */
 @layer components {
-  .nature-app {
+  .nature-app, body:has(.nature-app) {
     --background: var(--leaf-background);
     --foreground: var(--leaf-foreground);
     --card: var(--leaf-card);
@@ -169,7 +169,7 @@
     --sidebar-accent-foreground: var(--leaf-foreground);
     --sidebar-border: var(--leaf-border);
   }
-  html:not(.dark) .nature-app {
+  html:not(.dark) .nature-app, html:not(.dark) body:has(.nature-app) {
     --primary-foreground: 0 0% 100%;
     --accent-foreground: 0 0% 100%;
     --sidebar-primary-foreground: 0 0% 100%;

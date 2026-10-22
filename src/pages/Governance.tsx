@@ -66,18 +66,20 @@ const Governance = () => {
       <SEO title="Governance & Elections — ASTU Muslim Jemea" description="Leadership, sector Amirs, and seasonal election workflow for the ASTU Muslim community." path="/governance" />
       <div className="w-full max-w-3xl mx-auto p-3 md:p-5 space-y-4">
         <NaturePageHeader title="Governance & Elections" subtitle="Student leadership and annual elections">
+              <Badge variant="outline" className="text-primary border-primary/30">{phase === "closed" ? "Closed" : "Election Season"}</Badge>
               <div className="grid grid-cols-3 gap-2 mt-4">
                 {(["nomination","shortlisting","voting"] as Phase[]).map((p) => (
-                  <button
+                  <Button
+                    variant="outline"
                     key={p}
                     onClick={() => setPhase(p)}
-                    className={`rounded-xl p-2 border text-center transition ${phase === p ? "bg-primary/15 border-primary" : "bg-card/60 border-border/50"}`}
+                    className={`block h-auto rounded-lg p-3 border text-center transition ${phase === p ? "bg-primary/15 border-primary" : "bg-card/60 border-border/50"}`}
                   >
                     {p === "nomination" && <FileText className="h-4 w-4 mx-auto text-primary mb-1" />}
                     {p === "shortlisting" && <Sparkles className="h-4 w-4 mx-auto text-gold mb-1" />}
                     {p === "voting" && <Vote className="h-4 w-4 mx-auto text-accent mb-1" />}
                     <p className="font-display text-xs font-bold capitalize">{p}</p>
-                  </button>
+                  </Button>
                 ))}
               </div>
         </NaturePageHeader>

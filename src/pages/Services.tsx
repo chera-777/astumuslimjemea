@@ -71,24 +71,25 @@ const Services = () => {
       <div className="p-3 md:p-5 space-y-4 max-w-6xl mx-auto">
         <NaturePageHeader title="University Services" subtitle="Campus life, learning, and student support" />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
           {services.map((s, i) => (
             <motion.div key={s.slug} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-              <Card
+              <Button
+                variant="outline"
                 onClick={() => setActive(s)}
-                className={`cursor-pointer overflow-hidden border-border/60 hover:shadow-glow hover:-translate-y-0.5 transition-all bg-gradient-to-br ${s.color} to-card h-full`}
+                className="block w-full h-full min-h-48 whitespace-normal text-left p-5 bg-card border-border/60 hover:bg-secondary/60 hover:text-foreground hover:border-primary/40 shadow-leaf"
               >
-                <CardContent className="p-3.5 flex flex-col gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-card/80 backdrop-blur flex items-center justify-center">
+                <div className="flex h-full flex-col gap-3">
+                  <div className="w-11 h-11 rounded-lg bg-primary/10 flex items-center justify-center">
                     <s.icon className="h-5 w-5 text-primary" />
                   </div>
-                  <p className="font-display text-sm font-bold leading-tight">{s.title}</p>
-                  <p className="font-body text-[10px] text-muted-foreground line-clamp-2">{s.desc}</p>
+                  <p className="font-display text-lg font-bold leading-tight break-words">{s.title}</p>
+                  <p className="font-body text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
                   <div className="flex items-center justify-end mt-auto">
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </Button>
             </motion.div>
           ))}
         </div>

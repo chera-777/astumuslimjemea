@@ -95,7 +95,8 @@ const Donations = () => {
     setLoading(false);
   };
 
-  const selectedCampaign = campaigns.find(c => c.id === campaign)!;
+  const selectedCampaign = campaigns.find(c => c.id === campaign);
+  if (!selectedCampaign) return null;
   const campaignRaised = campaignTotals[campaign] || 0;
   const campaignProgress = Math.min((campaignRaised / selectedCampaign.goal) * 100, 100);
 
@@ -113,9 +114,11 @@ const Donations = () => {
             const prog = Math.min((raised / c.goal) * 100, 100);
             return (
               <motion.div key={c.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}>
-                <button
+                <Button
+                  variant="outline"
+                  aria-pressed={campaign === c.id}
                   onClick={() => setCampaign(c.id)}
-                  className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                  className={`block w-full h-full whitespace-normal text-left p-5 rounded-lg border transition-all hover:text-foreground ${
                     campaign === c.id ? "border-primary bg-primary/5 shadow-glow" : "border-border bg-card hover:border-primary/30"
                   }`}
                 >
@@ -123,14 +126,14 @@ const Donations = () => {
                     <c.icon className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <p className="font-body text-sm font-bold text-foreground">{c.name}</p>
-                  <p className="font-body text-[10px] text-muted-foreground mt-0.5">{c.desc}</p>
+                  <p className="font-body text-xs text-muted-foreground mt-2">{c.desc}</p>
                   <div className="mt-2">
                     <Progress value={prog} className="h-1.5" />
-                    <p className="font-body text-[9px] text-muted-foreground mt-1">
+                    <p className="font-body text-xs text-muted-foreground mt-2">
                       {raised.toLocaleString()} / {c.goal.toLocaleString()} ETB
                     </p>
                   </div>
-                </button>
+                </Button>
               </motion.div>
             );
           })}
@@ -157,17 +160,19 @@ const Donations = () => {
 
             <div className="grid grid-cols-3 gap-2">
               {quickAmounts.map(a => (
-                <button
+                <Button
                   key={a}
+                  variant="outline"
+                  aria-pressed={amount === String(a)}
                   onClick={() => setAmount(String(a))}
-                  className={`p-3 rounded-xl border-2 font-body font-bold text-sm transition-all ${
+                  className={`h-12 p-3 rounded-lg border font-body font-bold text-sm transition-all ${
                     amount === String(a)
                       ? "border-primary bg-primary/10 text-primary"
                       : "border-border bg-secondary text-foreground hover:border-primary/40"
                   }`}
                 >
                   {a} ETB
-                </button>
+                </Button>
               ))}
             </div>
 
@@ -184,7 +189,8 @@ const Donations = () => {
             <Button
               onClick={handleDonate}
               disabled={loading || !amount}
-              className="w-full gradient-gold text-primary-foreground border-0 shadow-gold"
+              variant="nature"
+              className="w-full h-12"
               size="lg"
             >
               {loading ? "Processing..." : (
