@@ -1,8 +1,11 @@
-# Leafy app redesign
+# Google sign-in and real group / Khadim management
 
-- [x] Share nature-inspired colors, leaf artwork, page spacing, and controls across the app, preserving dark mode and navigation positions.
-- [x] Redesign Profile and News & Events without changing their data or features.
-- [x] Align feature-page headings and layouts with the shared leafy presentation.
-- [x] Run existing checks and verify available public pages; report signed-in verification limitations.
+- [ ] Prepare Google sign-in and post-login student profile setup; hide unavailable Apple/Facebook options and give setup/sign-in steps.
+- [ ] Enforce university/gender membership boundaries and validate linked Khadim schedules in Supabase.
+- [ ] Add Admin dashboard to create/edit groups, assign/remove members, register volunteers, and book/edit/cancel shifts.
+- [ ] Scope student Groups and Khadims to real university/profile records and remove remaining sample Ittikaf figures.
+- [ ] Run rule/regression checks and verify available browser flows.
+- [ ] Enable Google in external Supabase (blocked by Google OAuth credentials and dashboard configuration).
+- [ ] Create actual named groups/memberships/shifts (blocked: no student profiles or supplied group/shift details).
 
-Verification: all 41 existing tests passed and the preview compiled cleanly. Public Guest page and quick menu checked live. Isolated visual checks rendered eight redesigned pages with no horizontal overflow or page errors, including Profile light theme, News Events tab, and Khadims Schedule tab. Authenticated end-to-end checks are unavailable for the externally managed Supabase project; fixture previews do not verify real student data flows.
+Hosted settings verified: email enabled; Google, Apple and Facebook disabled. Six real universities exist, but zero student profiles, groups, or shifts. Keep existing profiles; never create fictitious students, volunteer assignments, or privileged accounts. Authenticated browser checks are unavailable for this external Supabase project.
