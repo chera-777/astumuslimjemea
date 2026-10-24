@@ -268,6 +268,7 @@ export type Database = {
           group_id: string
           id: string
           role: string
+          updated_at: string
           user_id: string
         }
         Insert: {
@@ -275,6 +276,7 @@ export type Database = {
           group_id: string
           id?: string
           role?: string
+          updated_at?: string
           user_id: string
         }
         Update: {
@@ -282,6 +284,7 @@ export type Database = {
           group_id?: string
           id?: string
           role?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: [
@@ -303,6 +306,7 @@ export type Database = {
           period: string
           preferred_roles: string[] | null
           university_id: string
+          updated_at: string
           user_id: string
         }
         Insert: {
@@ -313,6 +317,7 @@ export type Database = {
           period: string
           preferred_roles?: string[] | null
           university_id: string
+          updated_at?: string
           user_id: string
         }
         Update: {
@@ -323,6 +328,7 @@ export type Database = {
           period?: string
           preferred_roles?: string[] | null
           university_id?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: [
@@ -344,6 +350,7 @@ export type Database = {
           khadim_id: string
           meal_type: string
           university_id: string
+          updated_at: string
         }
         Insert: {
           assigned_date: string
@@ -353,6 +360,7 @@ export type Database = {
           khadim_id: string
           meal_type: string
           university_id: string
+          updated_at?: string
         }
         Update: {
           assigned_date?: string
@@ -362,6 +370,7 @@ export type Database = {
           khadim_id?: string
           meal_type?: string
           university_id?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -796,6 +805,18 @@ export type Database = {
       }
     }
     Functions: {
+      admin_student_directory: {
+        Args: never
+        Returns: {
+          batch_year: string
+          department: string
+          full_name: string
+          gender: string
+          id: string
+          is_verified: boolean
+          university_id: string
+        }[]
+      }
       get_group_roster: {
         Args: { _group_id: string }
         Returns: {
