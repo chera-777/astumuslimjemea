@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { Shield, Users, Flag, ScrollText, CheckCircle2, XCircle, Search, Bell } from "lucide-react";
 import { PushComposer } from "@/components/PushComposer";
 import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
+import { CommunityManager } from "@/components/admin/CommunityManager";
 
 type Profile = {
   id: string;
@@ -146,8 +147,9 @@ export default function Admin() {
           </div>
         </header>
 
-        <Tabs defaultValue="users" className="w-full">
-          <TabsList className="grid grid-cols-6 w-full max-w-3xl">
+        <Tabs defaultValue="community" className="w-full">
+          <TabsList className="flex flex-wrap h-auto justify-start w-full gap-1">
+            <TabsTrigger value="community"><Users className="h-4 w-4 mr-1.5" />Groups & Shifts</TabsTrigger>
             <TabsTrigger value="users"><Users className="h-4 w-4 mr-1.5" />Users</TabsTrigger>
             <TabsTrigger value="reports"><Flag className="h-4 w-4 mr-1.5" />Reports {reports.filter(r=>r.status==='open').length>0 && <Badge className="ml-1.5">{reports.filter(r=>r.status==='open').length}</Badge>}</TabsTrigger>
             <TabsTrigger value="audit"><ScrollText className="h-4 w-4 mr-1.5" />Audit</TabsTrigger>
@@ -155,6 +157,7 @@ export default function Admin() {
             <TabsTrigger value="analytics">📊 Analytics</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
           </TabsList>
+          <TabsContent value="community"><CommunityManager /></TabsContent>
           <TabsContent value="analytics"><AnalyticsDashboard scope="global" /></TabsContent>
 
           <TabsContent value="users" className="space-y-3">
