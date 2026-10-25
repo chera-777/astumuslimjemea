@@ -81,14 +81,14 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "register", showA
   const goNext = () => { setDirection(1); setStep(s => Math.min(s + 1, totalSteps - 1)); };
   const goBack = () => { setDirection(-1); setStep(s => Math.max(s - 1, 0)); };
 
-  const handleGoogleSignIn = () => handleOAuth("google");
-  const handleOAuth = async (provider: "google" | "apple" | "facebook") => {
+  const handleOAuth = async (provider: "google") => {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: window.location.origin + "/dashboard" },
+      options: { redirectTo: window.location.origin + "/dashboard", skipBrowserRedirect: true },
     });
     if (error) toast.error(error.message);
+    else if (data.url) window.location.assign(data.url);
     setLoading(false);
   };
 
@@ -138,7 +138,6 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "register", showA
             phone,
             gender,
             university_id: uniData.id,
-            is_cafe_student: isCafe,
           },
         },
       });
@@ -146,15 +145,7 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "register", showA
       if (error) throw error;
 
       if (data.user) {
-        await supabase.from("profiles").insert({
-          id: data.user.id,
-          full_name: fullName,
-          phone: phone || null,
-          gender,
-          university_id: uniData.id,
-          is_cafe_student: isCafe,
-        });
-
+        // The signup trigger creates the profile safely, even before email confirmation.
         // Role assignment is handled server-side by the handle_new_user trigger,
         // which always assigns the baseline 'student' role. Elevated roles
         // (amir/committee/admin) must be granted by an existing admin via a

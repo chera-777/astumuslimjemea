@@ -9,6 +9,7 @@ import { useAzanAutoPlay } from "@/hooks/useAzanAutoPlay";
 import { useOneSignal } from "@/hooks/useOneSignal";
 import { useLocation } from "react-router-dom";
 import leaves from "@/assets/leaves-corner.png";
+import { StudentProfileSetup } from "@/components/auth/StudentProfileSetup";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -41,6 +42,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
         <DesktopFAB />
         <ProfileCompletionPrompt />
+        <StudentProfileSetup />
       </div>
     </SidebarProvider>
   );
