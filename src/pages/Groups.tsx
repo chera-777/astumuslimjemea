@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { loadAllGroups } from "@/lib/communityManagement";
 
 type Group = {
   id: string; name: string; gender: string; description: string | null;
@@ -24,34 +25,44 @@ type Rec = { group_id: string; match_score: number; reason: string };
 const roleIcon = (r: string) =>
   /amir/i.test(r) ? Crown : /naqeeb/i.test(r) ? Shield : /murshid/i.test(r) ? GraduationCap : User;
 
-// Tables are new; generated types may lag, so use an untyped handle.
-const db = supabase as any;
-
 const Groups = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [groups, setGroups] = useState<Group[]>([]);
   const [rosters, setRosters] = useState<Record<string, Member[]>>({});
   const [loading, setLoading] = useState(true);
   const [interests, setInterests] = useState("");
   const [finding, setFinding] = useState(false);
   const [recs, setRecs] = useState<Rec[] | null>(null);
+  const [failure, setFailure] = useState("");
+  const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
-    if (!user) return;
-    (async () => {
-      const { data, error } = await db.from("student_groups").select("id, name, gender, description, focus_tags, activities").order("name");
-      if (error) { toast.error("Couldn't load groups"); setLoading(false); return; }
-      setGroups(data ?? []);
-      const entries = await Promise.all(
-        (data ?? []).map(async (g: Group) => {
-          const { data: r } = await db.rpc("get_group_roster", { _group_id: g.id });
-          return [g.id, (r ?? []) as Member[]] as const;
-        })
-      );
-      setRosters(Object.fromEntries(entries));
-      setLoading(false);
-    })();
-  }, [user]);
+    let active = true;
+    setGroups([]); setRosters({}); setRecs(null); setFailure("");
+    const universityId = profile?.university_id;
+    const gender = profile?.gender;
+    if (!user || !universityId || !gender) { setLoading(false); return; }
+    setLoading(true);
+    const load = async () => {
+      try {
+        const data = await loadAllGroups(universityId, gender);
+        const entries = await Promise.all(data.map(async g => {
+          const { data: roster, error } = await supabase.rpc("get_group_roster", { _group_id: g.id });
+          if (error) throw error;
+          return [g.id, roster ?? []] as const;
+        }));
+        if (active) { setGroups(data); setRosters(Object.fromEntries(entries)); setFailure(""); }
+      } catch { if (active) setFailure("Could not load your university groups. Please try again."); }
+      finally { if (active) setLoading(false); }
+    };
+    void load();
+    const channel = supabase.channel(`student-groups:${user.id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "student_groups", filter: `university_id=eq.${universityId}` }, () => void load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "group_members" }, () => void load())
+      .subscribe();
+    window.addEventListener("focus", load);
+    return () => { active = false; window.removeEventListener("focus", load); void supabase.removeChannel(channel); };
+  }, [user?.id, profile?.university_id, profile?.gender, refresh]);
 
   const myGroups = groups.filter((g) => rosters[g.id]?.some((m) => m.user_id === user?.id));
   const otherGroups = groups.filter((g) => !myGroups.includes(g));
@@ -135,7 +146,7 @@ const Groups = () => {
             <Textarea value={interests} onChange={(e) => setInterests(e.target.value)} maxLength={1000}
               aria-label="Your interests"
               placeholder="e.g. I'm a 2nd-year software student who wants to improve my tajweed and help juniors with maths" className="font-body min-h-28" />
-            <Button variant="nature" onClick={findGroups} disabled={finding} className="h-12">
+            <Button variant="nature" onClick={findGroups} disabled={finding || loading || groups.length === 0 || !profile} className="h-12">
               {finding ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
               {finding ? "Finding matches…" : "Suggest groups"}
             </Button>
@@ -160,7 +171,9 @@ const Groups = () => {
             ))}
         </section>
 
-        {loading ? (
+        {failure ? (
+          <div role="alert" className="text-sm text-destructive">{failure}<Button variant="outline" className="ml-3" onClick={() => setRefresh(r => r + 1)}>Retry</Button></div>
+        ) : loading ? (
           <div className="space-y-4">{[0, 1].map((i) => <Skeleton key={i} className="h-48 w-full rounded-lg" />)}</div>
         ) : groups.length === 0 ? (
           <Card><CardContent className="p-0">

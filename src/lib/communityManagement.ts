@@ -52,6 +52,32 @@ export async function loadAllGroups(universityId?: string, gender?: string) {
   return rows.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+/** Ownership filters complement, never replace, the database's RLS rules. */
+export async function loadStudentKhadims(userId: string, universityId: string) {
+  const registrations: Volunteer[] = [];
+  for (let offset = 0; ; offset += 500) {
+    const { data, error } = await supabase.from("khadim_registrations").select("*")
+      .eq("user_id", userId).eq("university_id", universityId).order("id").range(offset, offset + 499);
+    if (error) throw error;
+    registrations.push(...(data ?? []));
+    if ((data?.length ?? 0) < 500) break;
+  }
+  const shifts: BookedShift[] = [];
+  // Chunk registration ids to avoid oversized URLs; no unscoped schedule fetches.
+  for (let start = 0; start < registrations.length; start += 100) {
+    const ids = registrations.slice(start, start + 100).map(r => r.id);
+    for (let offset = 0; ; offset += 500) {
+      const { data, error } = await supabase.from("khadim_schedule").select("*")
+        .eq("university_id", universityId).in("khadim_id", ids)
+        .order("assigned_date").order("id").range(offset, offset + 499);
+      if (error) throw error;
+      shifts.push(...(data ?? []));
+      if ((data?.length ?? 0) < 500) break;
+    }
+  }
+  return { registrations, shifts: shifts.sort((a, b) => a.assigned_date.localeCompare(b.assigned_date)) };
+}
+
 export async function loadAdminCommunity() {
   const directory: StudentRecord[] = [];
   for (let offset = 0; ; offset += 500) {
