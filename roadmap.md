@@ -1,6 +1,7 @@
 # Google sign-in and real group / Khadim management
 
 - [ ] Prepare Google sign-in and post-login student profile setup; hide unavailable Apple/Facebook options and give setup/sign-in steps.
+- [ ] Prioritize the repeated Google sign-in request and verify the public login screen before completion.
 - [ ] Enforce university/gender membership boundaries and validate linked Khadim schedules in Supabase.
 - [ ] Add Admin dashboard to create/edit groups, assign/remove members, register volunteers, and book/edit/cancel shifts.
 - [ ] Scope student Groups and Khadims to real university/profile records and remove remaining sample Ittikaf figures.
