@@ -351,6 +351,7 @@
     border-radius: 1rem;
   }
   .auth-popover-body { padding: 1.5rem; }
+  .auth-popover > button { z-index: 20; }
   .auth-heading { margin-bottom: 1.25rem; }
   .auth-heading img { height: 3rem; width: 3rem; }
   .auth-heading h1 { font-size: 1.75rem; margin-top: 0.5rem; }
