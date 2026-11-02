@@ -1,521 +1,103 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { useState, useEffect, type FormEvent } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Progress } from "@/components/ui/progress";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 import { NatureHeader, NatureLeaves, SocialRow } from "@/components/auth/NatureShell";
-import {
-  ArrowRight, ArrowLeft, Mail, Phone, User, GraduationCap,
-  CheckCircle2, Sparkles, Lock, Eye, EyeOff, Shield, Users
-} from "lucide-react";
+import { ArrowRight, ArrowLeft, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 type AuthMode = "register" | "signin" | "forgot";
-type RegistrationRole = "student" | "amir" | "committee" | "guest";
+interface AuthDialogProps { open: boolean; onOpenChange: (open: boolean) => void; defaultMode?: AuthMode; }
 
-interface AuthDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  defaultMode?: AuthMode;
-  showAdminOption?: boolean;
-}
-
-const universities = [
-  { id: "ASTU", name: "ASTU", city: "Adama" },
-  { id: "AAU", name: "AAU", city: "Addis Ababa" },
-  { id: "JU", name: "JU", city: "Jimma" },
-  { id: "BDU", name: "BDU", city: "Bahir Dar" },
-  { id: "HU", name: "HU", city: "Haramaya" },
-  { id: "MU", name: "MU", city: "Mekelle" },
-];
-
-const amirSectors = [
-  { id: "main", label: "Main Sector", icon: "⭐" },
-  { id: "qiraat", label: "Qira'at Sector", icon: "📖" },
-  { id: "academic", label: "Academic Sector", icon: "🎓" },
-  { id: "financial", label: "Financial Sector", icon: "💰" },
-  { id: "social", label: "Social Sector", icon: "🤝" },
-];
-
-export function AuthDialog({ open, onOpenChange, defaultMode = "register", showAdminOption = false }: AuthDialogProps) {
+export function AuthDialog({ open, onOpenChange, defaultMode = "register" }: AuthDialogProps) {
   const [mode, setMode] = useState<AuthMode>(defaultMode);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [direction, setDirection] = useState(1);
-
-  // Register fields
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
   const [university, setUniversity] = useState("");
-  const [isCafe, setIsCafe] = useState(false);
-  const [registrationRole, setRegistrationRole] = useState<RegistrationRole>("student");
-  const [selectedSector, setSelectedSector] = useState("");
-
-  // Sign-in fields
-  const [signInEmail, setSignInEmail] = useState("");
-  const [signInPassword, setSignInPassword] = useState("");
-  const [forgotEmail, setForgotEmail] = useState("");
-
-  useEffect(() => { setMode(defaultMode); }, [defaultMode]);
-
-  const totalSteps = registrationRole === "amir" ? 4 : 3;
-  const progress = ((step + 1) / totalSteps) * 100;
-
-  const resetForm = () => {
-    setStep(0);
-    setFullName(""); setEmail(""); setPhone(""); setPassword("");
-    setGender(""); setUniversity(""); setIsCafe(false);
-    setRegistrationRole("student"); setSelectedSector("");
-    setSignInEmail(""); setSignInPassword(""); setForgotEmail("");
-  };
-
-  const switchMode = (newMode: AuthMode) => { setMode(newMode); resetForm(); };
-  const goNext = () => { setDirection(1); setStep(s => Math.min(s + 1, totalSteps - 1)); };
-  const goBack = () => { setDirection(-1); setStep(s => Math.max(s - 1, 0)); };
-
-  const handleOAuth = async (provider: "google") => {
-    setLoading(true);
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: { redirectTo: window.location.origin + "/dashboard", skipBrowserRedirect: true },
+  const [universities, setUniversities] = useState<{ id: string; short_name: string; city: string }[]>([]);
+  const [error, setError] = useState("");
+  const [sent, setSent] = useState(false);
+  const reset = () => { setStep(0); setFullName(""); setEmail(""); setPhone(""); setPassword(""); setGender(""); setUniversity(""); setError(""); setSent(false); setShowPassword(false); };
+  useEffect(() => { if (open) { setMode(defaultMode); reset(); } }, [open, defaultMode]);
+  useEffect(() => {
+    if (!open || mode !== "register") return;
+    let active = true;
+    supabase.from("universities").select("id,short_name,city").order("short_name").then(({ data, error }) => {
+      if (!active) return;
+      if (error) setError("Could not load universities. Close this form and try again.");
+      else setUniversities(data ?? []);
     });
-    if (error) toast.error(error.message);
-    else if (data.url) window.location.assign(data.url);
-    setLoading(false);
+    return () => { active = false; };
+  }, [open, mode]);
+  const switchMode = (value: AuthMode) => { reset(); setMode(value); };
+  const handleOAuth = async () => {
+    setLoading(true); setError("");
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin, skipBrowserRedirect: true } });
+      if (error) throw error;
+      if (data.url) window.location.assign(data.url);
+    } catch (error) { setError(error instanceof Error ? error.message : "Google sign-in failed."); }
+    finally { setLoading(false); }
   };
-
-  const handleRegister = async () => {
-    if (!fullName || !email || !password || !gender || !university) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
+  const submit = async (event: FormEvent) => {
+    event.preventDefault(); setError("");
+    if (mode === "register" && step < 2) { setStep(value => value + 1); return; }
     setLoading(true);
     try {
-      const { data: uniData } = await supabase
-        .from("universities")
-        .select("id")
-        .eq("short_name", university)
-        .maybeSingle();
-
-      if (!uniData) {
-        toast.error("University not found. Please contact support.");
-        setLoading(false);
-        return;
+      if (mode === "register") {
+        if (!fullName.trim() || !gender || !university || !email.trim()) throw new Error("Complete your identity and university details.");
+        const { data, error } = await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: window.location.origin, data: { full_name: fullName.trim(), phone: phone.trim(), gender, university_id: university } } });
+        if (error) throw error;
+        if (data.session) { toast.success("Account created"); onOpenChange(false); }
+        else setSent(true);
+      } else if (mode === "signin") {
+        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+        if (error) throw error;
+        toast.success("Welcome back!"); onOpenChange(false);
+      } else {
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}/reset-password` });
+        if (error) throw error;
+        setSent(true);
       }
-
-      // For amir role, check if sector is already taken this year
-      if (registrationRole === "amir" && selectedSector) {
-        const currentYear = new Date().getFullYear();
-        const { data: existingAmir } = await supabase
-          .from("user_roles")
-          .select("id")
-          .eq("role", "amir")
-          .eq("sector", selectedSector)
-          .eq("university_id", uniData.id);
-
-        if (existingAmir && existingAmir.length > 0) {
-          toast.error(`The ${selectedSector} sector already has an Amir registered for ${currentYear}. Only one Amir per sector per year is allowed.`);
-          setLoading(false);
-          return;
-        }
-      }
-
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: window.location.origin + "/dashboard",
-          data: {
-            full_name: fullName,
-            phone,
-            gender,
-            university_id: uniData.id,
-          },
-        },
-      });
-
-      if (error) throw error;
-
-      if (data.user) {
-        // The signup trigger creates the profile safely, even before email confirmation.
-        // Role assignment is handled server-side by the handle_new_user trigger,
-        // which always assigns the baseline 'student' role. Elevated roles
-        // (amir/committee/admin) must be granted by an existing admin via a
-        // dedicated admin workflow — never self-assigned during registration.
-
-        toast.success("🎉 Registration successful! Check your email to verify.");
-        onOpenChange(false);
-        resetForm();
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Registration failed");
-    }
-    setLoading(false);
+    } catch (error) { setError(error instanceof Error ? error.message : "Please try again."); }
+    finally { setLoading(false); }
   };
-
-  const handleSignIn = async () => {
-    if (!signInEmail || !signInPassword) {
-      toast.error("Please enter email and password");
-      return;
-    }
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: signInEmail,
-      password: signInPassword,
-    });
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Welcome back! ✨");
-      onOpenChange(false);
-      resetForm();
-    }
-    setLoading(false);
-  };
-
-  const handleForgotPassword = async () => {
-    if (!forgotEmail) { toast.error("Please enter your email"); return; }
-    setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
-      redirectTo: window.location.origin + "/reset-password",
-    });
-    if (error) toast.error(error.message);
-    else { toast.success("Password reset link sent!"); switchMode("signin"); }
-    setLoading(false);
-  };
-
-  const slideVariants = {
-    enter: (d: number) => ({ x: d > 0 ? 200 : -200, opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit: (d: number) => ({ x: d > 0 ? -200 : 200, opacity: 0 }),
-  };
-
-  const renderStepIndicator = () => (
-    <div className="space-y-2 mb-5">
-      <div className="flex items-center justify-between text-xs font-body text-muted-foreground">
-        <span>Step {step + 1} of {totalSteps}</span>
-        <span className="flex items-center gap-1">
-          <Sparkles className="h-3 w-3 text-gold" />
-          {Math.round(progress)}%
-        </span>
-      </div>
-      <Progress value={progress} className="h-2" />
+  const emailField = <div className="space-y-1"><Label htmlFor="student-email">Email</Label><Input id="student-email" type="email" autoComplete={mode === "signin" ? "username" : "email"} required value={email} onChange={event => setEmail(event.target.value)} disabled={loading} /></div>;
+  const passwordField = <div className="space-y-1"><Label htmlFor="student-password">Password</Label><div className="relative"><Input id="student-password" type={showPassword ? "text" : "password"} autoComplete={mode === "register" ? "new-password" : "current-password"} minLength={mode === "register" ? 6 : undefined} required value={password} onChange={event => setPassword(event.target.value)} disabled={loading} className="pr-11" /><Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-10 w-10" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(value => !value)}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</Button></div></div>;
+  const title = mode === "signin" ? "Welcome" : mode === "forgot" ? "Reset Password" : "Create Account";
+  const subtitle = mode === "register" ? `${["Your identity", "Your university", "Your account"][step]} · ${step + 1} of 3` : mode === "signin" ? "Sign in to your account" : "Receive a password reset link";
+  return <Dialog open={open} onOpenChange={value => { if (!loading) onOpenChange(value); }}><DialogContent className="nature-surface auth-popover p-0 overflow-hidden border-0">
+    <NatureLeaves />
+    <div className="auth-popover-body relative z-10">
+      <div className="auth-heading"><DialogTitle className="sr-only">{title}</DialogTitle><DialogDescription className="sr-only">{subtitle}</DialogDescription><NatureHeader title={title} subtitle={subtitle} /></div>
+      <form onSubmit={submit} className="auth-form space-y-3" aria-label="Student authentication">
+        {sent ? <div className="space-y-4 text-center"><CheckCircle2 className="h-9 w-9 text-primary mx-auto" /><p role="status" className="text-sm">{mode === "register" ? "Check your email to confirm your account before signing in." : "Check your email for a password reset link."}</p><Button type="button" variant="outline" className="w-full" onClick={() => switchMode("signin")}>Back to sign-in</Button></div> : <>
+          <div className="auth-fields space-y-3">
+            {mode === "register" && step === 0 && <><div className="space-y-1"><Label htmlFor="student-name">Full name</Label><Input id="student-name" autoComplete="name" value={fullName} onChange={event => setFullName(event.target.value)} maxLength={120} required /></div>{emailField}</>}
+            {mode === "register" && step === 1 && <><div className="space-y-1"><Label htmlFor="student-gender">Gender</Label><Select value={gender} onValueChange={setGender}><SelectTrigger id="student-gender"><SelectValue placeholder="Choose gender" /></SelectTrigger><SelectContent><SelectItem value="male">Brother</SelectItem><SelectItem value="female">Sister</SelectItem></SelectContent></Select></div><div className="space-y-1"><Label htmlFor="student-university">University</Label><Select value={university} onValueChange={setUniversity}><SelectTrigger id="student-university"><SelectValue placeholder="Choose university" /></SelectTrigger><SelectContent>{universities.map(item => <SelectItem key={item.id} value={item.id}>{item.short_name} · {item.city}</SelectItem>)}</SelectContent></Select></div></>}
+            {mode === "register" && step === 2 && <><div className="space-y-1"><Label htmlFor="student-phone">Phone (optional)</Label><Input id="student-phone" type="tel" autoComplete="tel" value={phone} onChange={event => setPhone(event.target.value)} disabled={loading} /></div>{passwordField}</>}
+            {mode !== "register" && emailField}
+            {mode === "signin" && passwordField}
+          </div>
+          {error && <p role="alert" className="text-xs text-destructive break-words">{error}</p>}
+          {mode === "signin" && <Button type="button" variant="link" className="auth-link h-8 p-0 ml-auto block text-xs" onClick={() => switchMode("forgot")}>Forgot password?</Button>}
+          <div className="auth-actions flex gap-2">
+            {mode === "register" && step > 0 && <Button type="button" variant="outline" disabled={loading} className="h-12" onClick={() => { setStep(value => value - 1); setError(""); }}><ArrowLeft className="h-4 w-4 mr-1" />Back</Button>}
+            <Button type="submit" disabled={loading || (mode === "register" && step === 1 && (!gender || !university))} className="nature-btn border-0 flex-1">{loading ? "Please wait…" : mode === "register" ? step < 2 ? <>Next<ArrowRight className="h-4 w-4 ml-2" /></> : "Create account" : mode === "signin" ? "Log in" : "Send reset link"}</Button>
+          </div>
+          {(mode === "signin" || (mode === "register" && step === 2)) && <SocialRow onProvider={handleOAuth} disabled={loading} />}
+          <div className="auth-footer text-center text-xs text-muted-foreground">{mode === "register" ? <>Already have an account? <Button type="button" variant="link" className="h-8 p-0 text-xs" onClick={() => switchMode("signin")}>Log in</Button></> : mode === "signin" ? <>Don't have an account? <Button type="button" variant="link" className="h-8 p-0 text-xs" onClick={() => switchMode("register")}>Sign up</Button></> : <Button type="button" variant="link" className="h-8 p-0 text-xs" onClick={() => switchMode("signin")}>Back to sign-in</Button>}</div>
+        </>}
+      </form>
     </div>
-  );
-
-  const renderRegisterStep = () => {
-    switch (step) {
-      case 0:
-        return (
-          <div className="space-y-4">
-            <div className="text-center mb-3">
-              <h3 className="font-display text-xl font-bold text-foreground">Create Your Account</h3>
-              <p className="text-muted-foreground font-body text-xs mt-1">Step 1: Your identity</p>
-            </div>
-            <div className="space-y-3">
-              <div>
-                <Label className="font-body text-sm">Full Name *</Label>
-                <Input value={fullName} onChange={e => setFullName(e.target.value)} placeholder="Ahmed Mohammed" className="mt-1" />
-              </div>
-              <div>
-                <Label className="font-body text-sm">Email Address *</Label>
-                <Input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="your@email.com" className="mt-1" />
-              </div>
-              <div>
-                <Label className="font-body text-sm">Gender *</Label>
-                <div className="grid grid-cols-2 gap-3 mt-1">
-                  {[{ val: "male", label: "👤 Male", color: "border-blue" }, { val: "female", label: "❤️ Female", color: "border-pink" }].map(g => (
-                    <button
-                      key={g.val}
-                      type="button"
-                      onClick={() => setGender(g.val)}
-                      className={`p-3 rounded-xl border-2 text-sm font-body font-semibold transition-all ${
-                        gender === g.val
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border bg-card text-muted-foreground hover:border-primary/40"
-                      }`}
-                    >
-                      {g.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="pt-2">
-              <Button onClick={goNext} disabled={!fullName || !email || !gender} className="w-full nature-btn border-0 font-body">
-                Next <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-            <p className="text-center text-xs text-muted-foreground font-body">
-              Already have an account?{" "}
-              <button onClick={() => switchMode("signin")} className="text-primary font-semibold hover:underline">Login</button>
-            </p>
-          </div>
-        );
-
-      case 1:
-        return (
-          <div className="space-y-4">
-            <div className="text-center mb-3">
-              <h3 className="font-display text-xl font-bold text-foreground">Step 2 of {totalSteps}: Personal Details</h3>
-            </div>
-            <div className="space-y-3">
-              <div>
-                <Label className="font-body text-sm">Country</Label>
-                <Input value="Ethiopia" disabled className="mt-1 bg-secondary" />
-              </div>
-              <div>
-                <Label className="font-body text-sm">University *</Label>
-                <div className="grid grid-cols-2 gap-2 mt-1">
-                  {universities.map(u => (
-                    <button
-                      key={u.id}
-                      type="button"
-                      onClick={() => setUniversity(u.id)}
-                      className={`p-2.5 rounded-xl border-2 text-xs font-body font-semibold transition-all text-left ${
-                        university === u.id
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border bg-card text-muted-foreground hover:border-primary/40"
-                      }`}
-                    >
-                      <span className="block font-bold">{u.name}</span>
-                      <span className="text-[10px] opacity-70">{u.city}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary">
-                <Checkbox id="cafe" checked={isCafe} onCheckedChange={(v) => setIsCafe(!!v)} />
-                <Label htmlFor="cafe" className="font-body text-xs cursor-pointer">
-                  I'm a Café student (meal card eligible)
-                </Label>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={goBack} className="flex-1 h-11 rounded-xl">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back
-              </Button>
-              <Button onClick={goNext} disabled={!university} className="flex-1 nature-btn border-0 font-body">
-                Next <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        );
-
-      case 2:
-        // If amir role, this is sector selection step
-        if (registrationRole === "amir") {
-          return (
-            <div className="space-y-4">
-              <div className="text-center mb-3">
-                <h3 className="font-display text-xl font-bold text-foreground">Select Your Sector</h3>
-                <p className="text-muted-foreground font-body text-xs mt-1">Only 1 Amir per sector per year</p>
-              </div>
-              <div className="space-y-2">
-                {amirSectors.map(s => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setSelectedSector(s.id)}
-                    className={`w-full p-3 rounded-xl border-2 text-left flex items-center gap-3 transition-all font-body ${
-                      selectedSector === s.id
-                        ? "border-primary bg-primary/10"
-                        : "border-border bg-card hover:border-primary/40"
-                    }`}
-                  >
-                    <span className="text-xl">{s.icon}</span>
-                    <span className="text-sm font-semibold">{s.label}</span>
-                  </button>
-                ))}
-              </div>
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={goBack} className="flex-1 h-11 rounded-xl">
-                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
-                </Button>
-                <Button onClick={goNext} disabled={!selectedSector} className="flex-1 nature-btn border-0 font-body">
-                  Next <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          );
-        }
-
-        // Otherwise: account creation (final step for non-amir)
-        return renderAccountStep();
-
-      case 3:
-        // Final step for amir
-        return renderAccountStep();
-    }
-  };
-
-  const renderAccountStep = () => (
-    <div className="space-y-4">
-      <div className="text-center mb-3">
-        <h3 className="font-display text-xl font-bold text-foreground">Create Your Account</h3>
-        <p className="text-muted-foreground font-body text-xs mt-1">Almost there!</p>
-      </div>
-      <div className="space-y-3">
-        <div>
-          <Label className="font-body text-sm flex items-center gap-1"><Phone className="h-3 w-3" /> Phone (optional)</Label>
-          <Input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+251 9XX XXX XXX" className="mt-1" />
-        </div>
-        <div>
-          <Label className="font-body text-sm flex items-center gap-1"><Lock className="h-3 w-3" /> Password *</Label>
-          <div className="relative mt-1">
-            <Input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Min 6 characters"
-            />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Role selection (only if admin option is visible) */}
-      {showAdminOption && (
-        <div>
-          <Label className="font-body text-sm mb-2 block">Register as</Label>
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { val: "student" as RegistrationRole, label: "Student", icon: GraduationCap },
-              { val: "amir" as RegistrationRole, label: "Amir", icon: Shield },
-              { val: "committee" as RegistrationRole, label: "Committee", icon: Users },
-            ].map(r => (
-              <button
-                key={r.val}
-                type="button"
-                onClick={() => setRegistrationRole(r.val)}
-                className={`p-2.5 rounded-xl border-2 text-xs font-body font-semibold transition-all flex items-center gap-2 ${
-                  registrationRole === r.val
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-card text-muted-foreground hover:border-primary/40"
-                }`}
-              >
-                <r.icon className="h-4 w-4" />
-                {r.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="flex gap-3">
-        <Button variant="outline" onClick={goBack} className="flex-1 h-11 rounded-xl">
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back
-        </Button>
-        <Button
-          onClick={handleRegister}
-          disabled={!password || loading}
-          className="flex-1 nature-btn border-0 font-body"
-        >
-          {loading ? "Creating..." : <>Finish <CheckCircle2 className="ml-2 h-4 w-4" /></>}
-        </Button>
-      </div>
-    </div>
-  );
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="nature-surface sm:max-w-md p-0 overflow-hidden border-0 rounded-3xl">
-        <NatureLeaves />
-        <div className="relative z-10 px-6 pt-8 pb-16 max-h-[85vh] overflow-y-auto scrollbar-hide">
-          <DialogTitle className="sr-only">
-            {mode === "register" ? "Register" : mode === "signin" ? "Sign In" : "Reset Password"}
-          </DialogTitle>
-
-          {mode === "register" && (
-            <>
-              {renderStepIndicator()}
-              <AnimatePresence mode="wait" custom={direction}>
-                <motion.div
-                  key={step}
-                  custom={direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.25 }}
-                >
-                  {renderRegisterStep()}
-                </motion.div>
-              </AnimatePresence>
-
-              <SocialRow onProvider={handleOAuth} disabled={loading} />
-            </>
-          )}
-
-          {mode === "signin" && (
-            <div className="space-y-4">
-              <div className="mb-6"><NatureHeader title="Welcome" subtitle="Sign in to your account" /></div>
-
-              <div className="space-y-3">
-                <div>
-                  <Label className="font-body text-sm">Email</Label>
-                  <Input type="email" value={signInEmail} onChange={e => setSignInEmail(e.target.value)} placeholder="your@email.com" className="mt-1" />
-                </div>
-                <div>
-                  <Label className="font-body text-sm">Password</Label>
-                  <div className="relative mt-1">
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      value={signInPassword}
-                      onChange={e => setSignInPassword(e.target.value)}
-                      placeholder="Enter password"
-                    />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <button onClick={() => switchMode("forgot")} className="block ml-auto text-xs nature-link hover:underline">
-                Forgot Password?
-              </button>
-
-              <Button onClick={handleSignIn} disabled={loading} className="w-full nature-btn border-0">
-                {loading ? "Signing in..." : "Login"}
-              </Button>
-
-              <SocialRow onProvider={handleOAuth} disabled={loading} />
-
-              <p className="text-center text-xs text-muted-foreground font-body">
-                Don't have an account?{" "}
-                <button onClick={() => switchMode("register")} className="nature-link hover:underline">Sign up</button>
-              </p>
-            </div>
-          )}
-
-          {mode === "forgot" && (
-            <div className="space-y-4">
-              <div className="mb-6"><NatureHeader title="Reset Password" subtitle="Enter your email to receive a reset link" /></div>
-              <div>
-                <Label className="font-body text-sm">Email</Label>
-                <Input type="email" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} placeholder="your@email.com" className="mt-1" />
-              </div>
-              <Button onClick={handleForgotPassword} disabled={loading} className="w-full nature-btn border-0">
-                {loading ? "Sending..." : "Send Reset Link"}
-              </Button>
-              <button onClick={() => switchMode("signin")} className="text-xs text-primary font-body font-semibold hover:underline block mx-auto">
-                Back to Sign In
-              </button>
-            </div>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
+  </DialogContent></Dialog>;
 }

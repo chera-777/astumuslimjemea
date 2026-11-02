@@ -14,7 +14,7 @@ import {
 import logo from "@/assets/logo-leaf.png";
 
 const studentItems = [
-  { title: "Home", url: "/portal/student", icon: Home },
+  { title: "Home", url: "/dashboard", icon: Home },
   { title: "Resources", url: "/resources", icon: BookOpen },
   { title: "News", url: "/news", icon: Newspaper },
   { title: "Governance", url: "/governance", icon: Vote },
@@ -68,18 +68,21 @@ export function AppSidebar() {
 
   let items: typeof studentItems = studentItems;
   let portalLabel = "Student Portal";
-  if (roles.includes("admin") || roles.includes("amir")) {
-    items = amirItems as typeof studentItems;
-    portalLabel = "Amirs' Portal";
+  if (roles.includes("admin")) {
+    items = [{ title: "Dashboard", url: "/admin", icon: Shield }, ...studentItems.filter(item => item.title !== "Home")];
+    portalLabel = "Admin Portal";
   } else if (roles.includes("committee")) {
     items = committeeItems as typeof studentItems;
     portalLabel = "Committee Portal";
+  } else if (roles.includes("amir")) {
+    items = amirItems as typeof studentItems;
+    portalLabel = "Amirs' Portal";
   } else if (roles.includes("guest")) {
     items = guestItems as typeof studentItems;
     portalLabel = "Guest Portal";
   }
-  if (roles.includes("admin")) {
-    items = [...items, { title: "Admin", url: "/admin", icon: Shield } as any];
+  if (roles.some(role => ["admin", "amir", "committee"].includes(role))) {
+    items = [...items, { title: "Student Portal", url: "/dashboard", icon: GraduationCap }];
   }
 
   const initial = profile?.full_name?.[0]?.toUpperCase() || "U";

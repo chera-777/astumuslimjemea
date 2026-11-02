@@ -5,6 +5,8 @@ import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { UserCog, X } from "lucide-react";
+import { profileCompletion } from "@/lib/profileDetails";
+import { useLocation } from "react-router-dom";
 
 const REMINDER_KEY = "msj-profile-prompt-last";
 const REMINDER_INTERVAL_MS = 1000 * 60 * 60 * 24; // every 24h
@@ -12,22 +14,24 @@ const REMINDER_INTERVAL_MS = 1000 * 60 * 60 * 24; // every 24h
 export function ProfileCompletionPrompt() {
   const { profile, user } = useAuth();
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const reminderKey = `${REMINDER_KEY}:${user?.id ?? "signed-out"}`;
 
   useEffect(() => {
-    if (!user || !profile) return;
+    if (!user || !profile || location.pathname === "/profile") { setOpen(false); return; }
     const fields = [
       profile.full_name, profile.phone, profile.gender, profile.department,
-      profile.batch_year, profile.student_id,
+      profile.batch_year, profile.student_id, profile.profile_photo_url,
     ];
     const missing = fields.filter((f) => !f).length;
     if (missing === 0) return;
 
-    const last = Number(localStorage.getItem(REMINDER_KEY) || 0);
+    const last = Number(localStorage.getItem(reminderKey) || 0);
     if (Date.now() - last < REMINDER_INTERVAL_MS) return;
 
     const t = setTimeout(() => setOpen(true), 4000);
     return () => clearTimeout(t);
-  }, [user, profile]);
+  }, [user, profile, location.pathname, reminderKey]);
 
   if (!profile) return null;
 
@@ -38,12 +42,12 @@ export function ProfileCompletionPrompt() {
     { key: "department", label: "Department", value: profile.department },
     { key: "batch_year", label: "Batch year", value: profile.batch_year },
     { key: "student_id", label: "Student ID", value: profile.student_id },
+    { key: "profile_photo_url", label: "Profile photo", value: profile.profile_photo_url },
   ];
-  const filled = fields.filter((f) => f.value).length;
-  const pct = Math.round((filled / fields.length) * 100);
+  const pct = profileCompletion(profile);
 
   const handleClose = () => {
-    localStorage.setItem(REMINDER_KEY, String(Date.now()));
+    localStorage.setItem(reminderKey, String(Date.now()));
     setOpen(false);
   };
 
@@ -77,7 +81,7 @@ export function ProfileCompletionPrompt() {
           <DialogFooter className="flex flex-row gap-2 sm:justify-center">
             <Button variant="ghost" onClick={handleClose} className="text-xs">Later</Button>
             <Button asChild onClick={handleClose} className="text-xs">
-              <Link to="/profile">Complete profile</Link>
+              <Link to="/profile?edit=1">Complete profile</Link>
             </Button>
           </DialogFooter>
         </div>

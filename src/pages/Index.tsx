@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthDialog } from "@/components/AuthDialog";
-import { Star } from "lucide-react";
+import { StaffAuthDialog } from "@/components/auth/StaffAuthDialog";
+import { portalHome } from "@/lib/portalAccess";
 import { NatureScreen, NatureHeader } from "@/components/auth/NatureShell";
 import logo from "@/assets/logo-leaf.png";
 import { SEO } from "@/components/SEO";
@@ -14,34 +15,30 @@ const Index = () => {
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"register" | "signin">("register");
   const [logoClicks, setLogoClicks] = useState(0);
-  const [showAdminReg, setShowAdminReg] = useState(false);
-  const { user, roles, loading } = useAuth();
+  const [staffOpen, setStaffOpen] = useState(false);
+  const clickTimer = useRef<ReturnType<typeof setTimeout>>();
+  const { user, roles, loading, authError, retryAuth } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && user) {
-      // Route to role-specific portal
-      if (roles.includes("admin") || roles.includes("amir")) {
-        navigate("/portal/amirs");
-      } else if (roles.includes("committee")) {
-        navigate("/portal/committee");
-      } else if (roles.includes("guest")) {
-        navigate("/portal/guest");
-      } else {
-        navigate("/dashboard");
-      }
+    if (!loading && !authError && user && !staffOpen) {
+      navigate(portalHome(roles), { replace: true });
     }
-  }, [user, roles, loading, navigate]);
+  }, [user, roles, loading, authError, staffOpen, navigate]);
+
+  useEffect(() => () => clearTimeout(clickTimer.current), []);
 
   const handleLogoClick = () => {
+    clearTimeout(clickTimer.current);
     const newCount = logoClicks + 1;
     setLogoClicks(newCount);
-    if (newCount >= 5) {
-      setShowAdminReg(true);
+    if (newCount === 5) {
+      setAuthOpen(false);
+      setStaffOpen(true);
       setLogoClicks(0);
     }
     // Reset after 3 seconds of no clicking
-    setTimeout(() => setLogoClicks(0), 3000);
+    clickTimer.current = setTimeout(() => setLogoClicks(0), 3000);
   };
 
   const openRegister = () => { setAuthMode("register"); setAuthOpen(true); };
@@ -76,19 +73,13 @@ const Index = () => {
         </motion.div>
 
         <div className="space-y-3 pb-4">
-          <button onClick={openRegister} className="nature-btn">Get Started</button>
+          <Button onClick={openRegister} className="nature-btn border-0">Get Started</Button>
           <p className="nature-muted text-center text-sm">
             Already have an account?{" "}
-            <button onClick={openSignIn} className="nature-link hover:underline">Log in</button>
+            <Button variant="link" onClick={openSignIn} className="nature-link h-auto p-0">Log in</Button>
           </p>
 
-          {showAdminReg && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-              <button onClick={openRegister} className="nature-link text-xs inline-flex items-center gap-1">
-                <Star className="h-3 w-3" /> Admin / Committee Registration
-              </button>
-            </motion.div>
-          )}
+          {authError && <div role="alert" className="text-center text-sm text-destructive"><p>{authError}</p><Button variant="link" onClick={() => void retryAuth()}>Try again</Button></div>}
           <p className="nature-muted text-center text-xs pt-2">بسم الله الرحمن الرحيم</p>
         </div>
       </div>
@@ -98,8 +89,8 @@ const Index = () => {
         open={authOpen}
         onOpenChange={setAuthOpen}
         defaultMode={authMode}
-        showAdminOption={showAdminReg}
       />
+      <StaffAuthDialog open={staffOpen} onOpenChange={setStaffOpen} />
     </NatureScreen>
     </>
   );

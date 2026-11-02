@@ -4,7 +4,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
@@ -16,9 +16,12 @@ import {
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useXp } from "@/hooks/useXp";
 import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
+import { ProfileDetailsEditor } from "@/components/ProfileDetailsEditor";
+import { profileCompletion } from "@/lib/profileDetails";
+import { portalHome } from "@/lib/portalAccess";
 
 
 const accentColors = [
@@ -58,6 +61,15 @@ const Profile = () => {
   const { signOut, profile: authProfile, user, roles } = useAuth();
   const { xp, level, recent, progress, nextLevelAt } = useXp();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const editorOpen = searchParams.get("edit") === "1";
+  const setEditorOpen = (open: boolean) => {
+    setSearchParams(previous => {
+      const next = new URLSearchParams(previous);
+      if (open) next.set("edit", "1"); else next.delete("edit");
+      return next;
+    }, { replace: true });
+  };
   const [theme, setTheme] = useState<"dark" | "light" | "system">("dark");
   const [selectedAccent, setSelectedAccent] = useState(0);
 
@@ -106,13 +118,9 @@ const Profile = () => {
   const displayName = authProfile?.full_name || user?.email?.split("@")[0] || "Guest";
   const initials = displayName.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
   const totalDonated = donations.reduce((s, d) => s + Number(d.amount || 0), 0);
-  const completionPct = (() => {
-    if (!authProfile) return 0;
-    const fields = [authProfile.full_name, authProfile.phone, authProfile.gender, authProfile.department, authProfile.batch_year, authProfile.student_id, authProfile.profile_photo_url];
-    const filled = fields.filter(Boolean).length;
-    return Math.round((filled / fields.length) * 100);
-  })();
-  const role = roles[0] ? roles[0].charAt(0).toUpperCase() + roles[0].slice(1) : "Student";
+  const completionPct = profileCompletion(authProfile);
+  const primaryRole = portalHome(roles) === "/admin" ? "admin" : portalHome(roles) === "/portal/committee" ? "committee" : portalHome(roles) === "/portal/amirs" ? "amir" : roles.includes("student") ? "student" : "guest";
+  const role = primaryRole.charAt(0).toUpperCase() + primaryRole.slice(1);
   const joinedDate = user?.created_at ? new Date(user.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "—";
 
   return (
@@ -121,17 +129,18 @@ const Profile = () => {
       <div className="space-y-6">
         <NaturePageHeader title="My Profile" subtitle={universityName === "—" ? undefined : universityName} />
         {/* Profile Card */}
-        <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="border-b border-border pb-6">
-              <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
-                <Avatar className="w-20 h-20 ring-4 ring-primary/10 shrink-0">
+        <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="relative overflow-hidden rounded-lg border border-border bg-card p-5 sm:p-6">
+              <div className="absolute inset-y-0 left-0 w-1 bg-primary" aria-hidden="true" />
+              <div className="flex flex-wrap items-start gap-4">
+                <Avatar className="w-16 h-16 sm:w-20 sm:h-20 ring-4 ring-primary/10 shrink-0">
+                  {authProfile?.profile_photo_url && <AvatarImage src={authProfile.profile_photo_url} alt={displayName} className="object-cover" />}
                   <AvatarFallback className="bg-primary/15 text-primary font-display text-2xl">{initials}</AvatarFallback>
                 </Avatar>
-                <div className="flex-1 min-w-0">
-                  <h2 className="font-display text-2xl font-bold break-words">{displayName}</h2>
-                  <p className="font-body text-sm text-muted-foreground break-all mt-1">
-                    {authProfile?.student_id || user?.email || "—"} {authProfile?.department && `• ${authProfile.department}`}
-                  </p>
-                  <div className="flex items-center justify-center sm:justify-start gap-2 mt-3 flex-wrap">
+                <div className="flex-1 min-w-0 basis-40">
+                  <h2 className="font-display text-2xl font-bold break-words leading-tight">{displayName}</h2>
+                  {user?.email && <p className="font-body text-xs text-muted-foreground break-all mt-1">{user.email}</p>}
+                  {authProfile?.student_id && <p className="font-body text-sm text-foreground mt-2 break-words">{authProfile.student_id}{authProfile.department && ` · ${authProfile.department}`}</p>}
+                  <div className="flex items-center gap-2 mt-3 flex-wrap">
                     <Badge className="font-body text-[10px] bg-primary/10 text-primary border-0">
                       <Award className="h-3 w-3 mr-1" /> {role}
                     </Badge>
@@ -140,11 +149,11 @@ const Profile = () => {
                     )}
                   </div>
                 </div>
-                <Button variant="outline" size="sm" className="font-body text-xs shrink-0">
+                <Button variant="outline" size="sm" className="font-body text-xs shrink-0 h-10" onClick={() => setEditorOpen(true)} aria-label="Edit profile">
                   <Edit className="h-3.5 w-3.5 mr-1" /> Edit
                 </Button>
               </div>
-              <div className="mt-6 max-w-xl mx-auto sm:mx-0">
+              <div className="mt-5 border-t border-border pt-4">
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-body text-xs font-medium">Profile Completion</span>
                   <span className="font-body text-xs text-primary font-bold">{completionPct}%</span>
@@ -207,6 +216,7 @@ const Profile = () => {
                 <CardContent className="p-4 space-y-2">
                   <h3 className="font-display text-base font-bold">Personal Info</h3>
                   {[
+                    { icon: User, label: "Full Name", value: authProfile?.full_name || "Not set" },
                     { icon: Phone, label: "Phone", value: authProfile?.phone || "Not set" },
                     { icon: Mail, label: "Email", value: user?.email || "Not set" },
                     { icon: User, label: "Gender", value: authProfile?.gender || "Not set" },
@@ -228,6 +238,7 @@ const Profile = () => {
                 <CardContent className="p-4 space-y-2">
                   <h3 className="font-display text-base font-bold">Academic & Community</h3>
                   {[
+                    { icon: GraduationCap, label: "Student ID", value: authProfile?.student_id || "Not set" },
                     { icon: Building, label: "University", value: universityName },
                     { icon: GraduationCap, label: "Department", value: authProfile?.department || "Not set" },
                     { icon: User, label: "Batch Year", value: authProfile?.batch_year || "Not set" },
@@ -246,6 +257,7 @@ const Profile = () => {
                   {authProfile?.is_cafe_student && (
                     <Badge className="font-body bg-teal/10 text-teal border-teal/30">☕ Café Student</Badge>
                   )}
+                  {authProfile?.id_card_url && <Button asChild variant="link" className="h-auto p-0 text-sm"><a href={authProfile.id_card_url} target="_blank" rel="noopener noreferrer">Student ID card</a></Button>}
                 </CardContent>
               </Card>
             </div>
@@ -456,6 +468,7 @@ const Profile = () => {
           </TabsContent>
         </Tabs>
       </div>
+      <ProfileDetailsEditor open={editorOpen} onOpenChange={setEditorOpen} />
     </AppLayout>
   );
 };
