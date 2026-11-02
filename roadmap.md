@@ -1,11 +1,17 @@
-# Google sign-in and real group / Khadim management
+# Authentication, portal routing and profile fixes
 
-- [ ] Prepare Google sign-in and post-login student profile setup; hide unavailable Apple/Facebook options and give setup/sign-in steps.
-- [ ] Prioritize the repeated Google sign-in request and verify the public login screen before completion.
-- [ ] Enforce university/gender membership boundaries and validate linked Khadim schedules in Supabase.
-- [ ] Add Admin dashboard to create/edit groups, assign/remove members, register volunteers, and book/edit/cancel shifts.
-- [ ] Scope student Groups and Khadims to real university/profile records and remove remaining sample Ittikaf figures.
-- [ ] Run rule/regression checks and verify available browser flows.
+- [ ] Fit authentication pop-ups without vertical scrolling.
+- [ ] Open independent Admin and Committee authentication directly after five logo clicks.
+- [ ] Route authenticated users to their assigned portal and preserve intentional student access.
+- [ ] Make profile details editable and persistent; connect Complete Profile to the editor.
+- [ ] Redesign only the Profile name card.
+- [ ] Test role rules, profile persistence and form layout; report authenticated verification limits.
+
+## Previous work and external blockers
+
+- [x] Prepare Google sign-in and post-login student profile setup; hide unavailable providers.
+- [x] Enforce university/gender boundaries and add Admin Groups & Shifts with real-data student views.
+- [x] Run previous regression and public-screen checks.
 - [ ] Enable Google in external Supabase (blocked by Google OAuth credentials and dashboard configuration).
 - [ ] Create actual named groups/memberships/shifts (blocked: no student profiles or supplied group/shift details).
 
