@@ -13,7 +13,7 @@
 - [x] Enforce university/gender boundaries and add Admin Groups & Shifts with real-data student views.
 - [x] Run previous regression and public-screen checks.
 - [ ] Enable Google in external Supabase (blocked by Google OAuth credentials and dashboard configuration).
-- [ ] Create actual named groups/memberships/shifts (blocked: no student profiles or supplied group/shift details).
+- [ ] Create actual named groups/memberships/shifts (blocked: group names, membership assignments, and shift details have not been supplied).
 
 Previous hosted settings check: email enabled; Google, Apple and Facebook disabled. The current profile count is two; group creation still needs supplied assignment details. Keep existing profiles; never create fictitious students, volunteer assignments, or privileged accounts. Authenticated browser checks are unavailable for this external Supabase project.
 
