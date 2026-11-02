@@ -18,7 +18,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useXp } from "@/hooks/useXp";
-import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 import { ProfileDetailsEditor } from "@/components/ProfileDetailsEditor";
 import { profileCompletion } from "@/lib/profileDetails";
 import { portalHome } from "@/lib/portalAccess";
@@ -127,7 +126,6 @@ const Profile = () => {
     <AppLayout>
       <SEO title="My Profile — ASTU Muslim Jemea" description="Manage your profile, achievements, badges, and account preferences." path="/profile" />
       <div className="space-y-6">
-        <NaturePageHeader title="My Profile" subtitle={universityName === "—" ? undefined : universityName} />
         {/* Profile Card */}
         <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="relative overflow-hidden rounded-lg border border-border bg-card p-5 sm:p-6">
               <div className="absolute inset-y-0 left-0 w-1 bg-primary" aria-hidden="true" />
