@@ -9,6 +9,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { portalHome } from "@/lib/portalAccess";
 
 // 10 quick-access actions arranged in a circular/radial fan above the FAB
 const quickActions = [
@@ -177,13 +178,7 @@ export function BottomNav() {
 
   if (location.pathname === "/community" && location.hash === "#chat") return null;
 
-  const homePath = roles.includes("admin") || roles.includes("amir")
-    ? "/portal/amirs"
-    : roles.includes("committee")
-    ? "/portal/committee"
-    : roles.includes("guest")
-    ? "/portal/guest"
-    : "/portal/student";
+  const homePath = portalHome(roles);
 
   const navItems = [
     { icon: Home, label: "Home", path: homePath },

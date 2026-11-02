@@ -12,6 +12,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { studentPortalRoles } from "@/lib/portalAccess";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import ResetPassword from "./pages/ResetPassword";
@@ -87,7 +88,7 @@ const App = () => (
             <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><Admin /></ProtectedRoute>} />
 
             {/* Role-restricted portals */}
-            <Route path="/portal/student" element={<ProtectedRoute allowedRoles={["student", "admin"]}><StudentPortal /></ProtectedRoute>} />
+            <Route path="/portal/student" element={<ProtectedRoute allowedRoles={studentPortalRoles}><StudentPortal /></ProtectedRoute>} />
             <Route path="/portal/amirs" element={<ProtectedRoute allowedRoles={["amir", "admin"]}><AmirsPortal /></ProtectedRoute>} />
             <Route path="/portal/amirs/:sector" element={<ProtectedRoute allowedRoles={["amir", "admin"]}><SectorPortal /></ProtectedRoute>} />
             <Route path="/portal/committee" element={<ProtectedRoute allowedRoles={["committee", "admin"]}><CommitteePortal /></ProtectedRoute>} />
