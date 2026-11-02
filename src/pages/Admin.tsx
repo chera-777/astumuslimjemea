@@ -60,7 +60,7 @@ export default function Admin() {
   const load = async () => {
     setLoading(true);
     const [{ data: profs }, { data: rls }, { data: reps }, { data: aud }] = await Promise.all([
-      supabase.from("profiles").select("id,full_name,department,is_verified,university_id").limit(500),
+      supabase.rpc("admin_student_directory"),
       supabase.from("user_roles").select("user_id,role"),
       supabase.from("content_reports").select("*").order("created_at", { ascending: false }).limit(200),
       supabase.from("audit_log").select("*").order("created_at", { ascending: false }).limit(200),
