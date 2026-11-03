@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 const universities = ["ASTU (Adama)", "AAU (Addis Ababa)", "JU (Jimma)", "BDU (Bahir Dar)", "HU (Haramaya)", "MU (Mekelle)"];
-const departments = ["Computer Science", "Electrical Engineering", "Mechanical Engineering", "Civil Engineering", "Medicine", "Business", "Law", "Architecture", "Other"];
+const departments = ASTU_DEPARTMENTS;
 const years = ["1st Year", "2nd Year", "3rd Year", "4th Year", "5th Year"];
 
 const Register = () => {
