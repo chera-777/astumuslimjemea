@@ -635,6 +635,7 @@ export type Database = {
           academic_year: string | null
           activities: string[]
           created_at: string
+          department: string | null
           description: string | null
           focus_tags: string[]
           gender: string
@@ -647,6 +648,7 @@ export type Database = {
           academic_year?: string | null
           activities?: string[]
           created_at?: string
+          department?: string | null
           description?: string | null
           focus_tags?: string[]
           gender: string
@@ -659,6 +661,7 @@ export type Database = {
           academic_year?: string | null
           activities?: string[]
           created_at?: string
+          department?: string | null
           description?: string | null
           focus_tags?: string[]
           gender?: string
