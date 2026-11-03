@@ -9,10 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Moon, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { ASTU_DEPARTMENTS, CLASS_YEARS } from "@/lib/astuDepartments";
 
 const universities = ["ASTU (Adama)", "AAU (Addis Ababa)", "JU (Jimma)", "BDU (Bahir Dar)", "HU (Haramaya)", "MU (Mekelle)"];
 const departments = ASTU_DEPARTMENTS;
-const years = ["1st Year", "2nd Year", "3rd Year", "4th Year", "5th Year"];
+const years = CLASS_YEARS;
 
 const Register = () => {
   const [isCafe, setIsCafe] = useState(false);

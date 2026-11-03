@@ -15,9 +15,11 @@ export const SERVICE_ROLES = [
   { id: "ittikaf_support", label: "Ittikaf Support" },
 ] as const;
 
-export function membershipError(group: Pick<StudentGroup, "university_id" | "gender">, student: Pick<StudentRecord, "university_id" | "gender">, count: number) {
+export function membershipError(group: Pick<StudentGroup, "university_id" | "gender"> & { department?: string | null; academic_year?: string | null }, student: Pick<StudentRecord, "university_id" | "gender"> & { department?: string | null; batch_year?: string | null }, count: number) {
   if (group.university_id !== student.university_id) return "Student and group must belong to the same university.";
   if (group.gender.toLowerCase() !== student.gender.toLowerCase()) return "Student and group must have the same gender.";
+  if (group.department && group.department.toLowerCase() !== (student.department ?? "").toLowerCase()) return "Student must be in the group's department.";
+  if (group.academic_year && group.academic_year !== (student.batch_year ?? "")) return "Student must be in the group's class year.";
   if (count >= 14) return "A group can have at most 14 students.";
   return null;
 }
