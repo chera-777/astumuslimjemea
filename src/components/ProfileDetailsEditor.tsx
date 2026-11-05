@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, ArrowRight, Save } from "lucide-react";
 import { profileDraft, profileUpdate } from "@/lib/profileDetails";
 import { toast } from "sonner";
+import { ASTU_DEPARTMENTS, CLASS_YEARS } from "@/lib/astuDepartments";
 
 const steps = ["Personal details", "Academic details", "Photo & documents"];
 export function ProfileDetailsEditor({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
@@ -33,11 +34,15 @@ export function ProfileDetailsEditor({ open, onOpenChange }: { open: boolean; on
     finally { setSaving(false); }
   };
   const field = (key: keyof typeof draft, label: string, type = "text") => <div className="space-y-1"><Label htmlFor={`profile-${key}`}>{label}</Label><Input id={`profile-${key}`} type={type} value={draft[key]} onChange={event => setDraft(value => ({ ...value, [key]: event.target.value }))} disabled={saving} maxLength={key.endsWith("url") ? 2048 : 120} /></div>;
+  const pick = (key: "department" | "batch_year", label: string, options: string[]) => {
+    const opts = draft[key] && !options.includes(draft[key]) ? [draft[key], ...options] : options;
+    return <div className="space-y-1"><Label htmlFor={`profile-${key}`}>{label}</Label><Select value={draft[key] || undefined} onValueChange={v => setDraft(value => ({ ...value, [key]: v }))} disabled={saving}><SelectTrigger id={`profile-${key}`}><SelectValue placeholder={`Choose ${label.toLowerCase()}`} /></SelectTrigger><SelectContent>{opts.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select></div>;
+  };
   return <Dialog open={open} onOpenChange={value => { if (!saving) onOpenChange(value); }}><DialogContent className="max-w-md w-[calc(100%-2rem)] max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-lg">
     <div><DialogTitle>Edit profile</DialogTitle><DialogDescription className="mt-1">{steps[step]} · {step + 1} of {steps.length}</DialogDescription></div>
     <form onSubmit={save} className="space-y-4">
       {step === 0 && <div className="space-y-3">{field("full_name", "Full name")}{field("phone", "Phone", "tel")}<div className="space-y-1"><Label htmlFor="profile-gender">Gender</Label><Select value={draft.gender} onValueChange={gender => setDraft(value => ({ ...value, gender }))} disabled={saving}><SelectTrigger id="profile-gender"><SelectValue placeholder="Choose gender" /></SelectTrigger><SelectContent><SelectItem value="male">Brother</SelectItem><SelectItem value="female">Sister</SelectItem></SelectContent></Select></div></div>}
-      {step === 1 && <div className="space-y-3">{field("student_id", "Student ID")}{field("department", "Department")}{field("batch_year", "Batch year")}</div>}
+      {step === 1 && <div className="space-y-3">{field("student_id", "Student ID")}{pick("department", "Department", ASTU_DEPARTMENTS)}{pick("batch_year", "Class year", CLASS_YEARS)}<p className="text-xs text-muted-foreground">Your department and class year decide which groups you see.</p></div>}
       {step === 2 && <div className="space-y-3">{field("profile_photo_url", "Profile photo link", "url")}{field("id_card_url", "Student ID card link", "url")}</div>}
       {error && <p role="alert" className="text-sm text-destructive break-words">{error}</p>}
       <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3">
