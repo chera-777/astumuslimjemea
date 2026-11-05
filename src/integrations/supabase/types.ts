@@ -544,6 +544,9 @@ export type Database = {
           gender: string
           id: string
           id_card_url: string | null
+          id_verification_note: string | null
+          id_verification_status: string
+          id_verified_at: string | null
           is_cafe_student: boolean | null
           is_verified: boolean | null
           level: number
@@ -562,6 +565,9 @@ export type Database = {
           gender: string
           id: string
           id_card_url?: string | null
+          id_verification_note?: string | null
+          id_verification_status?: string
+          id_verified_at?: string | null
           is_cafe_student?: boolean | null
           is_verified?: boolean | null
           level?: number
@@ -580,6 +586,9 @@ export type Database = {
           gender?: string
           id?: string
           id_card_url?: string | null
+          id_verification_note?: string | null
+          id_verification_status?: string
+          id_verified_at?: string | null
           is_cafe_student?: boolean | null
           is_verified?: boolean | null
           level?: number
