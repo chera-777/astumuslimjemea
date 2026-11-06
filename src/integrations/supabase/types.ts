@@ -639,6 +639,62 @@ export type Database = {
         }
         Relationships: []
       }
+      service_requests: {
+        Row: {
+          created_at: string
+          details: string
+          id: string
+          is_anonymous: boolean
+          kind: string
+          location: string | null
+          service: string
+          staff_note: string | null
+          status: string
+          subject: string
+          university_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          details: string
+          id?: string
+          is_anonymous?: boolean
+          kind?: string
+          location?: string | null
+          service: string
+          staff_note?: string | null
+          status?: string
+          subject: string
+          university_id: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          details?: string
+          id?: string
+          is_anonymous?: boolean
+          kind?: string
+          location?: string | null
+          service?: string
+          staff_note?: string | null
+          status?: string
+          subject?: string
+          university_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_requests_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "universities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       student_groups: {
         Row: {
           academic_year: string | null
