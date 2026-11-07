@@ -15,6 +15,8 @@ export interface Profile {
   profile_photo_url: string | null;
   id_card_url: string | null;
   is_verified: boolean;
+  id_verification_status: string;
+  id_verification_note: string | null;
 }
 
 interface AuthContextType {

@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { NatureHeader, NatureLeaves, SocialRow } from "@/components/auth/NatureShell";
 import { ArrowRight, ArrowLeft, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ASTU_SCHOOLS, CLASS_YEARS } from "@/lib/astuDepartments";
 import { toast } from "sonner";
 
 type AuthMode = "register" | "signin" | "forgot";
@@ -23,10 +25,12 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "register" }: Aut
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
   const [university, setUniversity] = useState("");
+  const [department, setDepartment] = useState("");
+  const [batchYear, setBatchYear] = useState("");
   const [universities, setUniversities] = useState<{ id: string; short_name: string; city: string }[]>([]);
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
-  const reset = () => { setStep(0); setFullName(""); setEmail(""); setPhone(""); setPassword(""); setGender(""); setUniversity(""); setError(""); setSent(false); setShowPassword(false); };
+  const reset = () => { setStep(0); setFullName(""); setEmail(""); setPhone(""); setPassword(""); setGender(""); setUniversity(""); setDepartment(""); setBatchYear(""); setError(""); setSent(false); setShowPassword(false); };
   useEffect(() => { if (open) { setMode(defaultMode); reset(); } }, [open, defaultMode]);
   useEffect(() => {
     if (!open || mode !== "register") return;
@@ -54,8 +58,8 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "register" }: Aut
     setLoading(true);
     try {
       if (mode === "register") {
-        if (!fullName.trim() || !gender || !university || !email.trim()) throw new Error("Complete your identity and university details.");
-        const { data, error } = await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: window.location.origin, data: { full_name: fullName.trim(), phone: phone.trim(), gender, university_id: university } } });
+        if (!fullName.trim() || !gender || !university || !department || !batchYear || !email.trim()) throw new Error("Complete your identity and university details.");
+        const { data, error } = await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: window.location.origin, data: { full_name: fullName.trim(), phone: phone.trim(), gender, university_id: university, department, batch_year: batchYear } } });
         if (error) throw error;
         if (data.session) { toast.success("Account created"); onOpenChange(false); }
         else setSent(true);
@@ -71,8 +75,8 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "register" }: Aut
     } catch (error) { setError(error instanceof Error ? error.message : "Please try again."); }
     finally { setLoading(false); }
   };
-  const emailField = <div className="space-y-1"><Label htmlFor="student-email">Email</Label><Input id="student-email" type="email" autoComplete={mode === "signin" ? "username" : "email"} required value={email} onChange={event => setEmail(event.target.value)} disabled={loading} /></div>;
-  const passwordField = <div className="space-y-1"><Label htmlFor="student-password">Password</Label><div className="relative"><Input id="student-password" type={showPassword ? "text" : "password"} autoComplete={mode === "register" ? "new-password" : "current-password"} minLength={mode === "register" ? 6 : undefined} required value={password} onChange={event => setPassword(event.target.value)} disabled={loading} className="pr-11" /><Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-10 w-10" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(value => !value)}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</Button></div></div>;
+  const emailField = <div className="space-y-1"><Label htmlFor="student-email">Email</Label><Input id="student-email" type="email" autoComplete={mode === "signin" ? "username" : "email"} required value={email} onChange={event => setEmail(event.target.value)} disabled={loading} placeholder="e.g. chera.kemal@astu.edu.et" /></div>;
+  const passwordField = <div className="space-y-1"><Label htmlFor="student-password">Password</Label><div className="relative"><Input id="student-password" type={showPassword ? "text" : "password"} autoComplete={mode === "register" ? "new-password" : "current-password"} minLength={mode === "register" ? 6 : undefined} required value={password} onChange={event => setPassword(event.target.value)} disabled={loading} className="pr-11" placeholder={mode === "register" ? "At least 6 characters" : "Your password"} /><Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-10 w-10" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(value => !value)}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</Button></div></div>;
   const title = mode === "signin" ? "Welcome" : mode === "forgot" ? "Reset Password" : "Create Account";
   const subtitle = mode === "register" ? `${["Your identity", "Your university", "Your account"][step]} · ${step + 1} of 3` : mode === "signin" ? "Sign in to your account" : "Receive a password reset link";
   return <Dialog open={open} onOpenChange={value => { if (!loading) onOpenChange(value); }}><DialogContent className="nature-surface auth-popover p-0 overflow-hidden border-0">

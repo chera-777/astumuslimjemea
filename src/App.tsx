@@ -29,6 +29,7 @@ import Groups from "./pages/Groups";
 import News from "./pages/News";
 import Profile from "./pages/Profile";
 import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
 import Support from "./pages/Support";
 import Khadims from "./pages/Khadims";
 import DuaPage from "./pages/DuaPage";
@@ -72,6 +73,7 @@ const App = () => (
             <Route path="/groups" element={<ProtectedRoute><Groups /></ProtectedRoute>} />
             <Route path="/news" element={<ProtectedRoute><News /></ProtectedRoute>} />
             <Route path="/services" element={<ProtectedRoute><Services /></ProtectedRoute>} />
+            <Route path="/services/:slug" element={<ProtectedRoute><ServiceDetail /></ProtectedRoute>} />
             <Route path="/ramadan" element={<ProtectedRoute><Ramadan /></ProtectedRoute>} />
             <Route path="/prayer-times" element={<ProtectedRoute><PrayerTimes /></ProtectedRoute>} />
             <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />

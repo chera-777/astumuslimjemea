@@ -20,6 +20,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useXp } from "@/hooks/useXp";
 import { ProfileDetailsEditor } from "@/components/ProfileDetailsEditor";
 import { profileCompletion } from "@/lib/profileDetails";
+import { AVATAR_BUCKET, useProfileFileUrl } from "@/lib/profileFiles";
 import { portalHome } from "@/lib/portalAccess";
 
 
@@ -115,6 +116,7 @@ const Profile = () => {
   };
 
   const displayName = authProfile?.full_name || user?.email?.split("@")[0] || "Guest";
+  const photoUrl = useProfileFileUrl(authProfile?.profile_photo_url, AVATAR_BUCKET);
   const initials = displayName.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
   const totalDonated = donations.reduce((s, d) => s + Number(d.amount || 0), 0);
   const completionPct = profileCompletion(authProfile);
@@ -131,7 +133,7 @@ const Profile = () => {
               <div className="absolute inset-y-0 left-0 w-1 bg-primary" aria-hidden="true" />
               <div className="flex flex-wrap items-start gap-4">
                 <Avatar className="w-16 h-16 sm:w-20 sm:h-20 ring-4 ring-primary/10 shrink-0">
-                  {authProfile?.profile_photo_url && <AvatarImage src={authProfile.profile_photo_url} alt={displayName} className="object-cover" />}
+                  {photoUrl && <AvatarImage src={photoUrl} alt={displayName} className="object-cover" />}
                   <AvatarFallback className="bg-primary/15 text-primary font-display text-2xl">{initials}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0 basis-40">
@@ -144,6 +146,12 @@ const Profile = () => {
                     </Badge>
                     {authProfile?.is_verified && (
                       <Badge variant="outline" className="font-body text-[10px]">✓ Verified</Badge>
+                    )}
+                    {!authProfile?.is_verified && authProfile?.id_verification_status === "pending" && (
+                      <Badge variant="outline" className="font-body text-[10px]">ID under review</Badge>
+                    )}
+                    {!authProfile?.is_verified && authProfile?.id_verification_status === "rejected" && (
+                      <Badge variant="outline" className="font-body text-[10px] text-destructive border-destructive/40">ID not verified</Badge>
                     )}
                   </div>
                 </div>
@@ -255,7 +263,14 @@ const Profile = () => {
                   {authProfile?.is_cafe_student && (
                     <Badge className="font-body bg-teal/10 text-teal border-teal/30">☕ Café Student</Badge>
                   )}
-                  {authProfile?.id_card_url && <Button asChild variant="link" className="h-auto p-0 text-sm"><a href={authProfile.id_card_url} target="_blank" rel="noopener noreferrer">Student ID card</a></Button>}
+                  {authProfile?.id_card_url && (
+                    <p className="font-body text-xs text-muted-foreground flex items-center gap-1.5">
+                      <Shield className="h-3.5 w-3.5 text-primary" /> ID card uploaded
+                      {authProfile.id_verification_status === "verified" && " · verified ✓"}
+                      {authProfile.id_verification_status === "pending" && " · being checked"}
+                      {authProfile.id_verification_status === "rejected" && ` · ${authProfile.id_verification_note ?? "could not be verified"}`}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </div>
