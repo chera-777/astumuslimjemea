@@ -15,7 +15,7 @@ import {
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { usePrayerTimes } from "@/hooks/usePrayerTimes";
-import mosqueHero from "@/assets/mosque-hero.svg";
+import mosqueHero from "@/assets/mosque-hero.jpg";
 import { Progress } from "@/components/ui/progress";
 import { classesItems, tutoringItems, challengeItems, eventsItems, type EventItem } from "@/lib/portalItems";
 import { EventDetailsDialog } from "@/components/EventDetailsDialog";

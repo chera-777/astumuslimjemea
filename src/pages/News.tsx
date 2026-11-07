@@ -6,12 +6,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Newspaper, Calendar, Star, MapPin, Clock, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import eventTafsir from "@/assets/event-tafsir.svg";
-import eventHadith from "@/assets/event-hadith.svg";
-import eventFiqh from "@/assets/event-fiqh.svg";
-import eventChallenge from "@/assets/event-challenge.svg";
-import eventMath from "@/assets/event-math.svg";
-import eventCoding from "@/assets/event-coding.svg";
+import eventTafsir from "@/assets/event-tafsir.jpg";
+import eventHadith from "@/assets/event-hadith.jpg";
+import eventFiqh from "@/assets/event-fiqh.jpg";
+import eventChallenge from "@/assets/event-challenge.jpg";
+import eventMath from "@/assets/event-math.jpg";
+import eventCoding from "@/assets/event-coding.jpg";
 import { NaturePageHeader } from "@/components/layout/NaturePageHeader";
 
 const newsItems = [

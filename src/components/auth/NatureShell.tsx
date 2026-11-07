@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import leaves from "@/assets/leaves-corner.svg";
-import logo from "@/assets/logo-leaf.svg";
+import leaves from "@/assets/leaves-corner.png";
+import logo from "@/assets/logo-leaf.png";
 import { Button } from "@/components/ui/button";
 import { useGoogleSignInAvailability } from "@/hooks/useGoogleSignInAvailability";
 

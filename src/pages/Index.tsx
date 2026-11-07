@@ -7,7 +7,7 @@ import { AuthDialog } from "@/components/AuthDialog";
 import { StaffAuthDialog } from "@/components/auth/StaffAuthDialog";
 import { portalHome } from "@/lib/portalAccess";
 import { NatureScreen, NatureHeader } from "@/components/auth/NatureShell";
-import logo from "@/assets/logo-leaf.svg";
+import logo from "@/assets/logo-leaf.png";
 import { SEO } from "@/components/SEO";
 import { useEffect } from "react";
 

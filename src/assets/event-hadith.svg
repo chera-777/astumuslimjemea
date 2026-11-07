@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240" viewBox="0 0 400 240" fill="none">
-  <rect width="400" height="240" fill="#2e6b4f"/>
-  <rect width="400" height="240" fill="url(#hg)" opacity="0.6"/>
-  <text x="200" y="120" font-family="Georgia, serif" font-size="28" fill="#f4faf5" text-anchor="middle">Hadith</text>
-  <text x="200" y="150" font-family="Georgia, serif" font-size="14" fill="#c8e6d5" text-anchor="middle">Prophetic Traditions</text>
-  <defs><linearGradient id="hg" x1="0" y1="0" x2="400" y2="240"><stop stop-color="#4a9e72"/><stop offset="1" stop-color="#1a4a30"/></linearGradient></defs>
-</svg>

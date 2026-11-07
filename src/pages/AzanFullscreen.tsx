@@ -6,7 +6,7 @@ import { X, Pause, Play, BookOpen, Compass, Volume2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 import { RECITERS, getReciter, getSavedReciterId, saveReciterId } from "@/lib/reciters";
-import mosqueHero from "@/assets/mosque-hero.svg";
+import mosqueHero from "@/assets/mosque-hero.jpg";
 
 const AzanFullscreen = () => {
   const pt = usePrayerTimes();

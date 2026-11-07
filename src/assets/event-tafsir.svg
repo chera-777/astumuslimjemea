@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240" viewBox="0 0 400 240" fill="none">
-  <rect width="400" height="240" fill="#1f5e3a"/>
-  <rect width="400" height="240" fill="url(#tg)" opacity="0.6"/>
-  <text x="200" y="120" font-family="Georgia, serif" font-size="28" fill="#f4faf5" text-anchor="middle">Tafsir</text>
-  <text x="200" y="150" font-family="Georgia, serif" font-size="14" fill="#c8e6d5" text-anchor="middle">Quran Commentary</text>
-  <defs><linearGradient id="tg" x1="0" y1="0" x2="400" y2="240"><stop stop-color="#3f8f5f"/><stop offset="1" stop-color="#143d24"/></linearGradient></defs>
-</svg>

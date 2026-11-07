@@ -1,9 +1,9 @@
-import eventTafsir from "@/assets/event-tafsir.svg";
-import eventHadith from "@/assets/event-hadith.svg";
-import eventFiqh from "@/assets/event-fiqh.svg";
-import eventMath from "@/assets/event-math.svg";
-import eventCoding from "@/assets/event-coding.svg";
-import eventChallenge from "@/assets/event-challenge.svg";
+import eventTafsir from "@/assets/event-tafsir.jpg";
+import eventHadith from "@/assets/event-hadith.jpg";
+import eventFiqh from "@/assets/event-fiqh.jpg";
+import eventMath from "@/assets/event-math.jpg";
+import eventCoding from "@/assets/event-coding.jpg";
+import eventChallenge from "@/assets/event-challenge.jpg";
 
 export type EventItem = {
   title: string;

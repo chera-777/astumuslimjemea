@@ -8,7 +8,7 @@ import { ProfileCompletionPrompt } from "@/components/ProfileCompletionPrompt";
 import { useAzanAutoPlay } from "@/hooks/useAzanAutoPlay";
 import { useOneSignal } from "@/hooks/useOneSignal";
 import { useLocation } from "react-router-dom";
-import leaves from "@/assets/leaves-corner.svg";
+import leaves from "@/assets/leaves-corner.png";
 import { StudentProfileSetup } from "@/components/auth/StudentProfileSetup";
 
 interface AppLayoutProps {

@@ -11,7 +11,7 @@ import {
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,
   SidebarFooter, SidebarHeader,
 } from "@/components/ui/sidebar";
-import logo from "@/assets/logo-leaf.svg";
+import logo from "@/assets/logo-leaf.png";
 
 const studentItems = [
   { title: "Home", url: "/dashboard", icon: Home },
