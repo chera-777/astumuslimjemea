@@ -155,9 +155,17 @@ Community‑driven donations and sadaqah.
 Partnerships with student unions, Islamic organizations, and local businesses.
 Expansion to other Ethiopian universities with localized features.
 
-This project was built by Chera Kemal or Hassen Al Ghazi
+This project was built with [Lovable](https://lovable.dev).
 
 **Live app**: https://astumuslimjemea.lovable.app
+
+## Build with Lovable
+
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/e08c780f-994c-4a1d-96f1-9738b1adf3e9).
+
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 

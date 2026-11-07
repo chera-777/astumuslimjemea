@@ -544,9 +544,6 @@ export type Database = {
           gender: string
           id: string
           id_card_url: string | null
-          id_verification_note: string | null
-          id_verification_status: string
-          id_verified_at: string | null
           is_cafe_student: boolean | null
           is_verified: boolean | null
           level: number
@@ -565,9 +562,6 @@ export type Database = {
           gender: string
           id: string
           id_card_url?: string | null
-          id_verification_note?: string | null
-          id_verification_status?: string
-          id_verified_at?: string | null
           is_cafe_student?: boolean | null
           is_verified?: boolean | null
           level?: number
@@ -586,9 +580,6 @@ export type Database = {
           gender?: string
           id?: string
           id_card_url?: string | null
-          id_verification_note?: string | null
-          id_verification_status?: string
-          id_verified_at?: string | null
           is_cafe_student?: boolean | null
           is_verified?: boolean | null
           level?: number
@@ -638,62 +629,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
-      }
-      service_requests: {
-        Row: {
-          created_at: string
-          details: string
-          id: string
-          is_anonymous: boolean
-          kind: string
-          location: string | null
-          service: string
-          staff_note: string | null
-          status: string
-          subject: string
-          university_id: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          details: string
-          id?: string
-          is_anonymous?: boolean
-          kind?: string
-          location?: string | null
-          service: string
-          staff_note?: string | null
-          status?: string
-          subject: string
-          university_id: string
-          updated_at?: string
-          user_id?: string
-        }
-        Update: {
-          created_at?: string
-          details?: string
-          id?: string
-          is_anonymous?: boolean
-          kind?: string
-          location?: string | null
-          service?: string
-          staff_note?: string | null
-          status?: string
-          subject?: string
-          university_id?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "service_requests_university_id_fkey"
-            columns: ["university_id"]
-            isOneToOne: false
-            referencedRelation: "universities"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       student_groups: {
         Row: {

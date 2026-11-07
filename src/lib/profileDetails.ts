@@ -17,12 +17,9 @@ export function profileUpdate(draft: ProfileDraft): TablesUpdate<"profiles"> {
   if (!draft.full_name.trim()) throw new Error("Enter your full name.");
   if (!["male", "female"].includes(draft.gender)) throw new Error("Choose your gender.");
   for (const key of ["profile_photo_url", "id_card_url"] as const) {
-    const value = draft[key].trim();
-    if (!value) continue;
-    // Private storage paths ("<userId>/photo-….jpg") are allowed; external links must be valid HTTPS.
-    if (!value.includes("://") && !value.startsWith("/")) continue;
+    if (!draft[key].trim()) continue;
     let url: URL;
-    try { url = new URL(value); } catch { throw new Error("Use a valid HTTPS link for your photo or ID card."); }
+    try { url = new URL(draft[key].trim()); } catch { throw new Error("Use a valid HTTPS link for your photo or ID card."); }
     if (url.protocol !== "https:" || url.username || url.password) throw new Error("Use a valid HTTPS link for your photo or ID card.");
   }
   // Explicit allowlist keeps roles, verification, meal entitlement and university protected.

@@ -9,11 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Shield, Users, Flag, ScrollText, CheckCircle2, XCircle, Search, Bell, Inbox } from "lucide-react";
+import { Shield, Users, Flag, ScrollText, CheckCircle2, XCircle, Search, Bell } from "lucide-react";
 import { PushComposer } from "@/components/PushComposer";
 import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
 import { CommunityManager } from "@/components/admin/CommunityManager";
-import { ServiceRequests } from "@/components/admin/ServiceRequests";
 
 type Profile = {
   id: string;
@@ -155,12 +154,10 @@ export default function Admin() {
             <TabsTrigger value="reports"><Flag className="h-4 w-4 mr-1.5" />Reports {reports.filter(r=>r.status==='open').length>0 && <Badge className="ml-1.5">{reports.filter(r=>r.status==='open').length}</Badge>}</TabsTrigger>
             <TabsTrigger value="audit"><ScrollText className="h-4 w-4 mr-1.5" />Audit</TabsTrigger>
             <TabsTrigger value="push"><Bell className="h-4 w-4 mr-1.5" />Push</TabsTrigger>
-            <TabsTrigger value="requests"><Inbox className="h-4 w-4 mr-1.5" />Requests</TabsTrigger>
             <TabsTrigger value="analytics">📊 Analytics</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
           </TabsList>
           <TabsContent value="community"><CommunityManager /></TabsContent>
-          <TabsContent value="requests"><ServiceRequests /></TabsContent>
           <TabsContent value="analytics"><AnalyticsDashboard scope="global" /></TabsContent>
 
           <TabsContent value="users" className="space-y-3">
