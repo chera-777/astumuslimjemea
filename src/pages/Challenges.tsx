@@ -8,9 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { motion } from "framer-motion";
 import { Trophy, Flame, Star, Target, Crown, Zap, BookOpen, Heart, Users } from "lucide-react";
-import eventChallenge from "@/assets/event-challenge.jpg";
-import eventTafsir from "@/assets/event-tafsir.jpg";
-import eventHadith from "@/assets/event-hadith.jpg";
+import eventChallenge from "@/assets/event-challenge.svg";
+import eventTafsir from "@/assets/event-tafsir.svg";
+import eventHadith from "@/assets/event-hadith.svg";
 
 const activeChallenges = [
   { title: "Quran Memorization Sprint", desc: "Memorize Juz Amma in 30 days", xp: 150, progress: 65, joined: 145, image: eventChallenge, icon: BookOpen, color: "from-gold/40", endsIn: "12 days" },

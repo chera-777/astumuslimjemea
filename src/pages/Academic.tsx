@@ -11,9 +11,9 @@ import {
   GraduationCap, BookOpen, Users, Calendar, FileText, Award,
   Clock, MapPin, ChevronRight, Library, PenTool, Brain, Target
 } from "lucide-react";
-import eventMath from "@/assets/event-math.jpg";
-import eventCoding from "@/assets/event-coding.jpg";
-import eventTafsir from "@/assets/event-tafsir.jpg";
+import eventMath from "@/assets/event-math.svg";
+import eventCoding from "@/assets/event-coding.svg";
+import eventTafsir from "@/assets/event-tafsir.svg";
 
 const tutoringSessions = [
   { title: "Calculus II — Live Tutoring", tutor: "Br. Yusuf K.", level: "Year 2", time: "Mon/Wed · 2:00 PM", location: "Room 302", spots: "5 / 10", image: eventMath, color: "from-blue/30" },

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240" viewBox="0 0 400 240" fill="none">
+  <rect width="400" height="240" fill="#1a3d5a"/>
+  <rect width="400" height="240" fill="url(#cg)" opacity="0.6"/>
+  <text x="200" y="120" font-family="Georgia, serif" font-size="28" fill="#f4faf5" text-anchor="middle">Coding</text>
+  <text x="200" y="150" font-family="Georgia, serif" font-size="14" fill="#b8d0e8" text-anchor="middle">Programming Workshop</text>
+  <defs><linearGradient id="cg" x1="0" y1="0" x2="400" y2="240"><stop stop-color="#3a6b8a"/><stop offset="1" stop-color="#0f2a40"/></linearGradient></defs>
+</svg>

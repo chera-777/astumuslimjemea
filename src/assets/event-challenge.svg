@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240" viewBox="0 0 400 240" fill="none">
+  <rect width="400" height="240" fill="#5a2a1a"/>
+  <rect width="400" height="240" fill="url(#chg)" opacity="0.6"/>
+  <text x="200" y="120" font-family="Georgia, serif" font-size="28" fill="#f4faf5" text-anchor="middle">Challenge</text>
+  <text x="200" y="150" font-family="Georgia, serif" font-size="14" fill="#e8c0b0" text-anchor="middle">Compete &amp; Earn XP</text>
+  <defs><linearGradient id="chg" x1="0" y1="0" x2="400" y2="240"><stop stop-color="#9a4a2a"/><stop offset="1" stop-color="#3d1a0f"/></linearGradient></defs>
+</svg>

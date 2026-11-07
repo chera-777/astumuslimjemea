@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
 import { XpChip } from "@/components/XpChip";
-import logo from "@/assets/logo-leaf.png";
+import logo from "@/assets/logo-leaf.svg";
 
 
 export function AppHeader() {
