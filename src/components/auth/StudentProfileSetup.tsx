@@ -48,7 +48,7 @@ export function StudentProfileSetup() {
       <DialogHeader><DialogTitle className="font-display text-2xl text-center">Your student profile</DialogTitle><DialogDescription className="text-center">{step === 0 ? "Your name · 1 of 2" : "University and identity · 2 of 2"}</DialogDescription></DialogHeader></div>
       <form onSubmit={save} className="auth-form space-y-3">
         <div className="auth-fields space-y-3">
-        {step === 0 && <div className="space-y-1"><Label htmlFor="setup-name">Full name</Label><Input id="setup-name" value={fullName} onChange={e => setFullName(e.target.value)} required maxLength={120} /></div>}
+        {step === 0 && <div className="space-y-1"><Label htmlFor="setup-name">Full name</Label><Input id="setup-name" placeholder="e.g. Abdurahman Kedir" value={fullName} onChange={e => setFullName(e.target.value)} required maxLength={120} /></div>}
         {step === 1 && <><div className="space-y-1"><Label>Gender</Label><Select value={gender} onValueChange={setGender}><SelectTrigger aria-label="Your gender"><SelectValue placeholder="Choose gender" /></SelectTrigger><SelectContent><SelectItem value="male">Brother</SelectItem><SelectItem value="female">Sister</SelectItem></SelectContent></Select></div>
         <div className="space-y-1"><Label>University</Label><Select value={university} onValueChange={setUniversity}><SelectTrigger aria-label="Your university"><SelectValue placeholder="Choose university" /></SelectTrigger><SelectContent>{universities.map(u => <SelectItem key={u.id} value={u.id}>{u.short_name} · {u.city}</SelectItem>)}</SelectContent></Select></div></>}
         </div>
