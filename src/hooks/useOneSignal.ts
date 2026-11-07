@@ -3,6 +3,15 @@ import OneSignal from "react-onesignal";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
+type OneSignalClient = typeof OneSignal & {
+  User?: {
+    PushSubscription?: {
+      id?: string;
+      subscriptionId?: string;
+    };
+  };
+};
+
 let initialized = false;
 
 /**
@@ -27,8 +36,8 @@ export function useOneSignal() {
             serviceWorkerParam: { scope: "/onesignal/" },
             serviceWorkerPath: "onesignal/OneSignalSDKWorker.js",
           });
-        } catch (e) {
-          console.warn("OneSignal init failed", e);
+        } catch (error) {
+          console.warn("OneSignal init failed", error);
           return;
         }
       }
@@ -38,9 +47,11 @@ export function useOneSignal() {
       try {
         await OneSignal.login(user.id);
         // Best-effort mirror the subscription
+        const oneSignalClient = OneSignal as OneSignalClient;
         const subId =
-          (OneSignal as any)?.User?.PushSubscription?.id ||
-          (OneSignal as any)?.User?.PushSubscription?.subscriptionId;
+          oneSignalClient.User?.PushSubscription?.id ??
+          oneSignalClient.User?.PushSubscription?.subscriptionId;
+
         if (subId) {
           const { data: existing } = await supabase
             .from("push_subscriptions")
@@ -48,6 +59,7 @@ export function useOneSignal() {
             .eq("user_id", user.id)
             .eq("onesignal_subscription_id", subId)
             .maybeSingle();
+
           if (existing) {
             await supabase
               .from("push_subscriptions")
@@ -62,8 +74,8 @@ export function useOneSignal() {
             });
           }
         }
-      } catch (e) {
-        console.warn("OneSignal login failed", e);
+      } catch (error) {
+        console.warn("OneSignal login failed", error);
       }
     };
 
@@ -75,8 +87,8 @@ export async function requestPushPermission() {
   try {
     await OneSignal.Notifications.requestPermission();
     return OneSignal.Notifications.permission;
-  } catch (e) {
-    console.warn("Push permission failed", e);
+  } catch (error) {
+    console.warn("Push permission failed", error);
     return false;
   }
 }
