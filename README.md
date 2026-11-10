@@ -157,9 +157,11 @@ Expansion to other Ethiopian universities with localized features.
 
 This project was built by Chera Kemal or Hassen Al Ghazi
 
-**Live app**: https://astumuslimjemea.lovable.app
+**Live app**: 
+              
+              https://astumuslimjemea.lovable.app
             
-            : https://astumuslimstudentsjemea.com
+              https://astumuslimstudentsjemea.com
 
 ## Development
 
