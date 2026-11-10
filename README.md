@@ -156,7 +156,9 @@ Partnerships with student unions, Islamic organizations, and local businesses.
 Expansion to other Ethiopian universities with localized features.
 
 This project was built by Chera Kemal or Hassen Al Ghazi
+
 **Live app**: https://astumuslimjemea.lovable.app
+            
             : https://astumuslimstudentsjemea.com
 
 ## Development
