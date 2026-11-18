@@ -243,7 +243,7 @@ export function DesktopFAB() {
   const [showActions, setShowActions] = useState(false);
   const location = useLocation();
   if (isMobile) return null;
-  if (location.pathname === "/community" && location.hash === "#chat") return null;
+  if (location.pathname.startsWith("/community")) return null;
 
   return (
     <>

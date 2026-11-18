@@ -8,6 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { motion } from "framer-motion";
 import { Trophy, Flame, Star, Target, Crown, Zap, BookOpen, Heart, Users } from "lucide-react";
+import { Leaderboard } from "@/components/Leaderboard";
+import { isSupabaseConfigured } from "@/integrations/supabase/client";
 import eventChallenge from "@/assets/event-challenge.jpg";
 import eventTafsir from "@/assets/event-tafsir.jpg";
 import eventHadith from "@/assets/event-hadith.jpg";
@@ -103,23 +105,27 @@ const Challenges = () => {
           </TabsContent>
 
           <TabsContent value="leaderboard" className="mt-3 space-y-2">
-            {leaderboard.map((u) => (
-              <Card key={u.rank} className={u.you ? "border-primary/50 bg-primary/5" : ""}>
-                <CardContent className="p-3 flex items-center gap-3">
-                  <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold ${u.rank <= 3 ? "gradient-gold text-primary-foreground" : "bg-secondary"}`}>
-                    {u.badge || `#${u.rank}`}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-display text-sm font-bold truncate">{u.name}</p>
-                    <p className="font-body text-[10px] text-muted-foreground">Rank #{u.rank}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-display text-base font-bold text-gold">{u.xp.toLocaleString()}</p>
-                    <p className="font-body text-[9px] text-muted-foreground">XP</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {isSupabaseConfigured ? (
+              <Leaderboard />
+            ) : (
+              leaderboard.map((u) => (
+                <Card key={u.rank} className={u.you ? "border-primary/50 bg-primary/5" : ""}>
+                  <CardContent className="p-3 flex items-center gap-3">
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold ${u.rank <= 3 ? "gradient-gold text-primary-foreground" : "bg-secondary"}`}>
+                      {u.badge || `#${u.rank}`}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-display text-sm font-bold truncate">{u.name}</p>
+                      <p className="font-body text-[10px] text-muted-foreground">Rank #{u.rank}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-display text-base font-bold text-gold">{u.xp.toLocaleString()}</p>
+                      <p className="font-body text-[9px] text-muted-foreground">XP</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </TabsContent>
 
           <TabsContent value="badges" className="mt-3 grid grid-cols-3 gap-2.5">

@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import { portalHome } from "@/lib/portalAccess";
 import { Button } from "@/components/ui/button";
+import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -16,6 +17,10 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
     return (
       <LoadingScreen />
     );
+  }
+
+  if (!isSupabaseConfigured && (!allowedRoles || allowedRoles.length === 0)) {
+    return <>{children}</>;
   }
 
   if (!user) return <Navigate to="/" replace />;
