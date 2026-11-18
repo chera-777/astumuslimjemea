@@ -4,9 +4,15 @@ import { useEffect, useState } from "react";
 export function useGoogleSignInAvailability() {
   const [enabled, setEnabled] = useState<boolean | null>(null);
   useEffect(() => {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    if (!supabaseUrl || !supabaseKey) {
+      setEnabled(false);
+      return;
+    }
     const controller = new AbortController();
-    fetch(`${import.meta.env.VITE_SUPABASE_URL}/auth/v1/settings`, {
-      headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
+    fetch(`${supabaseUrl}/auth/v1/settings`, {
+      headers: { apikey: supabaseKey },
       signal: controller.signal,
     }).then(async response => {
       if (!response.ok) throw new Error("Could not check sign-in availability");

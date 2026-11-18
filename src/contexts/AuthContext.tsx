@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback, useRef, ReactNode } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
 export interface Profile {
@@ -88,6 +88,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (nextId) { setLoading(true); setTimeout(() => { if (active) void loadUserRecords(nextId); }, 0); }
       else { setAuthError(null); setLoading(false); }
     };
+    if (!isSupabaseConfigured) {
+      setAuthError(null);
+      setLoading(false);
+      return () => { active = false; currentUserId.current = null; };
+    }
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => { sessionRevision += 1; applySession(session); }
     );
@@ -99,6 +104,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data: { session } } = await supabase.auth.getSession();
       if (!active || sessionRevision !== initialRevision) return;
       applySession(session);
+    }).catch(() => {
+      if (active && sessionRevision === initialRevision) applySession(null);
     });
     return () => { active = false; currentUserId.current = null; subscription.unsubscribe(); };
   }, [loadUserRecords]);
