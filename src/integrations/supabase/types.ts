@@ -88,6 +88,297 @@ export type Database = {
         }
         Relationships: []
       }
+      committee_meeting_participants: {
+        Row: {
+          is_host: boolean
+          is_muted: boolean
+          is_video_on: boolean
+          joined_at: string
+          meeting_id: string
+          user_id: string
+        }
+        Insert: {
+          is_host?: boolean
+          is_muted?: boolean
+          is_video_on?: boolean
+          joined_at?: string
+          meeting_id: string
+          user_id: string
+        }
+        Update: {
+          is_host?: boolean
+          is_muted?: boolean
+          is_video_on?: boolean
+          joined_at?: string
+          meeting_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      committee_meetings: {
+        Row: {
+          created_at: string
+          description: string
+          ended_at: string | null
+          host_id: string
+          id: string
+          invited_user_ids: string[]
+          meeting_type: string
+          notifications_sent_at: string | null
+          scheduled_date: string
+          scheduled_time: string
+          started_at: string | null
+          status: string
+          title: string
+          university_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          ended_at?: string | null
+          host_id: string
+          id?: string
+          invited_user_ids?: string[]
+          meeting_type?: string
+          notifications_sent_at?: string | null
+          scheduled_date: string
+          scheduled_time: string
+          started_at?: string | null
+          status?: string
+          title: string
+          university_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          ended_at?: string | null
+          host_id?: string
+          id?: string
+          invited_user_ids?: string[]
+          meeting_type?: string
+          notifications_sent_at?: string | null
+          scheduled_date?: string
+          scheduled_time?: string
+          started_at?: string | null
+          status?: string
+          title?: string
+          university_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      community_conversations: {
+        Row: {
+          avatar_color: string
+          boost_count: number
+          channel_settings: Json
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          invite_code: string
+          is_public: boolean
+          sharing_disabled: boolean
+          title: string
+          type: string
+          university_id: string
+          updated_at: string
+          username: string | null
+          wallpaper_id: string
+        }
+        Insert: {
+          avatar_color?: string
+          boost_count?: number
+          channel_settings?: Json
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          invite_code?: string
+          is_public?: boolean
+          sharing_disabled?: boolean
+          title: string
+          type: string
+          university_id: string
+          updated_at?: string
+          username?: string | null
+          wallpaper_id?: string
+        }
+        Update: {
+          avatar_color?: string
+          boost_count?: number
+          channel_settings?: Json
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          invite_code?: string
+          is_public?: boolean
+          sharing_disabled?: boolean
+          title?: string
+          type?: string
+          university_id?: string
+          updated_at?: string
+          username?: string | null
+          wallpaper_id?: string
+        }
+        Relationships: []
+      }
+      community_members: {
+        Row: {
+          conversation_id: string
+          draft_text: string
+          is_muted: boolean
+          is_pinned: boolean
+          joined_at: string
+          last_read_at: string
+          permissions: Json
+          role: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          draft_text?: string
+          is_muted?: boolean
+          is_pinned?: boolean
+          joined_at?: string
+          last_read_at?: string
+          permissions?: Json
+          role?: string
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          draft_text?: string
+          is_muted?: boolean
+          is_pinned?: boolean
+          joined_at?: string
+          last_read_at?: string
+          permissions?: Json
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_message_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          message_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          message_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          message_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_messages: {
+        Row: {
+          attachments: Json
+          conversation_id: string
+          created_at: string
+          deleted_for_all: boolean
+          edited_at: string | null
+          forwarded_from: Json | null
+          id: string
+          is_pinned: boolean
+          poll: Json | null
+          reply_to_id: string | null
+          sender_id: string
+          text: string
+          views_count: number
+        }
+        Insert: {
+          attachments?: Json
+          conversation_id: string
+          created_at?: string
+          deleted_for_all?: boolean
+          edited_at?: string | null
+          forwarded_from?: Json | null
+          id?: string
+          is_pinned?: boolean
+          poll?: Json | null
+          reply_to_id?: string | null
+          sender_id: string
+          text?: string
+          views_count?: number
+        }
+        Update: {
+          attachments?: Json
+          conversation_id?: string
+          created_at?: string
+          deleted_for_all?: boolean
+          edited_at?: string | null
+          forwarded_from?: Json | null
+          id?: string
+          is_pinned?: boolean
+          poll?: Json | null
+          reply_to_id?: string | null
+          sender_id?: string
+          text?: string
+          views_count?: number
+        }
+        Relationships: []
+      }
+      community_poll_votes: {
+        Row: {
+          created_at: string
+          message_id: string
+          option_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          message_id: string
+          option_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          message_id?: string
+          option_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_user_settings: {
+        Row: {
+          accessibility_preferences: Json
+          media_preferences: Json
+          notification_preferences: Json
+          privacy_settings: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accessibility_preferences?: Json
+          media_preferences?: Json
+          notification_preferences?: Json
+          privacy_settings?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accessibility_preferences?: Json
+          media_preferences?: Json
+          notification_preferences?: Json
+          privacy_settings?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       content_reports: {
         Row: {
           created_at: string
@@ -538,6 +829,7 @@ export type Database = {
       profiles: {
         Row: {
           batch_year: string | null
+          bio: string | null
           created_at: string
           department: string | null
           full_name: string
@@ -549,16 +841,20 @@ export type Database = {
           id_verified_at: string | null
           is_cafe_student: boolean | null
           is_verified: boolean | null
+          last_seen_at: string
           level: number
+          online_status: string
           phone: string | null
           profile_photo_url: string | null
           student_id: string | null
           university_id: string
           updated_at: string
+          username: string | null
           xp: number
         }
         Insert: {
           batch_year?: string | null
+          bio?: string | null
           created_at?: string
           department?: string | null
           full_name: string
@@ -570,16 +866,20 @@ export type Database = {
           id_verified_at?: string | null
           is_cafe_student?: boolean | null
           is_verified?: boolean | null
+          last_seen_at?: string
           level?: number
+          online_status?: string
           phone?: string | null
           profile_photo_url?: string | null
           student_id?: string | null
           university_id: string
           updated_at?: string
+          username?: string | null
           xp?: number
         }
         Update: {
           batch_year?: string | null
+          bio?: string | null
           created_at?: string
           department?: string | null
           full_name?: string
@@ -591,12 +891,15 @@ export type Database = {
           id_verified_at?: string | null
           is_cafe_student?: boolean | null
           is_verified?: boolean | null
+          last_seen_at?: string
           level?: number
+          online_status?: string
           phone?: string | null
           profile_photo_url?: string | null
           student_id?: string | null
           university_id?: string
           updated_at?: string
+          username?: string | null
           xp?: number
         }
         Relationships: [
@@ -885,6 +1188,26 @@ export type Database = {
           university_id: string
         }[]
       }
+      boost_community_channel: {
+        Args: { _conversation_id: string }
+        Returns: number
+      }
+      get_community_directory: {
+        Args: never
+        Returns: {
+          avatar_url: string | null
+          batch_year: string
+          bio: string
+          department: string
+          full_name: string
+          id: string
+          is_verified: boolean
+          last_seen_at: string
+          online_status: string
+          portal_roles: string[]
+          username: string
+        }[]
+      }
       get_group_roster: {
         Args: { _group_id: string }
         Returns: {
@@ -893,6 +1216,10 @@ export type Database = {
           role: string
           user_id: string
         }[]
+      }
+      get_or_create_direct_conversation: {
+        Args: { _target_user_id: string }
+        Returns: string
       }
       get_user_university: { Args: { _user_id: string }; Returns: string }
       has_role: {

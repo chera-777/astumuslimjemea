@@ -1,14 +1,16 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 /**
  * Subscribes to inserts on public.notifications for the current user
- * and surfaces them as sonner toasts. Mount once near the app root.
+ * and surfaces them as sonner toasts. Mount once inside BrowserRouter.
  */
 export function RealtimeNotificationBridge() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user?.id) return;
@@ -28,7 +30,16 @@ export function RealtimeNotificationBridge() {
           toast(n.title || "New notification", {
             description: n.body,
             action: n.deep_link
-              ? { label: "Open", onClick: () => (window.location.href = n.deep_link!) }
+              ? {
+                  label: "Open",
+                  onClick: () => {
+                    if (n.deep_link!.startsWith("/")) {
+                      navigate(n.deep_link!);
+                    } else {
+                      window.location.assign(n.deep_link!);
+                    }
+                  },
+                }
               : undefined,
           });
         }
@@ -36,9 +47,9 @@ export function RealtimeNotificationBridge() {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      void supabase.removeChannel(channel);
     };
-  }, [user?.id]);
+  }, [user?.id, navigate]);
 
   return null;
 }

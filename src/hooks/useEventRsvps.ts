@@ -35,7 +35,7 @@ export function useEventRsvps(eventId?: string | null) {
           .eq("event_id", eventId)
           .eq("user_id", user.id)
           .maybeSingle();
-        if (!cancelled) setMyStatus((data as any)?.status ?? null);
+        if (!cancelled) setMyStatus((data as { status?: string } | null)?.status ?? null);
       }
       if (!cancelled) setLoading(false);
     };

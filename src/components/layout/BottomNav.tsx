@@ -176,7 +176,7 @@ export function BottomNav() {
   const [showActions, setShowActions] = useState(false);
   const { roles } = useAuth();
 
-  if (location.pathname === "/community" && location.hash === "#chat") return null;
+  if (location.pathname === "/community" && (location.hash === "#chat" || location.hash === "#meetings")) return null;
 
   const homePath = portalHome(roles);
 

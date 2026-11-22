@@ -7,10 +7,15 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Star, BookOpen, GraduationCap, DollarSign, Users,
-  ArrowLeft, CheckCircle, Clock, AlertCircle, Plus, BarChart3, Calendar
+  ArrowLeft, CheckCircle, Clock, AlertCircle, Plus, BarChart3, Calendar,
+  type LucideIcon
 } from "lucide-react";
 
-const sectorData: Record<string, { title: string; icon: any; gradient: string; description: string; tasks: any[]; members: any[]; reports: any[] }> = {
+interface SectorTask { title: string; status: string; priority: string }
+interface SectorMember { name: string; role: string; status: string }
+interface SectorReport { title: string; date: string }
+
+const sectorData: Record<string, { title: string; icon: LucideIcon; gradient: string; description: string; tasks: SectorTask[]; members: SectorMember[]; reports: SectorReport[] }> = {
   main: {
     title: "Main Sector",
     icon: Star,
@@ -124,7 +129,7 @@ const statusIcon = (status: string) => {
   return <AlertCircle className="h-4 w-4 text-muted-foreground" />;
 };
 
-const priorityColor = (p: string) => {
+const priorityColor = (p: string): "destructive" | "default" | "secondary" => {
   if (p === "high") return "destructive";
   if (p === "medium") return "default";
   return "secondary";
@@ -175,7 +180,7 @@ const SectorPortal = () => {
                     <div className="flex-1">
                       <p className={`font-body text-sm font-medium ${task.status === "completed" ? "line-through text-muted-foreground" : ""}`}>{task.title}</p>
                     </div>
-                    <Badge variant={priorityColor(task.priority) as any} className="font-body text-[10px]">{task.priority}</Badge>
+                    <Badge variant={priorityColor(task.priority)} className="font-body text-[10px]">{task.priority}</Badge>
                   </CardContent>
                 </Card>
               </motion.div>

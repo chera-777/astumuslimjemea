@@ -5,6 +5,8 @@ import type { User, Session } from "@supabase/supabase-js";
 export interface Profile {
   id: string;
   full_name: string;
+  username?: string | null;
+  bio?: string | null;
   phone: string | null;
   gender: string;
   university_id: string;
@@ -24,8 +26,11 @@ interface AuthContextType {
   roles: string[];
   loading: boolean;
   authError: string | null;
+  oauthError: string | null;
+  clearOAuthError: () => void;
   retryAuth: () => Promise<void>;
   signOut: () => Promise<void>;
+  signOutOtherDevices: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
 
@@ -36,10 +41,34 @@ const AuthContext = createContext<AuthContextType>({
   roles: [],
   loading: true,
   authError: null,
+  oauthError: null,
+  clearOAuthError: () => {},
   retryAuth: async () => {},
   signOut: async () => {},
+  signOutOtherDevices: async () => {},
   refreshProfile: async () => {},
 });
+
+function extractOAuthErrorFromUrl(): string | null {
+  if (typeof window === "undefined") return null;
+  const searchParams = new URLSearchParams(window.location.search);
+  const hashRaw = window.location.hash.startsWith("#") ? window.location.hash.slice(1) : window.location.hash;
+  const hashParams = new URLSearchParams(hashRaw);
+
+  const errCode = searchParams.get("error") ?? hashParams.get("error");
+  const errDesc = searchParams.get("error_description") ?? hashParams.get("error_description");
+  if (!errCode && !errDesc) return null;
+
+  // Clean OAuth error parameters from browser history without triggering reload
+  const cleanUrl = window.location.pathname;
+  window.history.replaceState({}, document.title, cleanUrl);
+
+  if (errCode === "access_denied") {
+    return "Google sign-in was cancelled. You can try again anytime.";
+  }
+  const readable = (errDesc ?? errCode ?? "Google sign-in failed.").replace(/\+/g, " ");
+  return readable;
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -48,24 +77,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [roles, setRoles] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [oauthError, setOauthError] = useState<string | null>(() => extractOAuthErrorFromUrl());
+
+  const clearOAuthError = useCallback(() => setOauthError(null), []);
 
   const currentUserId = useRef<string | null>(null);
+  const inFlightLoadRef = useRef<{ userId: string; promise: Promise<boolean | undefined> } | null>(null);
   const loadUserRecords = useCallback(async (userId: string) => {
-    try {
-      const [profileResult, roleResult] = await Promise.all([
-        supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
-        supabase.from("user_roles").select("role").eq("user_id", userId),
-      ]);
-      if (currentUserId.current !== userId) return;
-      if (profileResult.error || roleResult.error) throw new Error("Could not load your profile and portal access. Please try again.");
-      setProfile(profileResult.data as Profile | null);
-      setRoles(roleResult.data?.map(r => r.role) ?? []);
-      setAuthError(null);
-      return true;
-    } catch {
-      if (currentUserId.current === userId) setAuthError("Could not load your profile and portal access. Please try again.");
-      return false;
-    } finally { if (currentUserId.current === userId) setLoading(false); }
+    if (inFlightLoadRef.current?.userId === userId) {
+      return inFlightLoadRef.current.promise;
+    }
+    const promise = (async () => {
+      try {
+        const [profileResult, roleResult] = await Promise.all([
+          supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+          supabase.from("user_roles").select("role").eq("user_id", userId),
+        ]);
+        if (currentUserId.current !== userId) return;
+        if (profileResult.error || roleResult.error) throw new Error("Could not load your profile and portal access. Please try again.");
+        setProfile(profileResult.data as Profile | null);
+        setRoles(roleResult.data?.map(r => r.role) ?? []);
+        setAuthError(null);
+        return true;
+      } catch {
+        if (currentUserId.current === userId) setAuthError("Could not load your profile and portal access. Please try again.");
+        return false;
+      } finally {
+        if (inFlightLoadRef.current?.userId === userId) {
+          inFlightLoadRef.current = null;
+        }
+        if (currentUserId.current === userId) setLoading(false);
+      }
+    })();
+    inFlightLoadRef.current = { userId, promise };
+    return promise;
   }, []);
   const refreshProfile = useCallback(async () => {
     if (user && !(await loadUserRecords(user.id))) throw new Error("Your changes were saved, but your profile could not be refreshed. Please try again.");
@@ -85,7 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (nextId !== currentUserId.current) { setProfile(null); setRoles([]); }
       currentUserId.current = nextId;
       setSession(session); setUser(session?.user ?? null);
-      if (nextId) { setLoading(true); setTimeout(() => { if (active) void loadUserRecords(nextId); }, 0); }
+      if (nextId) { setOauthError(null); setLoading(true); setTimeout(() => { if (active) void loadUserRecords(nextId); }, 0); }
       else { setAuthError(null); setLoading(false); }
     };
     if (!isSupabaseConfigured) {
@@ -96,13 +141,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => { sessionRevision += 1; applySession(session); }
     );
-    // Validate the stored identity with Supabase before trusting it for access.
+    // Validate any stored session with Supabase before trusting it for access.
     const initialRevision = sessionRevision;
-    supabase.auth.getUser().then(async ({ data: { user }, error }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!active || sessionRevision !== initialRevision) return;
+      if (!session) { applySession(null); return; }
+      const { data: { user }, error } = await supabase.auth.getUser();
       if (!active || sessionRevision !== initialRevision) return;
       if (error || !user) { applySession(null); return; }
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!active || sessionRevision !== initialRevision) return;
       applySession(session);
     }).catch(() => {
       if (active && sessionRevision === initialRevision) applySession(null);
@@ -111,8 +157,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [loadUserRecords]);
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    if (isSupabaseConfigured) {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    }
     currentUserId.current = null;
     setUser(null);
     setSession(null);
@@ -122,8 +170,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   };
 
+  const signOutOtherDevices = async () => {
+    if (!isSupabaseConfigured) return;
+    const { error } = await supabase.auth.signOut({ scope: "others" });
+    if (error) throw error;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, profile, roles, loading, authError, retryAuth, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{ user, session, profile, roles, loading, authError, oauthError, clearOAuthError, retryAuth, signOut, signOutOtherDevices, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

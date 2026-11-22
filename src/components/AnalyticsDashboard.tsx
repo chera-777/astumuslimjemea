@@ -56,18 +56,27 @@ export function AnalyticsDashboard({ scope = "university" }: { scope?: "universi
         profQ, evQ, rsvpQ, donQ, roleQ,
       ]);
 
-      const profiles = profRes.data || [];
-      const events = evRes.data || [];
-      const rsvps = (rsvpRes.data || []).filter((r: any) => events.some((e: any) => e.id === r.event_id));
-      const donations = donRes.data || [];
-      const roles = (roleRes.data || []).filter((r: any) => profiles.some((p: any) => p.id === r.user_id));
+      interface ProfRow { id: string; created_at: string; updated_at: string }
+      interface EventRow { id: string; title: string | null }
+      interface RsvpRow { event_id: string; status: string }
+      interface DonationRow { amount: number | string | null; created_at: string }
+      interface UserRoleRow { role: string; user_id: string }
+
+      const profiles = (profRes.data || []) as ProfRow[];
+      const events = (evRes.data || []) as EventRow[];
+      const rsvps = ((rsvpRes.data || []) as RsvpRow[]).filter((r) => events.some((e) => e.id === r.event_id));
+      const donations = (donRes.data || []) as DonationRow[];
+      const roles = ((roleRes.data || []) as UserRoleRow[]).filter((r) => profiles.some((p) => p.id === r.user_id));
 
       const weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
-      const activeWeek = profiles.filter((p: any) => new Date(p.updated_at).getTime() > weekAgo).length;
-      const totalDon = donations.reduce((a: number, d: any) => a + Number(d.amount || 0), 0);
+      const activeWeek = profiles.filter((p) => new Date(p.updated_at).getTime() > weekAgo).length;
+      const totalDon = donations.reduce((a, d) => a + Number(d.amount || 0), 0);
 
       // Weekly buckets (last 8 weeks)
-      const buckets = (rows: any[], dateField: string, valueFn: (r: any) => number): Bucket[] => {
+      const buckets = <T extends { created_at: string }>(
+        rows: T[],
+        valueFn: (r: T) => number
+      ): Bucket[] => {
         const map = new Map<string, number>();
         for (let i = 7; i >= 0; i--) {
           const d = new Date(Date.now() - i * 7 * 24 * 3600 * 1000);
@@ -76,7 +85,7 @@ export function AnalyticsDashboard({ scope = "university" }: { scope?: "universi
         }
         const keys = [...map.keys()];
         rows.forEach((r) => {
-          const t = new Date(r[dateField]).getTime();
+          const t = new Date(r.created_at).getTime();
           if (t < Date.now() - 8 * 7 * 24 * 3600 * 1000) return;
           const weeksAgo = Math.floor((Date.now() - t) / (7 * 24 * 3600 * 1000));
           const idx = 7 - weeksAgo;
@@ -88,19 +97,19 @@ export function AnalyticsDashboard({ scope = "university" }: { scope?: "universi
         return [...map.entries()].map(([week, value]) => ({ week, value }));
       };
 
-      setDonationTrend(buckets(donations.filter((d: any) => new Date(d.created_at).toISOString() > eightWeeksAgo), "created_at", (r) => Number(r.amount || 0)));
-      setSignupTrend(buckets(profiles.filter((p: any) => new Date(p.created_at).toISOString() > eightWeeksAgo), "created_at", () => 1));
+      setDonationTrend(buckets(donations.filter((d) => new Date(d.created_at).toISOString() > eightWeeksAgo), (r) => Number(r.amount || 0)));
+      setSignupTrend(buckets(profiles.filter((p) => new Date(p.created_at).toISOString() > eightWeeksAgo), () => 1));
 
       // Role distribution
       const roleCount = new Map<string, number>();
-      roles.forEach((r: any) => roleCount.set(r.role, (roleCount.get(r.role) || 0) + 1));
+      roles.forEach((r) => roleCount.set(r.role, (roleCount.get(r.role) || 0) + 1));
       setRolePie([...roleCount.entries()].map(([name, value]) => ({ name, value })));
 
       // Top 5 events by RSVP
       const rsvpCount = new Map<string, number>();
-      rsvps.forEach((r: any) => rsvpCount.set(r.event_id, (rsvpCount.get(r.event_id) || 0) + 1));
+      rsvps.forEach((r) => rsvpCount.set(r.event_id, (rsvpCount.get(r.event_id) || 0) + 1));
       const top = events
-        .map((e: any) => ({ name: (e.title || "").slice(0, 14), rsvps: rsvpCount.get(e.id) || 0 }))
+        .map((e) => ({ name: (e.title || "").slice(0, 14), rsvps: rsvpCount.get(e.id) || 0 }))
         .sort((a, b) => b.rsvps - a.rsvps)
         .slice(0, 5);
       setEventBars(top);

@@ -42,7 +42,18 @@ function StaffCredentialsForm({ portal, onSignedIn, onBusyChange }: { portal: St
       onSignedIn(portalHome(roles));
     } catch (error) {
       if (authenticated) await supabase.auth.signOut();
-      setError(error instanceof Error ? error.message : "Sign-in failed. Please try again.");
+      const raw = error instanceof Error ? error.message : "Sign-in failed. Please try again.";
+      const lower = raw.toLowerCase();
+      if (
+        lower.includes("rate limit") ||
+        lower.includes("too many requests") ||
+        lower.includes("429") ||
+        lower.includes("security purposes")
+      ) {
+        setError("Too many sign-in attempts right now. Please wait a minute before trying again.");
+      } else {
+        setError(raw);
+      }
     } finally { setBusy(false); onBusyChange(false); }
   };
 

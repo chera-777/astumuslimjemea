@@ -26,10 +26,94 @@ function to12h(time24: string): string {
   return `${hr}:${m.toString().padStart(2, "0")} ${ampm}`;
 }
 
+type CachedPrayerPayload = Omit<PrayerTimesData, "loading" | "error">;
+
+const cachedByDay = new Map<string, CachedPrayerPayload>();
+const inFlightByDay = new Map<string, Promise<CachedPrayerPayload>>();
+
+function readStoredPrayerCache(dayKey: string): CachedPrayerPayload | null {
+  if (cachedByDay.has(dayKey)) return cachedByDay.get(dayKey)!;
+  try {
+    const raw = sessionStorage.getItem(`prayer-times:${dayKey}`);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as CachedPrayerPayload;
+    if (parsed?.fajr && parsed?.isha) {
+      cachedByDay.set(dayKey, parsed);
+      return parsed;
+    }
+  } catch {
+    // ignore storage errors
+  }
+  return null;
+}
+
+function writeStoredPrayerCache(dayKey: string, payload: CachedPrayerPayload): void {
+  cachedByDay.set(dayKey, payload);
+  try {
+    sessionStorage.setItem(`prayer-times:${dayKey}`, JSON.stringify(payload));
+  } catch {
+    // ignore storage errors
+  }
+}
+
+async function fetchCachedTimes(lat: number, lng: number): Promise<CachedPrayerPayload> {
+  const today = new Date();
+  const dd = today.getDate();
+  const mm = today.getMonth() + 1;
+  const yyyy = today.getFullYear();
+  const dayKey = `${yyyy}-${mm}-${dd}:${lat.toFixed(1)},${lng.toFixed(1)}`;
+
+  const hit = readStoredPrayerCache(dayKey);
+  if (hit) return hit;
+
+  const existing = inFlightByDay.get(dayKey);
+  if (existing) return existing;
+
+  const promise = fetch(
+    `https://api.aladhan.com/v1/timings/${dd}-${mm}-${yyyy}?latitude=${lat}&longitude=${lng}&method=3`
+  )
+    .then(async (res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      const t = json.data.timings;
+      const hijri = json.data.date.hijri;
+      const payload: CachedPrayerPayload = {
+        fajr: to12h(t.Fajr),
+        dhuhr: to12h(t.Dhuhr),
+        asr: to12h(t.Asr),
+        maghrib: to12h(t.Maghrib),
+        isha: to12h(t.Isha),
+        sunrise: to12h(t.Sunrise),
+        sunset: to12h(t.Sunset),
+        hijriDate: `${hijri.day} ${hijri.month.en} ${hijri.year} AH`,
+        city: json.data.meta?.timezone?.split("/").pop()?.replace("_", " ") || "Adama",
+      };
+      writeStoredPrayerCache(dayKey, payload);
+      return payload;
+    })
+    .finally(() => {
+      inFlightByDay.delete(dayKey);
+    });
+
+  inFlightByDay.set(dayKey, promise);
+  return promise;
+}
+
 export function usePrayerTimes() {
-  const [data, setData] = useState<PrayerTimesData>({
-    ...fallbackTimes, hijriDate: "11 Shawwal 1447 AH", city: "Adama",
-    loading: true, error: null,
+  const [data, setData] = useState<PrayerTimesData>(() => {
+    const today = new Date();
+    const defaultDayKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}:8.5,39.3`;
+    const cached = typeof window !== "undefined" ? readStoredPrayerCache(defaultDayKey) : null;
+    if (cached) {
+      return { ...cached, loading: false, error: null };
+    }
+    return {
+      ...fallbackTimes,
+      hijriDate: "11 Shawwal 1447 AH",
+      city: "Adama",
+      loading: true,
+      error: null,
+    };
   });
 
   useEffect(() => {
@@ -37,25 +121,9 @@ export function usePrayerTimes() {
 
     async function fetchTimes(lat: number, lng: number) {
       try {
-        const today = new Date();
-        const dd = today.getDate();
-        const mm = today.getMonth() + 1;
-        const yyyy = today.getFullYear();
-        const res = await fetch(
-          `https://api.aladhan.com/v1/timings/${dd}-${mm}-${yyyy}?latitude=${lat}&longitude=${lng}&method=3`
-        );
-        const json = await res.json();
+        const payload = await fetchCachedTimes(lat, lng);
         if (cancelled) return;
-        const t = json.data.timings;
-        const hijri = json.data.date.hijri;
-        setData({
-          fajr: to12h(t.Fajr), dhuhr: to12h(t.Dhuhr), asr: to12h(t.Asr),
-          maghrib: to12h(t.Maghrib), isha: to12h(t.Isha),
-          sunrise: to12h(t.Sunrise), sunset: to12h(t.Sunset),
-          hijriDate: `${hijri.day} ${hijri.month.en} ${hijri.year} AH`,
-          city: json.data.meta?.timezone?.split("/").pop()?.replace("_", " ") || "Adama",
-          loading: false, error: null,
-        });
+        setData({ ...payload, loading: false, error: null });
       } catch {
         if (!cancelled) setData(prev => ({ ...prev, loading: false, error: "Failed to fetch" }));
       }
@@ -67,12 +135,12 @@ export function usePrayerTimes() {
 
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => fetchTimes(pos.coords.latitude, pos.coords.longitude),
-        () => fetchTimes(defaultLat, defaultLng),
+        (pos) => void fetchTimes(pos.coords.latitude, pos.coords.longitude),
+        () => void fetchTimes(defaultLat, defaultLng),
         { timeout: 5000 }
       );
     } else {
-      fetchTimes(defaultLat, defaultLng);
+      void fetchTimes(defaultLat, defaultLng);
     }
 
     return () => { cancelled = true; };

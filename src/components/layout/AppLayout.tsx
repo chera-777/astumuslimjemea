@@ -47,7 +47,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             )}
             {children}
           </main>
-          {isMobile && !isCommunity && <BottomNav />}
+          {isMobile && <BottomNav />}
         </div>
         <DesktopFAB />
         <ProfileCompletionPrompt />

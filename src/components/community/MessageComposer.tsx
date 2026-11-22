@@ -28,9 +28,14 @@ const EMOJI_GROUPS = [
 interface MessageComposerProps {
   disabled?: boolean;
   disabledReason?: string;
+  placeholder?: string;
 }
 
-export function MessageComposer({ disabled = false, disabledReason }: MessageComposerProps) {
+export function MessageComposer({
+  disabled = false,
+  disabledReason,
+  placeholder = "Message",
+}: MessageComposerProps) {
   const {
     snapshot,
     activeConversation,
@@ -41,10 +46,16 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
     sendMessage,
     saveEditMessage,
     saveDraft,
+    sendTyping,
+    uploadAttachment,
+    isRealtimeBackendActive,
   } = useCommunity();
 
   const [text, setText] = useState("");
-  const [pendingAttachments, setPendingAttachments] = useState<MessageAttachment[]>([]);
+  const [pendingAttachments, setPendingAttachments] = useState<
+    { attachment: MessageAttachment; rawFile?: File }[]
+  >([]);
+  const [uploading, setUploading] = useState(false);
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [attachOpen, setAttachOpen] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -55,6 +66,9 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
   const fileInputRef = useRef<HTMLInputElement>(null);
   const draftTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastConvIdRef = useRef<string | null>(null);
+  const lastTypingSentRef = useRef<number>(0);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
   // Sync draft when switching conversations
   useEffect(() => {
@@ -84,22 +98,22 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
   }, [recording]);
 
   // Debounced draft save
+  const activeConvId = activeConversation?.id;
+  const currentSavedDraft = activeConversation?.draftText ?? "";
   useEffect(() => {
-    if (!activeConversation || editingMessage) return;
+    if (!activeConvId || editingMessage) return;
     if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
-    const convId = activeConversation.id;
-    const currentDraft = activeConversation.draftText ?? "";
-    if (text === currentDraft) return;
+    if (text === currentSavedDraft) return;
     draftTimerRef.current = setTimeout(() => {
-      void saveDraft(convId, text);
+      void saveDraft(activeConvId, text);
     }, 300);
     return () => {
       if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
     };
-  }, [text, activeConversation, editingMessage, saveDraft]);
+  }, [text, activeConvId, currentSavedDraft, editingMessage, saveDraft]);
 
   const handleSend = async () => {
-    if (disabled) return;
+    if (disabled || uploading) return;
     if (editingMessage) {
       if (!text.trim()) return;
       await saveEditMessage(editingMessage.id, text);
@@ -108,11 +122,84 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
     }
 
     if (!text.trim() && pendingAttachments.length === 0) return;
-    const attachmentsToSend = pendingAttachments.length ? [...pendingAttachments] : undefined;
+    if (!activeConversation) return;
+
+    const currentPending = [...pendingAttachments];
     const messageText = text;
     setText("");
     setPendingAttachments([]);
-    await sendMessage(messageText, attachmentsToSend);
+    setUploading(true);
+
+    try {
+      let attachmentsToSend: MessageAttachment[] | undefined;
+      if (currentPending.length > 0) {
+        attachmentsToSend = await Promise.all(
+          currentPending.map(async ({ attachment, rawFile }) => {
+            if (rawFile && isRealtimeBackendActive) {
+              const uploaded = await uploadAttachment(rawFile, activeConversation.id, {
+                fileName: rawFile.name,
+                mimeType: rawFile.type,
+                type: attachment.type,
+              });
+              if (attachment.url?.startsWith("blob:")) {
+                URL.revokeObjectURL(attachment.url);
+              }
+              return uploaded;
+            }
+            return attachment;
+          })
+        );
+      }
+      await sendMessage(messageText, attachmentsToSend);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const stopRecorderAndGetBlob = async (): Promise<Blob | null> => {
+    const rec = mediaRecorderRef.current;
+    if (!rec) return null;
+    mediaRecorderRef.current = null;
+    return new Promise((resolve) => {
+      const handleStop = () => {
+        rec.stream?.getTracks().forEach((t) => t.stop());
+        const blob =
+          audioChunksRef.current.length > 0
+            ? new Blob(audioChunksRef.current, { type: rec.mimeType || "audio/webm" })
+            : null;
+        audioChunksRef.current = [];
+        resolve(blob);
+      };
+      if (rec.state === "inactive") {
+        handleStop();
+      } else {
+        rec.onstop = handleStop;
+        rec.stop();
+      }
+    });
+  };
+
+  const startVoiceRecording = async () => {
+    setRecordSeconds(0);
+    setRecording(true);
+    audioChunksRef.current = [];
+    if (
+      typeof navigator !== "undefined" &&
+      navigator.mediaDevices?.getUserMedia &&
+      typeof MediaRecorder !== "undefined"
+    ) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const recorder = new MediaRecorder(stream);
+        recorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) audioChunksRef.current.push(e.data);
+        };
+        mediaRecorderRef.current = recorder;
+        recorder.start(250);
+      } catch {
+        // Fallback smoothly to metadata voice note when microphone permission is blocked/headless
+      }
+    }
   };
 
   const handleSendVoiceNote = async () => {
@@ -120,6 +207,20 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
     const bars = Array.from({ length: 18 }, () => Math.floor(25 + Math.random() * 70));
     setRecording(false);
     setRecordSeconds(0);
+    const blob = await stopRecorderAndGetBlob();
+
+    if (blob && activeConversation) {
+      const uploaded = await uploadAttachment(blob, activeConversation.id, {
+        fileName: `voice-note-${Date.now()}.webm`,
+        mimeType: blob.type || "audio/webm",
+        type: "voice",
+        durationSec: duration,
+        waveform: bars,
+      });
+      await sendMessage("", [uploaded]);
+      return;
+    }
+
     await sendMessage("", [
       {
         id: `voice-${Date.now()}`,
@@ -133,11 +234,11 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
 
   const handleFileSelected = (files: FileList | null, forceFile = false) => {
     if (!files?.length) return;
-    const added: MessageAttachment[] = Array.from(files).map((file) => {
-      const url = URL.createObjectURL(file);
+    const added = Array.from(files).map((file) => {
+      const url = typeof URL !== "undefined" && URL.createObjectURL ? URL.createObjectURL(file) : undefined;
       const isImage = !forceFile && file.type.startsWith("image/");
       const isVideo = !forceFile && file.type.startsWith("video/");
-      return {
+      const attachment: MessageAttachment = {
         id: `att-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         type: isImage ? "image" : isVideo ? "video" : "file",
         name: file.name,
@@ -145,6 +246,7 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
         sizeBytes: file.size,
         mimeType: file.type,
       };
+      return { attachment, rawFile: file };
     });
     setPendingAttachments((prev) => [...prev, ...added]);
     setAttachOpen(false);
@@ -155,21 +257,25 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
       setPendingAttachments((prev) => [
         ...prev,
         {
-          id: `att-${Date.now()}`,
-          type: "image",
-          name: "Hadith_Study_Notes.jpg",
-          url: eventHadith,
+          attachment: {
+            id: `att-${Date.now()}`,
+            type: "image",
+            name: "Hadith_Study_Notes.jpg",
+            url: eventHadith,
+          },
         },
       ]);
     } else {
       setPendingAttachments((prev) => [
         ...prev,
         {
-          id: `att-${Date.now()}`,
-          type: "file",
-          name: "Calculus_II_Midterm_Review.pdf",
-          sizeBytes: 945_000,
-          mimeType: "application/pdf",
+          attachment: {
+            id: `att-${Date.now()}`,
+            type: "file",
+            name: "Calculus_II_Midterm_Review.pdf",
+            sizeBytes: 945_000,
+            mimeType: "application/pdf",
+          },
         },
       ]);
     }
@@ -236,7 +342,7 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
       {/* Pending attachments preview strip */}
       {pendingAttachments.length > 0 && (
         <div className="flex items-center gap-2 px-4 py-2 overflow-x-auto border-b border-border/60 bg-secondary/20">
-          {pendingAttachments.map((att) => (
+          {pendingAttachments.map(({ attachment: att }) => (
             <div
               key={att.id}
               className="relative flex items-center gap-2 rounded-lg border border-border bg-card px-2.5 py-1.5 shrink-0 max-w-[200px]"
@@ -259,7 +365,10 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
               <button
                 type="button"
                 aria-label={`Remove ${att.name}`}
-                onClick={() => setPendingAttachments((prev) => prev.filter((p) => p.id !== att.id))}
+                onClick={() => {
+                  if (att.url?.startsWith("blob:")) URL.revokeObjectURL(att.url);
+                  setPendingAttachments((prev) => prev.filter((p) => p.attachment.id !== att.id));
+                }}
                 className="absolute top-1 right-1 h-5 w-5 rounded-full bg-secondary hover:bg-destructive hover:text-destructive-foreground flex items-center justify-center transition-colors"
               >
                 <X className="h-3 w-3" />
@@ -301,6 +410,7 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
             size="icon"
             aria-label="Discard voice recording"
             onClick={() => {
+              void stopRecorderAndGetBlob();
               setRecording(false);
               setRecordSeconds(0);
             }}
@@ -383,14 +493,24 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
               ref={textareaRef}
               rows={1}
               value={text}
-              onChange={(e) => setText(e.target.value)}
+              onChange={(e) => {
+                const nextValue = e.target.value;
+                setText(nextValue);
+                if (nextValue.trim() && activeConvId && !editingMessage) {
+                  const now = Date.now();
+                  if (now - lastTypingSentRef.current > 1500) {
+                    lastTypingSentRef.current = now;
+                    sendTyping(activeConvId);
+                  }
+                }
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   void handleSend();
                 }
               }}
-              placeholder={editingMessage ? "Edit your message…" : "Message"}
+              placeholder={editingMessage ? "Edit your message…" : placeholder}
               aria-label="Message input"
               className="flex-1 resize-none bg-transparent text-sm font-body placeholder:text-muted-foreground focus:outline-none max-h-32 py-1 leading-snug"
             />
@@ -443,15 +563,12 @@ export function MessageComposer({ disabled = false, disabledReason }: MessageCom
               <Send className="h-4 w-4" />
             </Button>
           ) : (
-            <Button
+              <Button
               type="button"
               variant="secondary"
               size="icon"
               aria-label="Record voice message"
-              onClick={() => {
-                setRecordSeconds(0);
-                setRecording(true);
-              }}
+              onClick={() => void startVoiceRecording()}
               className="h-10 w-10 rounded-full shrink-0"
             >
               <Mic className="h-5 w-5" />

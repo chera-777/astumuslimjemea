@@ -78,8 +78,13 @@ export function ProfileCompletionPrompt() {
               </li>
             ))}
           </ul>
-          <DialogFooter className="flex flex-row gap-2 sm:justify-center">
+          <DialogFooter className="flex flex-wrap flex-row gap-2 sm:justify-center">
             <Button variant="ghost" onClick={handleClose} className="text-xs">Later</Button>
+            {!profile.is_verified && (
+              <Button variant="outline" asChild onClick={handleClose} className="text-xs">
+                <Link to="/verification">Verify Student ID</Link>
+              </Button>
+            )}
             <Button asChild onClick={handleClose} className="text-xs">
               <Link to="/profile?edit=1">Complete profile</Link>
             </Button>

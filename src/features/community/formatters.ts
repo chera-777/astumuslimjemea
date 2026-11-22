@@ -58,6 +58,11 @@ export function formatBytes(bytes?: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+export function formatCountCompact(count = 0): string {
+  if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
+  return String(count);
+}
+
 export function getLastMessagePreview(
   conv: Conversation,
   messages: ChatMessage[],
@@ -69,10 +74,16 @@ export function getLastMessagePreview(
   }
   const last = messages[messages.length - 1];
   if (!last) {
-    return conv.type === "group" ? "Group created" : "Start a conversation";
+    if (conv.type === "channel") return "Channel created";
+    if (conv.type === "group") return "Group created";
+    return "Start a conversation";
   }
   if (last.deletedForAll) {
     return "Message deleted";
+  }
+
+  if (last.poll) {
+    return `Poll: ${last.poll.question}`;
   }
 
   let body = last.text.trim();
@@ -87,6 +98,10 @@ export function getLastMessagePreview(
     if (att.type === "image") body = `Photo · ${body}`;
     else if (att.type === "video") body = `Video · ${body}`;
     else if (att.type === "file") body = `${att.name} · ${body}`;
+  }
+
+  if (conv.type === "channel") {
+    return body;
   }
 
   if (conv.type === "group") {

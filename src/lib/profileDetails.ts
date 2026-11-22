@@ -1,6 +1,6 @@
 import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 
-export const editableProfileFields = ["full_name", "phone", "gender", "department", "batch_year", "student_id", "profile_photo_url", "id_card_url"] as const;
+export const editableProfileFields = ["full_name", "username", "bio", "phone", "gender", "department", "batch_year", "student_id", "profile_photo_url", "id_card_url"] as const;
 export type ProfileDraft = Record<(typeof editableProfileFields)[number], string>;
 
 export function profileDraft(profile: Partial<Tables<"profiles">>): ProfileDraft {
@@ -16,6 +16,10 @@ export function profileCompletion(profile: Partial<Tables<"profiles">> | null): 
 export function profileUpdate(draft: ProfileDraft): TablesUpdate<"profiles"> {
   if (!draft.full_name.trim()) throw new Error("Enter your full name.");
   if (!["male", "female"].includes(draft.gender)) throw new Error("Choose your gender.");
+  const rawUsername = draft.username.trim().replace(/^@+/, "");
+  if (rawUsername && !/^[a-zA-Z0-9_]{3,24}$/.test(rawUsername)) {
+    throw new Error("Username must be 3–24 letters, numbers, or underscores.");
+  }
   for (const key of ["profile_photo_url", "id_card_url"] as const) {
     if (!draft[key].trim()) continue;
     let url: URL;
@@ -23,5 +27,9 @@ export function profileUpdate(draft: ProfileDraft): TablesUpdate<"profiles"> {
     if (url.protocol !== "https:" || url.username || url.password) throw new Error("Use a valid HTTPS link for your photo or ID card.");
   }
   // Explicit allowlist keeps roles, verification, meal entitlement and university protected.
-  return Object.fromEntries(editableProfileFields.map(key => [key, draft[key].trim() || null])) as TablesUpdate<"profiles">;
+  const entries = editableProfileFields.map(key => {
+    if (key === "username") return [key, rawUsername ? `@${rawUsername.toLowerCase()}` : null];
+    return [key, draft[key].trim() || null];
+  });
+  return Object.fromEntries(entries) as TablesUpdate<"profiles">;
 }

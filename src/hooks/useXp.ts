@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
+import type { Json } from "@/integrations/supabase/types";
+
 export type XpSource =
   | "event_rsvp"
   | "donation"
@@ -21,7 +23,7 @@ export interface XpEvent {
   id: string;
   source: string;
   delta: number;
-  meta: any;
+  meta: Json | null;
   created_at: string;
 }
 
@@ -72,7 +74,7 @@ export function useXp() {
         user_id: user.id,
         source,
         delta: XP_REWARDS[source],
-        meta: (opts?.meta ?? {}) as any,
+        meta: (opts?.meta ?? {}) as Json,
       });
       if (error) return false;
       if (opts?.oncePerDay) localStorage.setItem(todayKey(source), "1");

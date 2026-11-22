@@ -39,8 +39,8 @@ export function StudentProfileSetup() {
     const { error } = await supabase.from("profiles").insert({
       id: user.id, full_name: fullName.trim(), gender, university_id: university,
     });
-    if (error) { setError(error.message); setSaving(false); return; }
-    try { await refreshProfile(); } catch (error) { setError(error instanceof Error ? error.message : "Could not refresh your profile."); }
+    if (error && error.code !== "23505") { setError(error.message); setSaving(false); return; }
+    try { await refreshProfile(); } catch (err) { setError(err instanceof Error ? err.message : "Could not refresh your profile."); }
     setSaving(false);
   };
   return <Dialog open={open}><DialogContent className="nature-surface auth-popover p-0 overflow-hidden" onPointerDownOutside={e => e.preventDefault()} onEscapeKeyDown={e => e.preventDefault()}>

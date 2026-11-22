@@ -74,7 +74,10 @@ const Groups = () => {
     setFinding(false);
     if (error || data?.error) {
       let msg = data?.error;
-      try { msg = msg || (await (error as any)?.context?.json())?.error; } catch { /* ignore */ }
+      try {
+        const ctx = (error as { context?: { json?: () => Promise<{ error?: string }> } } | null)?.context;
+        msg = msg || (await ctx?.json?.())?.error;
+      } catch { /* ignore */ }
       toast.error(msg || "Couldn't get suggestions right now");
       return;
     }

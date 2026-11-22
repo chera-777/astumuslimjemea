@@ -1,25 +1,21 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Ban,
+  BarChart3,
   Bell,
-  BookOpen,
-  Calendar,
   Check,
-  Clock,
+  Copy,
+  Flag,
   Forward,
-  Gift,
-  GraduationCap,
-  Home,
+  Image as ImageIcon,
+  Link2,
   Lock,
+  Megaphone,
   MessageCircle,
-  Moon,
+  Plus,
   Search,
-  Settings,
   Shield,
-  Sun,
-  Trophy,
-  User,
+  Trash2,
   UserPlus,
   Users,
 } from "lucide-react";
@@ -31,152 +27,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
-import { useAuth } from "@/contexts/AuthContext";
-import { portalHome } from "@/lib/portalAccess";
 import { useCommunity } from "@/features/community/CommunityContext";
 import { formatLastSeen } from "@/features/community/formatters";
 import { getPushProviderStatus } from "@/features/community/notifications";
+import { CHAT_WALLPAPERS } from "@/features/community/wallpapers";
+import { cn } from "@/lib/utils";
 import { AvatarBadge } from "./AvatarBadge";
 import { toast } from "sonner";
 
-/* 1. Left App Navigation & Account Drawer */
-interface CommunityNavDrawerProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onOpenContacts: () => void;
-  onOpenNewGroup: () => void;
-  onOpenSettings: () => void;
-}
-
-export function CommunityNavDrawer({
-  open,
-  onOpenChange,
-  onOpenContacts,
-  onOpenNewGroup,
-  onOpenSettings,
-}: CommunityNavDrawerProps) {
-  const { roles } = useAuth();
-  const { snapshot } = useCommunity();
-  const [isDark, setIsDark] = useState(
-    () => typeof document !== "undefined" && document.documentElement.classList.contains("dark")
-  );
-
-  const toggleTheme = () => {
-    const html = document.documentElement;
-    const nextDark = !html.classList.contains("dark");
-    html.classList.toggle("dark", nextDark);
-    setIsDark(nextDark);
-  };
-
-  const me = snapshot ? snapshot.users[snapshot.currentUserId] : null;
-  const homePath = portalHome(roles);
-
-  const appLinks = [
-    { label: "Home", path: homePath, icon: Home },
-    { label: "Resources", path: "/resources", icon: BookOpen },
-    { label: "Groups Directory", path: "/groups", icon: Users },
-    { label: "Prayer Times", path: "/prayer-times", icon: Clock },
-    { label: "Academic", path: "/academic", icon: GraduationCap },
-    { label: "Challenges", path: "/challenges", icon: Trophy },
-    { label: "Donations", path: "/donations", icon: Gift },
-    { label: "Profile", path: "/profile", icon: User },
-  ];
-
-  return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="left" className="p-0 w-[290px] sm:w-[320px] flex flex-col">
-        <SheetTitle className="sr-only">Community Navigation &amp; Settings</SheetTitle>
-        {/* User summary */}
-        <div className="p-4 border-b border-border bg-secondary/30 flex items-center justify-between gap-3">
-          {me && (
-            <div className="flex items-center gap-3 min-w-0">
-              <AvatarBadge
-                initials={me.avatarInitials}
-                colorClass={me.avatarColor}
-                name={me.fullName}
-                status="online"
-                showPresence
-                size="lg"
-              />
-              <div className="min-w-0">
-                <p className="font-body text-sm font-semibold truncate">{me.fullName}</p>
-                <p className="font-body text-xs text-muted-foreground truncate">{me.username}</p>
-                <p className="font-body text-[11px] text-muted-foreground truncate">
-                  {me.department}
-                </p>
-              </div>
-            </div>
-          )}
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-            className="h-9 w-9 rounded-full shrink-0"
-          >
-            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
-        </div>
-
-        {/* Messaging shortcuts */}
-        <div className="p-2 border-b border-border space-y-0.5">
-          <button
-            type="button"
-            onClick={() => {
-              onOpenChange(false);
-              onOpenContacts();
-            }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary text-sm font-body font-medium text-left"
-          >
-            <UserPlus className="h-4 w-4 text-primary" /> Contacts
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              onOpenChange(false);
-              onOpenNewGroup();
-            }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary text-sm font-body font-medium text-left"
-          >
-            <Users className="h-4 w-4 text-primary" /> New Group
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              onOpenChange(false);
-              onOpenSettings();
-            }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary text-sm font-body font-medium text-left"
-          >
-            <Settings className="h-4 w-4 text-primary" /> Privacy &amp; Notifications
-          </button>
-        </div>
-
-        {/* App navigation */}
-        <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
-          <p className="px-3 py-1.5 text-[11px] font-body font-semibold text-muted-foreground">
-            ASTU Muslim Jemea
-          </p>
-          {appLinks.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              onClick={() => onOpenChange(false)}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary text-sm font-body text-foreground/90"
-            >
-              <item.icon className="h-4 w-4 text-muted-foreground" />
-              <span>{item.label}</span>
-            </Link>
-          ))}
-        </div>
-      </SheetContent>
-    </Sheet>
-  );
-}
-
-/* 2. Contacts Discovery Dialog */
+/* 1. Contacts Discovery Dialog */
 export function ContactsDialog({
   open,
   onOpenChange,
@@ -277,7 +136,7 @@ export function ContactsDialog({
   );
 }
 
-/* 3. User Profile Modal (opened when clicking a group member or contact) */
+/* 2. User Profile Modal */
 export function UserProfileDialog() {
   const { snapshot, profileUserId, setProfileUserId, openDirectChat, toggleBlockUser } =
     useCommunity();
@@ -366,7 +225,7 @@ export function UserProfileDialog() {
   );
 }
 
-/* 4. Create New Group Dialog */
+/* 3. Create New Group Dialog */
 export function NewGroupDialog({
   open,
   onOpenChange,
@@ -505,7 +364,359 @@ export function NewGroupDialog({
   );
 }
 
-/* 5. Forward Message Dialog */
+/* 4. Create New Channel Dialog */
+export function NewChannelDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { createChannel } = useCommunity();
+  const [title, setTitle] = useState("");
+  const [username, setUsername] = useState("");
+  const [description, setDescription] = useState("");
+  const [isPublic, setIsPublic] = useState(true);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) {
+      toast.error("Please enter a channel name");
+      return;
+    }
+    await createChannel({ title, username, description, isPublic });
+    setTitle("");
+    setUsername("");
+    setDescription("");
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="font-display text-lg flex items-center gap-2">
+            <Megaphone className="h-4 w-4 text-primary" /> Create Channel
+          </DialogTitle>
+          <DialogDescription className="font-body text-xs">
+            Broadcast announcements, reminders, and campus updates to subscribers.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="new-channel-title" className="text-xs font-body">
+              Channel name
+            </Label>
+            <Input
+              id="new-channel-title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g. ASTU Mosque Reminders"
+              required
+              className="h-9 text-sm font-body"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="new-channel-handle" className="text-xs font-body">
+              Public handle (optional)
+            </Label>
+            <Input
+              id="new-channel-handle"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="@astu_reminders"
+              className="h-9 text-sm font-body"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="new-channel-desc" className="text-xs font-body">
+              Description
+            </Label>
+            <Textarea
+              id="new-channel-desc"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="What subscribers will receive in this channel…"
+              className="text-xs font-body min-h-16"
+            />
+          </div>
+
+          <div className="flex items-center justify-between py-1">
+            <div>
+              <p className="text-xs font-body font-medium">Public channel</p>
+              <p className="text-[11px] font-body text-muted-foreground">
+                Appear in Discover Channels for ASTU students
+              </p>
+            </div>
+            <Switch checked={isPublic} onCheckedChange={setIsPublic} aria-label="Public channel" />
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button type="submit">
+              <Check className="h-4 w-4 mr-1.5" /> Create Channel
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* 5. Create Poll Dialog */
+export function CreatePollDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { sendMessage } = useCommunity();
+  const [question, setQuestion] = useState("");
+  const [options, setOptions] = useState(["", ""]);
+  const [multipleChoice, setMultipleChoice] = useState(false);
+  const [anonymous, setAnonymous] = useState(true);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleaned = options.map((o) => o.trim()).filter(Boolean);
+    if (!question.trim() || cleaned.length < 2) {
+      toast.error("Provide a question and at least 2 options");
+      return;
+    }
+    await sendMessage("", undefined, {
+      id: `poll-${Date.now()}`,
+      question: question.trim(),
+      options: cleaned.map((text, idx) => ({
+        id: `opt-${Date.now()}-${idx}`,
+        text,
+        voterIds: [],
+      })),
+      multipleChoice,
+      anonymous,
+    });
+    setQuestion("");
+    setOptions(["", ""]);
+    onOpenChange(false);
+    toast.success("Poll published");
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="font-display text-lg flex items-center gap-2">
+            <BarChart3 className="h-4 w-4 text-primary" /> Create Poll
+          </DialogTitle>
+          <DialogDescription className="font-body text-xs">
+            Gather quick votes or feedback from members.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={(e) => void handleSubmit(e)} className="space-y-3.5">
+          <div className="space-y-1">
+            <Label htmlFor="poll-question" className="text-xs font-body">Question</Label>
+            <Input
+              id="poll-question"
+              required
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Ask a question…"
+              className="h-9 text-sm font-body"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs font-body">Options</Label>
+            {options.map((opt, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <Input
+                  value={opt}
+                  onChange={(e) =>
+                    setOptions((prev) => prev.map((v, i) => (i === idx ? e.target.value : v)))
+                  }
+                  placeholder={`Option ${idx + 1}`}
+                  className="h-9 text-xs font-body"
+                />
+                {options.length > 2 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setOptions((prev) => prev.filter((_, i) => i !== idx))}
+                    aria-label="Remove option"
+                    className="h-8 w-8 text-muted-foreground"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            {options.length < 5 && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setOptions((prev) => [...prev, ""])}
+                className="h-8 text-xs font-body"
+              >
+                <Plus className="h-3.5 w-3.5 mr-1" /> Add Option
+              </Button>
+            )}
+          </div>
+
+          <div className="space-y-2 pt-1">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-body">Anonymous voting</span>
+              <Switch checked={anonymous} onCheckedChange={setAnonymous} />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-body">Allow multiple answers</span>
+              <Switch checked={multipleChoice} onCheckedChange={setMultipleChoice} />
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button type="submit">Publish Poll</Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* 6. Set Wallpaper Dialog */
+export function WallpaperDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { activeConversation, setConversationWallpaper } = useCommunity();
+
+  if (!activeConversation) return null;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-sm">
+        <DialogHeader>
+          <DialogTitle className="font-display text-lg flex items-center gap-2">
+            <ImageIcon className="h-4 w-4 text-primary" /> Chat Wallpaper
+          </DialogTitle>
+          <DialogDescription className="font-body text-xs">
+            Choose a backdrop for {activeConversation.title}.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid grid-cols-2 gap-2.5 pt-1">
+          {CHAT_WALLPAPERS.map((wp) => {
+            const selected = (activeConversation.wallpaperId || "default") === wp.id;
+            return (
+              <button
+                key={wp.id}
+                type="button"
+                onClick={() => {
+                  void setConversationWallpaper(activeConversation.id, wp.id);
+                  onOpenChange(false);
+                }}
+                className={cn(
+                  "rounded-xl border p-2 text-left space-y-1.5 transition-all",
+                  selected
+                    ? "border-primary ring-2 ring-primary/30"
+                    : "border-border hover:border-primary/50"
+                )}
+              >
+                <div className={cn("h-14 w-full rounded-lg", wp.previewClass)} />
+                <p className="text-xs font-body font-medium truncate">{wp.name}</p>
+              </button>
+            );
+          })}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* 7. Report Conversation Dialog */
+export function ReportConversationDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { activeConversation, reportConversation } = useCommunity();
+  const [reason, setReason] = useState("spam");
+  const [details, setDetails] = useState("");
+
+  if (!activeConversation) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await reportConversation(activeConversation.id, `${reason}: ${details}`.trim());
+    setDetails("");
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-sm">
+        <DialogHeader>
+          <DialogTitle className="font-display text-lg flex items-center gap-2">
+            <Flag className="h-4 w-4 text-destructive" /> Report {activeConversation.title}
+          </DialogTitle>
+          <DialogDescription className="font-body text-xs">
+            Reports are reviewed by ASTU Muslim Jemea moderators.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={(e) => void handleSubmit(e)} className="space-y-3.5">
+          <div className="space-y-1">
+            <Label className="text-xs font-body">Reason</Label>
+            <Select value={reason} onValueChange={setReason}>
+              <SelectTrigger className="h-9 text-xs font-body">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="spam">Spam or unsolicited promotion</SelectItem>
+                <SelectItem value="harassment">Harassment or disrespectful conduct</SelectItem>
+                <SelectItem value="misinformation">Misleading religious or academic info</SelectItem>
+                <SelectItem value="other">Other concern</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="report-notes" className="text-xs font-body">Details (optional)</Label>
+            <Textarea
+              id="report-notes"
+              value={details}
+              onChange={(e) => setDetails(e.target.value)}
+              placeholder="Share context for moderators…"
+              className="text-xs font-body min-h-20"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="destructive">Submit Report</Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* 8. Forward Message Dialog */
 export function ForwardMessageDialog() {
   const { snapshot, forwardingMessage, setForwardingMessage, forwardToConversation } =
     useCommunity();
@@ -530,12 +741,12 @@ export function ForwardMessageDialog() {
             <Forward className="h-4 w-4 text-primary" /> Forward to…
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Select a chat or group to forward this message to
+            Select a chat, group, or channel to forward this message to
           </DialogDescription>
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search chats or groups…"
+            placeholder="Search chats, groups, or channels…"
             className="mt-2 h-9 text-sm font-body"
           />
         </DialogHeader>
@@ -557,7 +768,11 @@ export function ForwardMessageDialog() {
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-body font-medium truncate">{conv.title}</p>
                 <p className="text-[11px] font-body text-muted-foreground">
-                  {conv.type === "group" ? "Group" : "Direct chat"}
+                  {conv.type === "channel"
+                    ? "Channel"
+                    : conv.type === "group"
+                      ? "Group"
+                      : "Direct chat"}
                 </p>
               </div>
             </button>
@@ -568,7 +783,7 @@ export function ForwardMessageDialog() {
   );
 }
 
-/* 6. Privacy & Notification Preferences Dialog */
+/* 9. Privacy & Notification Preferences Dialog */
 export function CommunitySettingsDialog({
   open,
   onOpenChange,
@@ -591,7 +806,7 @@ export function CommunitySettingsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-display text-lg">
             Community Preferences
@@ -660,6 +875,12 @@ export function CommunitySettingsDialog({
                 label: "Group chats",
                 desc: "Notify for group conversations",
                 value: np.groupMessages,
+              },
+              {
+                key: "channelPosts" as const,
+                label: "Channel broadcasts",
+                desc: "Notify when subscribed channels post",
+                value: np.channelPosts,
               },
               {
                 key: "mentionsOnly" as const,
@@ -792,6 +1013,410 @@ export function CommunitySettingsDialog({
             </div>
           </div>
         )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* 10. Start New Chat Dialog */
+export function StartNewChatDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { snapshot, openDirectChat } = useCommunity();
+  const [query, setQuery] = useState("");
+
+  const contacts = useMemo(() => {
+    if (!snapshot) return [];
+    const q = query.trim().toLowerCase();
+    return Object.values(snapshot.users)
+      .filter((u) => u.id !== snapshot.currentUserId && !u.isBlocked)
+      .filter((u) => {
+        if (!q) return true;
+        return (
+          u.fullName.toLowerCase().includes(q) ||
+          u.username.toLowerCase().includes(q) ||
+          u.department.toLowerCase().includes(q)
+        );
+      })
+      .sort((a, b) => a.fullName.localeCompare(b.fullName));
+  }, [snapshot, query]);
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+        <DialogHeader className="px-4 pt-4 pb-3 border-b border-border">
+          <DialogTitle className="font-display text-lg flex items-center gap-2">
+            <MessageCircle className="h-4 w-4 text-primary" /> Start New Chat
+          </DialogTitle>
+          <DialogDescription className="font-body text-xs">
+            Choose a campus member to start or jump into a direct conversation.
+          </DialogDescription>
+          <div className="relative pt-2">
+            <Search className="absolute left-3 top-1/2 -translate-y-0.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search member by name, @username, or dept…"
+              aria-label="Search member for new chat"
+              className="pl-9 h-9 text-sm font-body"
+            />
+          </div>
+        </DialogHeader>
+
+        <div className="max-h-80 overflow-y-auto divide-y divide-border/50">
+          {contacts.length === 0 ? (
+            <p className="text-center text-xs font-body text-muted-foreground py-8">
+              No matching campus members found.
+            </p>
+          ) : (
+            contacts.map((u) => (
+              <button
+                key={u.id}
+                type="button"
+                onClick={() => {
+                  onOpenChange(false);
+                  void openDirectChat(u.id);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-secondary/50 text-left transition-colors"
+              >
+                <AvatarBadge
+                  initials={u.avatarInitials}
+                  colorClass={u.avatarColor}
+                  name={u.fullName}
+                  status={u.status}
+                  showPresence
+                  size="md"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="font-body text-sm font-semibold truncate">{u.fullName}</p>
+                  <p className="font-body text-xs text-muted-foreground truncate">
+                    {u.username} · {u.department}
+                  </p>
+                </div>
+                <span className="text-[11px] font-body font-medium text-primary shrink-0">
+                  Message
+                </span>
+              </button>
+            ))
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* 11. Add Contact / Campus Directory Lookup Dialog */
+export function AddContactDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { snapshot, openDirectChat, setProfileUserId, setActiveTab } = useCommunity();
+  const [handleQuery, setHandleQuery] = useState("");
+
+  const matches = useMemo(() => {
+    if (!snapshot) return [];
+    const normalized = handleQuery.trim().replace(/^@/, "").toLowerCase();
+    return Object.values(snapshot.users)
+      .filter((u) => u.id !== snapshot.currentUserId)
+      .filter((u) => {
+        if (!normalized) return true;
+        return (
+          u.username.replace(/^@/, "").toLowerCase().includes(normalized) ||
+          u.fullName.toLowerCase().includes(normalized) ||
+          u.department.toLowerCase().includes(normalized)
+        );
+      });
+  }, [snapshot, handleQuery]);
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+        <DialogHeader className="px-4 pt-4 pb-3 border-b border-border">
+          <DialogTitle className="font-display text-lg flex items-center gap-2">
+            <UserPlus className="h-4 w-4 text-primary" /> Add Contact
+          </DialogTitle>
+          <DialogDescription className="font-body text-xs">
+            Find an ASTU student or organizer by @username, full name, or department.
+          </DialogDescription>
+          <div className="relative pt-2">
+            <Search className="absolute left-3 top-1/2 -translate-y-0.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              value={handleQuery}
+              onChange={(e) => setHandleQuery(e.target.value)}
+              placeholder="Enter @username or name…"
+              aria-label="Lookup contact by username"
+              className="pl-9 h-9 text-sm font-body"
+            />
+          </div>
+        </DialogHeader>
+
+        <div className="max-h-72 overflow-y-auto divide-y divide-border/50">
+          {matches.length === 0 ? (
+            <div className="text-center py-8 px-4 space-y-1">
+              <p className="text-xs font-body font-medium">No matching member found</p>
+              <p className="text-[11px] font-body text-muted-foreground">
+                Ask your peer to set a @username in Community Settings → Account &amp; Profile.
+              </p>
+            </div>
+          ) : (
+            matches.map((u) => (
+              <div
+                key={u.id}
+                className="flex items-center justify-between gap-3 px-4 py-2.5 hover:bg-secondary/40"
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    onOpenChange(false);
+                    setProfileUserId(u.id);
+                  }}
+                  className="flex items-center gap-3 min-w-0 flex-1 text-left"
+                >
+                  <AvatarBadge
+                    initials={u.avatarInitials}
+                    colorClass={u.avatarColor}
+                    name={u.fullName}
+                    status={u.status}
+                    showPresence={!u.isBlocked}
+                    size="sm"
+                  />
+                  <div className="min-w-0">
+                    <p className="font-body text-xs font-semibold truncate">{u.fullName}</p>
+                    <p className="font-body text-[11px] text-muted-foreground truncate">
+                      {u.username} · {u.department}
+                    </p>
+                  </div>
+                </button>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => {
+                    onOpenChange(false);
+                    void openDirectChat(u.id);
+                  }}
+                  className="h-8 text-xs shrink-0"
+                >
+                  Connect
+                </Button>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div className="px-4 py-2.5 border-t border-border bg-secondary/30 flex items-center justify-between">
+          <span className="text-[11px] font-body text-muted-foreground">
+            {matches.length} campus directory member(s)
+          </span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              onOpenChange(false);
+              setActiveTab("contacts");
+            }}
+            className="h-7 text-xs"
+          >
+            Browse Contacts Tab
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* 12. Invite Members Dialog */
+export function InviteMembersDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { snapshot, activeConversation, addGroupMember } = useCommunity();
+  const [selectedConvId, setSelectedConvId] = useState<string>("");
+  const [query, setQuery] = useState("");
+  const [invitingId, setInvitingId] = useState<string | null>(null);
+
+  const manageableSpaces = useMemo(() => {
+    if (!snapshot) return [];
+    return snapshot.conversations.filter(
+      (c) => c.type === "group" || c.type === "channel"
+    );
+  }, [snapshot]);
+
+  const targetConversation = useMemo(() => {
+    if (
+      activeConversation &&
+      (activeConversation.type === "group" || activeConversation.type === "channel") &&
+      !selectedConvId
+    ) {
+      return activeConversation;
+    }
+    return (
+      manageableSpaces.find((c) => c.id === selectedConvId) ??
+      manageableSpaces[0] ??
+      null
+    );
+  }, [activeConversation, manageableSpaces, selectedConvId]);
+
+  const candidates = useMemo(() => {
+    if (!snapshot || !targetConversation) return [];
+    const q = query.trim().toLowerCase();
+    return Object.values(snapshot.users)
+      .filter(
+        (u) =>
+          u.id !== snapshot.currentUserId &&
+          !u.isBlocked &&
+          !targetConversation.participantIds.includes(u.id)
+      )
+      .filter((u) => {
+        if (!q) return true;
+        return (
+          u.fullName.toLowerCase().includes(q) ||
+          u.username.toLowerCase().includes(q) ||
+          u.department.toLowerCase().includes(q)
+        );
+      });
+  }, [snapshot, targetConversation, query]);
+
+  const shareLink =
+    targetConversation?.inviteLink ||
+    (typeof window !== "undefined" ? `${window.location.origin}/community` : "https://astu-jemea.app/community");
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareLink);
+      toast.success("Invite link copied to clipboard");
+    } catch {
+      toast.info(shareLink);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+        <DialogHeader className="px-4 pt-4 pb-3 border-b border-border">
+          <DialogTitle className="font-display text-lg flex items-center gap-2">
+            <Users className="h-4 w-4 text-primary" /> Invite Members
+          </DialogTitle>
+          <DialogDescription className="font-body text-xs">
+            Add ASTU students directly to a group/channel or share an invite link.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="p-4 space-y-3.5">
+          {manageableSpaces.length > 0 && (
+            <div className="space-y-1">
+              <Label className="text-xs font-body">Target Group or Channel</Label>
+              <Select
+                value={targetConversation?.id}
+                onValueChange={setSelectedConvId}
+              >
+                <SelectTrigger className="h-9 text-xs font-body" aria-label="Target group or channel">
+                  <SelectValue placeholder="Choose a group or channel" />
+                </SelectTrigger>
+                <SelectContent>
+                  {manageableSpaces.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.title} ({c.type === "channel" ? "Channel" : "Group"})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          <div className="rounded-xl border border-border bg-secondary/35 p-3 flex items-center justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-body font-semibold flex items-center gap-1.5">
+                <Link2 className="h-3.5 w-3.5 text-primary shrink-0" /> Shareable Invite Link
+              </p>
+              <p className="text-[11px] font-body text-muted-foreground truncate mt-0.5">
+                {shareLink}
+              </p>
+            </div>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              onClick={() => void copyLink()}
+              className="h-8 text-xs shrink-0"
+            >
+              <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+            </Button>
+          </div>
+
+          {targetConversation && (
+            <div className="space-y-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search members to add…"
+                  aria-label="Search members to invite"
+                  className="pl-8 h-8 text-xs font-body"
+                />
+              </div>
+
+              <div className="max-h-52 overflow-y-auto rounded-lg border border-border divide-y divide-border/50">
+                {candidates.length === 0 ? (
+                  <p className="text-center text-xs font-body text-muted-foreground py-6">
+                    All matching contacts are already members.
+                  </p>
+                ) : (
+                  candidates.map((u) => (
+                    <div
+                      key={u.id}
+                      className="flex items-center justify-between gap-2.5 px-3 py-2"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <AvatarBadge
+                          initials={u.avatarInitials}
+                          colorClass={u.avatarColor}
+                          name={u.fullName}
+                          size="sm"
+                        />
+                        <div className="min-w-0">
+                          <p className="text-xs font-body font-semibold truncate">
+                            {u.fullName}
+                          </p>
+                          <p className="text-[11px] font-body text-muted-foreground truncate">
+                            {u.username} · {u.department}
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        size="sm"
+                        disabled={invitingId === u.id}
+                        onClick={async () => {
+                          setInvitingId(u.id);
+                          try {
+                            await addGroupMember(targetConversation.id, u.id);
+                          } finally {
+                            setInvitingId(null);
+                          }
+                        }}
+                        className="h-7 text-xs shrink-0"
+                      >
+                        <UserPlus className="h-3 w-3 mr-1" /> Add
+                      </Button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

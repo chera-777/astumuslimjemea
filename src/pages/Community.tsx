@@ -6,21 +6,40 @@ import { CommunityProvider, useCommunity } from "@/features/community/CommunityC
 import { ConversationListPane } from "@/components/community/ConversationListPane";
 import { ChatThreadPane } from "@/components/community/ChatThreadPane";
 import { ChatInfoPanel } from "@/components/community/ChatInfoPanel";
+import { CommunitySettingsView } from "@/components/community/CommunitySettingsView";
+import { CommitteeMeetingsView } from "@/components/community/CommitteeMeetingsView";
 import {
-  CommunityNavDrawer,
-  CommunitySettingsDialog,
-  ContactsDialog,
+  AddContactDialog,
+  CreatePollDialog,
   ForwardMessageDialog,
+  InviteMembersDialog,
+  NewChannelDialog,
   NewGroupDialog,
+  ReportConversationDialog,
+  StartNewChatDialog,
   UserProfileDialog,
+  WallpaperDialog,
 } from "@/components/community/CommunityDialogs";
 
 function CommunityWorkspace() {
-  const { activeConversationId } = useCommunity();
-  const [navDrawerOpen, setNavDrawerOpen] = useState(false);
-  const [contactsOpen, setContactsOpen] = useState(false);
+  const { activeConversationId, meetingsOpen, rightPaneMode, openSettingsPanel } =
+    useCommunity();
+  const [startNewChatOpen, setStartNewChatOpen] = useState(false);
+  const [addContactOpen, setAddContactOpen] = useState(false);
+  const [inviteMembersOpen, setInviteMembersOpen] = useState(false);
   const [newGroupOpen, setNewGroupOpen] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [newChannelOpen, setNewChannelOpen] = useState(false);
+  const [wallpaperOpen, setWallpaperOpen] = useState(false);
+  const [pollOpen, setPollOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+
+  if (meetingsOpen) {
+    return (
+      <div className="flex h-[100dvh] w-full overflow-hidden bg-background text-foreground">
+        <CommitteeMeetingsView />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-[100dvh] w-full overflow-hidden bg-background text-foreground">
@@ -32,34 +51,41 @@ function CommunityWorkspace() {
         )}
       >
         <ConversationListPane
-          onOpenNavDrawer={() => setNavDrawerOpen(true)}
-          onOpenContacts={() => setContactsOpen(true)}
+          onOpenStartNewChat={() => setStartNewChatOpen(true)}
+          onOpenAddContact={() => setAddContactOpen(true)}
+          onOpenInviteMembers={() => setInviteMembersOpen(true)}
           onOpenNewGroup={() => setNewGroupOpen(true)}
+          onOpenNewChannel={() => setNewChannelOpen(true)}
+          onOpenSettings={openSettingsPanel}
         />
       </div>
 
-      {/* Center pane: Active chat thread (always visible on md+, full-width on mobile when selected) */}
+      {/* Center pane: Active chat thread */}
       <div
         className={cn(
           "flex-1 h-full min-w-0 flex",
           activeConversationId ? "flex" : "hidden md:flex"
         )}
       >
-        <ChatThreadPane />
-        <ChatInfoPanel />
+        <ChatThreadPane
+          onOpenWallpaper={() => setWallpaperOpen(true)}
+          onOpenCreatePoll={() => setPollOpen(true)}
+          onOpenReport={() => setReportOpen(true)}
+        />
       </div>
 
-      {/* Drawers & Modals */}
-      <CommunityNavDrawer
-        open={navDrawerOpen}
-        onOpenChange={setNavDrawerOpen}
-        onOpenContacts={() => setContactsOpen(true)}
-        onOpenNewGroup={() => setNewGroupOpen(true)}
-        onOpenSettings={() => setSettingsOpen(true)}
-      />
-      <ContactsDialog open={contactsOpen} onOpenChange={setContactsOpen} />
+      {/* Right pane: Contextual Info or Settings (side-by-side inline on lg+, drawer on < lg) */}
+      {rightPaneMode === "settings" ? <CommunitySettingsView /> : <ChatInfoPanel />}
+
+      {/* Modals & Call Staging Overlay */}
+      <StartNewChatDialog open={startNewChatOpen} onOpenChange={setStartNewChatOpen} />
+      <AddContactDialog open={addContactOpen} onOpenChange={setAddContactOpen} />
+      <InviteMembersDialog open={inviteMembersOpen} onOpenChange={setInviteMembersOpen} />
       <NewGroupDialog open={newGroupOpen} onOpenChange={setNewGroupOpen} />
-      <CommunitySettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <NewChannelDialog open={newChannelOpen} onOpenChange={setNewChannelOpen} />
+      <WallpaperDialog open={wallpaperOpen} onOpenChange={setWallpaperOpen} />
+      <CreatePollDialog open={pollOpen} onOpenChange={setPollOpen} />
+      <ReportConversationDialog open={reportOpen} onOpenChange={setReportOpen} />
       <UserProfileDialog />
       <ForwardMessageDialog />
     </div>
@@ -70,8 +96,8 @@ const Community = () => {
   return (
     <AppLayout>
       <SEO
-        title="Community Messages & Groups — ASTU Muslim Jemea"
-        description="Connect with ASTU Muslim Jemea members through direct chats, study groups, and community channels."
+        title="Community Messages, Channels & Groups — ASTU Muslim Jemea"
+        description="Connect with ASTU Muslim Jemea members through direct chats, study groups, broadcast channels, and committee meetings."
         path="/community"
       />
       <CommunityProvider>

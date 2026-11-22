@@ -9,10 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Shield, Users, Flag, ScrollText, CheckCircle2, XCircle, Search, Bell } from "lucide-react";
+import { Shield, Users, Flag, ScrollText, CheckCircle2, XCircle, Search, Bell, ShieldCheck } from "lucide-react";
 import { PushComposer } from "@/components/PushComposer";
 import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
 import { CommunityManager } from "@/components/admin/CommunityManager";
+import { VerificationManager } from "@/components/admin/VerificationManager";
 
 type Profile = {
   id: string;
@@ -38,13 +39,14 @@ type AuditEntry = {
   action: string;
   target_type: string | null;
   target_id: string | null;
-  meta: any;
+  meta: Record<string, unknown> | null;
   created_at: string;
 };
 
 type RoleRow = { user_id: string; role: string };
 
 const ROLES = ["admin", "amir", "committee", "student", "guest"] as const;
+type AppRole = (typeof ROLES)[number];
 const REPORT_TYPES = ["all", "message", "announcement", "news", "event", "profile"] as const;
 
 export default function Admin() {
@@ -78,14 +80,14 @@ export default function Admin() {
 
   useEffect(() => { load(); }, []);
 
-  const toggleRole = async (userId: string, role: string) => {
+  const toggleRole = async (userId: string, role: AppRole) => {
     const has = (rolesByUser[userId] || []).includes(role);
     if (has) {
-      const { error } = await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", role as any);
+      const { error } = await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", role);
       if (error) return toast.error(error.message);
       toast.success(`Revoked ${role}`);
     } else {
-      const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: role as any });
+      const { error } = await supabase.from("user_roles").insert({ user_id: userId, role });
       if (error) return toast.error(error.message);
       toast.success(`Granted ${role}`);
     }
@@ -111,7 +113,7 @@ export default function Admin() {
     let authorId: string | null = null;
     if (report.target_type === "message") {
       const { data } = await supabase.from("messages").select("user_id").eq("id", report.target_id).maybeSingle();
-      authorId = (data as any)?.user_id ?? null;
+      authorId = (data as { user_id?: string } | null)?.user_id ?? null;
     } else if (report.target_type === "profile") {
       authorId = report.target_id;
     }
@@ -120,8 +122,8 @@ export default function Admin() {
       user_id: authorId,
       title: "Content warning",
       body: `An admin reviewed a report about your ${report.target_type} and issued a warning. Please review community guidelines.`,
-      kind: "moderation",
-    } as any);
+      category: "moderation",
+    });
     if (error) return toast.error(error.message);
     await supabase.from("content_reports").update({ status: "resolved" }).eq("id", report.id);
     toast.success("Warning sent");
@@ -143,21 +145,23 @@ export default function Admin() {
           </div>
           <div>
             <h1 className="font-display text-xl font-bold">Admin Dashboard</h1>
-            <p className="text-xs text-muted-foreground">Users · Reports · Moderation · Audit</p>
+            <p className="text-xs text-muted-foreground">Users · Verifications · Reports · Moderation · Audit</p>
           </div>
         </header>
 
         <Tabs defaultValue="community" className="w-full">
           <TabsList className="flex flex-wrap h-auto justify-start w-full gap-1">
-            <TabsTrigger value="community"><Users className="h-4 w-4 mr-1.5" />Groups & Shifts</TabsTrigger>
+            <TabsTrigger value="community"><Users className="h-4 w-4 mr-1.5" />Groups &amp; Shifts</TabsTrigger>
+            <TabsTrigger value="verifications"><ShieldCheck className="h-4 w-4 mr-1.5" />Verifications</TabsTrigger>
             <TabsTrigger value="users"><Users className="h-4 w-4 mr-1.5" />Users</TabsTrigger>
             <TabsTrigger value="reports"><Flag className="h-4 w-4 mr-1.5" />Reports {reports.filter(r=>r.status==='open').length>0 && <Badge className="ml-1.5">{reports.filter(r=>r.status==='open').length}</Badge>}</TabsTrigger>
             <TabsTrigger value="audit"><ScrollText className="h-4 w-4 mr-1.5" />Audit</TabsTrigger>
             <TabsTrigger value="push"><Bell className="h-4 w-4 mr-1.5" />Push</TabsTrigger>
-            <TabsTrigger value="analytics">📊 Analytics</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
           </TabsList>
           <TabsContent value="community"><CommunityManager /></TabsContent>
+          <TabsContent value="verifications"><VerificationManager /></TabsContent>
           <TabsContent value="analytics"><AnalyticsDashboard scope="global" /></TabsContent>
 
           <TabsContent value="users" className="space-y-3">

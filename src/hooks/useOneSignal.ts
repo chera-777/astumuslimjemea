@@ -38,9 +38,12 @@ export function useOneSignal() {
       try {
         await OneSignal.login(user.id);
         // Best-effort mirror the subscription
-        const subId =
-          (OneSignal as any)?.User?.PushSubscription?.id ||
-          (OneSignal as any)?.User?.PushSubscription?.subscriptionId;
+        const pushSub = (
+          OneSignal as unknown as {
+            User?: { PushSubscription?: { id?: string; subscriptionId?: string } };
+          }
+        )?.User?.PushSubscription;
+        const subId = pushSub?.id || pushSub?.subscriptionId;
         if (subId) {
           const { data: existing } = await supabase
             .from("push_subscriptions")

@@ -1,11 +1,11 @@
 import { LoadingScreen } from "@/components/auth/NatureShell";
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-const QuranReader = lazy(() => import("./pages/QuranReader"));
-const Ramadan = lazy(() => import("./pages/Ramadan"));
-const PrayerTimes = lazy(() => import("./pages/PrayerTimes"));
-const Admin = lazy(() => import("./pages/Admin"));
+import QuranReader from "./pages/QuranReader";
+import Ramadan from "./pages/Ramadan";
+import PrayerTimes from "./pages/PrayerTimes";
+import Admin from "./pages/Admin";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -39,9 +39,13 @@ import AzanPage from "./pages/AzanPage";
 import AzanFullscreen from "./pages/AzanFullscreen";
 import Academic from "./pages/Academic";
 import Challenges from "./pages/Challenges";
+import CallPage from "./pages/CallPage";
+import CallHistoryPage from "./pages/CallHistoryPage";
+import StudentVerificationPage from "./pages/StudentVerificationPage";
 import NotFound from "./pages/NotFound";
 import { AzanNotificationBridge } from "@/components/AzanNotificationBridge";
 import { RealtimeNotificationBridge } from "@/components/RealtimeNotificationBridge";
+import { CallProvider } from "@/features/community/CallContext";
 
 
 const queryClient = new QueryClient();
@@ -54,10 +58,11 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <AzanNotificationBridge />
-          <RealtimeNotificationBridge />
+          <CallProvider>
+            <AzanNotificationBridge />
+            <RealtimeNotificationBridge />
 
-          <Suspense fallback={<LoadingScreen />}>
+            <Suspense fallback={<LoadingScreen />}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/reset-password" element={<ResetPassword />} />
@@ -85,6 +90,12 @@ const App = () => (
             <Route path="/azan/now" element={<ProtectedRoute><AzanFullscreen /></ProtectedRoute>} />
             <Route path="/academic" element={<ProtectedRoute><Academic /></ProtectedRoute>} />
             <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
+            <Route path="/calls/history" element={<ProtectedRoute><CallHistoryPage /></ProtectedRoute>} />
+            <Route path="/calls/voice/:callId" element={<ProtectedRoute><CallPage routeKind="voice" /></ProtectedRoute>} />
+            <Route path="/calls/video/:callId" element={<ProtectedRoute><CallPage routeKind="video" /></ProtectedRoute>} />
+            <Route path="/calls/group/:callId" element={<ProtectedRoute><CallPage routeKind="group" /></ProtectedRoute>} />
+            <Route path="/calls/:mediaType/:callId" element={<ProtectedRoute><CallPage /></ProtectedRoute>} />
+            <Route path="/verification" element={<ProtectedRoute><StudentVerificationPage /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><Admin /></ProtectedRoute>} />
 
             {/* Role-restricted portals */}
@@ -97,6 +108,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           </Suspense>
+          </CallProvider>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

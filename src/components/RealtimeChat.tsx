@@ -74,7 +74,9 @@ export function RealtimeChat({ room = "general" }: { room?: string }) {
           .from("profiles")
           .select("id,full_name")
           .in("id", ids);
-        (profs || []).forEach((p: any) => (names[p.id] = p.full_name));
+        ((profs || []) as Array<{ id: string; full_name: string }>).forEach((p) => {
+          names[p.id] = p.full_name;
+        });
       }
       setMessages(rows.map((r) => ({ ...r, sender_name: names[r.user_id] || "Member" })));
     };
